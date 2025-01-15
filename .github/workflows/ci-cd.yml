@@ -10,7 +10,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]  # Cross-platform setup
     
     steps:
     # Step 1: Check out the repository
@@ -26,35 +29,41 @@ jobs:
 
     # Step 3: Cache Maven dependencies
     - name: Cache Maven dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+
+    # Step 4: Get project version from pom.xml
+    - name: Get project version from pom.xml
+      id: get_version
+      run: |
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "::set-output name=version::$VERSION"
     
-    # Step 4: Run Maven build and tests
-    - name: Build with Maven
-      run: mvn clean install --batch-mode
+    # Step 5: Compile, test, and package the application
+    - name: Build, test, and package with Maven
+      run: mvn clean package --batch-mode
     
-    # Step 5: Package the application (optional - for self-contained app)
-    - name: Package application as JAR
-      run: mvn package --file pom.xml
-    
-    # Optional: If you want to use `jpackage` to bundle a native installer
-    # Make sure you have JDK 21 set up for `jpackage`
+    # Step 6: Bundle into a native installer
     - name: Package application as self-contained installer
       run: |
-        jpackage --input target/ \
-                 --name my-app \
-                 --main-jar my-app.jar \
-                 --main-class com.example.app.Main \
-                 --type exe
-      # Replace the above with your actual project details for `jpackage`
-    
-    # Step 6: Upload build artifacts (JAR or installer)
-    - name: Upload JAR or Installer as Artifact
-      uses: actions/upload-artifact@v2
+        if [ $RUNNER_OS == 'Linux' ]; then
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ steps.get_version.outputs.version }}.jar --main-class com.example.App --type deb
+        elif [ $RUNNER_OS == 'Windows' ]; then
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ steps.get_version.outputs.version }}.jar --main-class com.example.App --type exe
+        elif [ $RUNNER_OS == 'macOS' ]; then
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ steps.get_version.outputs.version }}.jar --main-class com.example.App --type dmg
+        fi
+            
+    # Step 7: Upload Installer as Artifact
+    - name: Upload Installer as Artifact
+      uses: actions/upload-artifact@v4
       with:
-        name: my-app-artifact
-        path: target/*.jar   # or path to your installer (e.g., *.exe for Windows)
+        name: my-app-installer
+        path: |
+          target/*.exe  # For Windows
+          target/*.deb  # For Linux
+          target/*.dmg  # For macOS
