@@ -36,12 +36,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    # Step 4: Get project version from pom.xml
+    # Step 5: Get project version from pom.xml
     - name: Get project version from pom.xml
       id: get_version
       run: |
-        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        echo "::set-output name=version::$VERSION"
+        if ($Env:RUNNER_OS -eq "Windows") {
+            $VERSION = & mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+            Write-Host "VERSION=$VERSION"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+        } else {
+            VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+        }
     
     # Step 5: Compile, test, and package the application
     - name: Build, test, and package with Maven
