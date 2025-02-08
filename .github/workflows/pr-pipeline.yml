@@ -100,7 +100,10 @@ jobs:
 
       - name: Package application as self-contained installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe
+          echo "VERSION: ${{ env.VERSION }}"
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe --dest target/  # Make sure to specify --dest
+          echo "Checking the output of jpackage:"
+          dir target/  # Check if the .exe was generated in the target directory
 
       - name: Upload Installer as Artifact
         uses: actions/upload-artifact@v4
