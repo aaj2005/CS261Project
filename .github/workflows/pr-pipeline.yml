@@ -35,23 +35,9 @@ jobs:
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
 
-      - name: Debug output of VERSION
-        run: |
-          echo "Debugging VERSION:"
-          echo "${{ env.VERSION }}"
-
       - name: Check if JAR file exists
         run: |
-          echo "Checking if the JAR file exists in the target directory"
-          ls target/
-
-      - name: Package application as self-contained installer
-        run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type deb --dest target/
-
-      - name: Check if the built .deb file exists
-        run: |
-          if [ ! -f "target/trafficsim-${{ env.VERSION }}.deb" ]; then
+          if [ ! -f "target/trafficsim-${{ env.VERSION }}.jar" ]; then
             echo "The built .deb file does not exist"
             exit 1
           fi
@@ -88,23 +74,13 @@ jobs:
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
 
-      - name: Package application as self-contained installer
+      - name: Check if JAR file exists
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe --dest target/
-
-      - name: Upload Installer as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: traffic-sim-installer
-          path: target/*.exe
-
-      - name: Check if the built .exe file exists
-        run: |
-          if (-Not (Test-Path "target\trafficsim-${{ env.VERSION }}.exe")) {
-            Write-Error "The built .exe file does not exist"
+          if [ ! -f "target/trafficsim-${{ env.VERSION }}.jar" ]; then
+            echo "The built .deb file does not exist"
             exit 1
-          }
-          echo "The .exe file exists"
+          fi
+          echo "The .deb file exists"
   
 
   build-macos:
@@ -136,24 +112,10 @@ jobs:
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
 
-      - name: Debug output of VERSION
-        run: |
-          echo "Debugging VERSION:"
-          echo "${{ env.VERSION }}"
-
       - name: Check if JAR file exists
         run: |
-          echo "Checking if the JAR file exists in the target directory"
-          ls target/
-
-      - name: Package application as self-contained installer
-        run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg --dest target/
-
-          - name: Check if the built .dmg file exists
-          run: |
-            if [ ! -f "target/trafficsim-${{ env.VERSION }}.dmg" ]; then
-              echo "The built .dmg file does not exist"
-              exit 1
-            fi
-            echo "The .dmg file exists"
+          if [ ! -f "target/trafficsim-${{ env.VERSION }}.jar" ]; then
+            echo "The built .deb file does not exist"
+            exit 1
+          fi
+          echo "The .deb file exists"
