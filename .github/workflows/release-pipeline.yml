@@ -3,7 +3,7 @@ name: Release Pipeline
 on:
   push:
     branches:
-      - release  # For testing purposes
+      - project-setup  # For testing purposes
 
 permissions:
   contents: write   # Ensures write access to create tags and upload artifacts
