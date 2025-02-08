@@ -12,7 +12,7 @@ jobs:
   create-release-tag:
     runs-on: ubuntu-latest  # Create a release tag
     outputs:
-      RELEASE_TAG: ${{ steps.create_release_tag.outputs.RELEASE_TAG }},
+      RELEASE_TAG: ${{ steps.create_release_tag.outputs.RELEASE_TAG }}
       VERSION: ${{ steps.get_version.outputs.VERSION }}
     steps:
       - name: Checkout code
@@ -22,7 +22,7 @@ jobs:
         id: get_version
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION_=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create Release Tag
@@ -82,7 +82,7 @@ jobs:
     runs-on: windows-latest
     needs: create-release-tag
     env:
-        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }},
+        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
         VERSION: ${{ needs.create-release-tag.outputs.VERSION }}
     steps:
       - name: Checkout code
@@ -121,7 +121,7 @@ jobs:
     runs-on: macos-latest
     needs: create-release-tag
     env:
-        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }},
+        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
         VERSION: ${{ needs.create-release-tag.outputs.VERSION }}
     steps:
       - name: Checkout code
