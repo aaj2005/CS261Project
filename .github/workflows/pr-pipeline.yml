@@ -38,6 +38,16 @@ jobs:
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
 
+      - name: Debug output of VERSION
+        run: |
+          echo "Debugging VERSION:"
+          echo "${{ env.VERSION }}"
+
+      - name: Check if JAR file exists
+        run: |
+          echo "Checking if the JAR file exists in the target directory"
+          ls target/
+
       - name: Package application as self-contained installer
         run: |
           jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type deb
@@ -78,6 +88,16 @@ jobs:
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
 
+      - name: Debug output of VERSION
+        run: |
+          echo "Debugging VERSION:"
+          echo "${{ env.VERSION }}"
+
+      - name: Check if JAR file exists
+        run: |
+          echo "Checking if the JAR file exists in the target directory"
+          ls target/
+
       - name: Package application as self-contained installer
         run: |
           jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe
@@ -116,6 +136,16 @@ jobs:
 
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
+
+      - name: Debug output of VERSION
+        run: |
+          echo "Debugging VERSION:"
+          echo "${{ env.VERSION }}"
+
+      - name: Check if JAR file exists
+        run: |
+          echo "Checking if the JAR file exists in the target directory"
+          ls target/
 
       - name: Package application as self-contained installer
         run: |
