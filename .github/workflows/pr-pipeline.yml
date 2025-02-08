@@ -9,54 +9,54 @@ on:
       - project-setup
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # build-linux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v2
-        with:
-          java-version: '21'
-          distribution: 'temurin'
+  #     - name: Set up JDK 21
+  #       uses: actions/setup-java@v2
+  #       with:
+  #         java-version: '21'
+  #         distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+  #     - name: Cache Maven dependencies
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.m2/repository
+  #         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-maven-
 
-      - name: Get project version from pom.xml
-        id: get_version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+  #     - name: Get project version from pom.xml
+  #       id: get_version
+  #       run: |
+  #         VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+  #         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build, test, and package with Maven
-        run: mvn clean package --batch-mode
+  #     - name: Build, test, and package with Maven
+  #       run: mvn clean package --batch-mode
 
-      - name: Debug output of VERSION
-        run: |
-          echo "Debugging VERSION:"
-          echo "${{ env.VERSION }}"
+  #     - name: Debug output of VERSION
+  #       run: |
+  #         echo "Debugging VERSION:"
+  #         echo "${{ env.VERSION }}"
 
-      - name: Check if JAR file exists
-        run: |
-          echo "Checking if the JAR file exists in the target directory"
-          ls target/
+  #     - name: Check if JAR file exists
+  #       run: |
+  #         echo "Checking if the JAR file exists in the target directory"
+  #         ls target/
 
-      - name: Package application as self-contained installer
-        run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type deb
+  #     - name: Package application as self-contained installer
+  #       run: |
+  #         jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type deb
 
-      - name: Upload Installer as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: traffic-sim-installer
-          path: target/*.deb
+  #     - name: Upload Installer as Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: traffic-sim-installer
+  #         path: target/*.deb
 
   build-windows:
     runs-on: windows-latest
@@ -83,7 +83,7 @@ jobs:
         run: |
           $VERSION = & mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
           Write-Host "VERSION=$VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Build, test, and package with Maven
         run: mvn clean package --batch-mode
@@ -108,51 +108,51 @@ jobs:
           name: traffic-sim-installer
           path: target/*.exe
 
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # build-macos:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v2
-        with:
-          java-version: '21'
-          distribution: 'temurin'
+  #     - name: Set up JDK 21
+  #       uses: actions/setup-java@v2
+  #       with:
+  #         java-version: '21'
+  #         distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+  #     - name: Cache Maven dependencies
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.m2/repository
+  #         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-maven-
 
-      - name: Get project version from pom.xml
-        id: get_version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+  #     - name: Get project version from pom.xml
+  #       id: get_version
+  #       run: |
+  #         VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+  #         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build, test, and package with Maven
-        run: mvn clean package --batch-mode
+  #     - name: Build, test, and package with Maven
+  #       run: mvn clean package --batch-mode
 
-      - name: Debug output of VERSION
-        run: |
-          echo "Debugging VERSION:"
-          echo "${{ env.VERSION }}"
+  #     - name: Debug output of VERSION
+  #       run: |
+  #         echo "Debugging VERSION:"
+  #         echo "${{ env.VERSION }}"
 
-      - name: Check if JAR file exists
-        run: |
-          echo "Checking if the JAR file exists in the target directory"
-          ls target/
+  #     - name: Check if JAR file exists
+  #       run: |
+  #         echo "Checking if the JAR file exists in the target directory"
+  #         ls target/
 
-      - name: Package application as self-contained installer
-        run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg
+  #     - name: Package application as self-contained installer
+  #       run: |
+  #         jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg
 
-      - name: Upload Installer as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: traffic-sim-installer
-          path: target/*.dmg
+  #     - name: Upload Installer as Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: traffic-sim-installer
+  #         path: target/*.dmg
