@@ -1,4 +1,4 @@
-name: TrafficSim CI/CD Workflow
+name: PR Pipeline
 
 on:
   push:
@@ -71,7 +71,7 @@ jobs:
       - name: Get project version from pom.xml
         id: get_version
         run: |
-          $VERSION = & mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+          $VERSION = & mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
           Write-Host "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
