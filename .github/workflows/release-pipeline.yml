@@ -5,6 +5,9 @@ on:
     branches:
       - project-setup  # For testing purposes
 
+permissions:
+  contents: write   # Ensures write access to create tags and upload artifacts
+
 jobs:
   create-release-tag:
     runs-on: ubuntu-latest  # Create a release tag
