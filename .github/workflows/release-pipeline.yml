@@ -44,15 +44,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check if RELEASE_TAG is set
-        run: |
-          if [ -z "${{ env.RELEASE_TAG }}" ]; then
-            echo "Release tag not found. Failing the job."
-            exit 1
-          else
-            echo "Release tag found: ${{ env.RELEASE_TAG }}"
-          fi
-
       - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
@@ -88,91 +79,91 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # release-windows:
-  #   runs-on: windows-latest
-  #   needs: create-release-tag
-      # env:
-      #     RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  release-windows:
+    runs-on: windows-latest
+    needs: create-release-tag
+    env:
+        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Set up JDK 21
-  #       uses: actions/setup-java@v2
-  #       with:
-  #         java-version: '21'
-  #         distribution: 'temurin'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-  #     - name: Cache Maven dependencies
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: C:\Users\runneradmin\.m2\repository
-  #         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-maven-
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: C:\Users\runneradmin\.m2\repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-  #     - name: Get project version from pom.xml
-  #       id: get_version
-  #       run: |
-  #         $VERSION = & mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
-  #         Write-Host "VERSION=$VERSION"
-  #         echo "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Get project version from pom.xml
+        id: get_version
+        run: |
+          $VERSION = & mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
+          Write-Host "VERSION=$VERSION"
+          echo "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Build, test, and package with Maven
-  #       run: mvn clean package --batch-mode
+      - name: Build, test, and package with Maven
+        run: mvn clean package --batch-mode
 
-  #     - name: Package application as self-contained Windows installer
-  #       run: |
-  #         jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe --dest target/
+      - name: Package application as self-contained Windows installer
+        run: |
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe --dest target/
 
-  #     - name: Upload Windows package to GitHub Release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         files: target/*.exe
-  #         tag_name: ${{ env.RELEASE_TAG }}
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Windows package to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/*.exe
+          tag_name: ${{ env.RELEASE_TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # release-macos:
-  #   runs-on: macos-latest
-  #   needs: create-release-tag
-      # env:
-      #     RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  release-macos:
+    runs-on: macos-latest
+    needs: create-release-tag
+    env:
+        RELEASE_TAG: ${{ needs.create-release-tag.outputs.RELEASE_TAG }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Set up JDK 21
-  #       uses: actions/setup-java@v2
-  #       with:
-  #         java-version: '21'
-  #         distribution: 'temurin'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-  #     - name: Cache Maven dependencies
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ~/.m2/repository
-  #         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-maven-
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-  #     - name: Get project version from pom.xml
-  #       id: get_version
-  #       run: |
-  #         VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-  #         echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Get project version from pom.xml
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-  #     - name: Build, test, and package with Maven
-  #       run: mvn clean package --batch-mode
+      - name: Build, test, and package with Maven
+        run: mvn clean package --batch-mode
 
-  #     - name: Package application as self-contained macOS installer
-  #       run: |
-  #         jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg --dest target/
+      - name: Package application as self-contained macOS installer
+        run: |
+          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg --dest target/
 
-  #     - name: Upload macOS package to GitHub Release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         files: target/*.dmg
-  #         tag_name: ${{ env.RELEASE_TAG }}
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload macOS package to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/*.dmg
+          tag_name: ${{ env.RELEASE_TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
