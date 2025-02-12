@@ -32,7 +32,9 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        double outflow = MathsModel.ProportionalReduction(0.5, 0.2, 0.1, 0.0, 0.5, 0.5, 0.0);
+        System.out.println(outflow);
+        // launch();
     }
 
 }
