@@ -23,17 +23,16 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Traffic Simulation");
-        SimulationComponents simComponent = new SimulationComponents(5,4,3,2);
+        //                                           junction arm: left - top - bottom - right
+        SimulationComponents simComponent = new SimulationComponents(1,2,3,4);
         AnchorPane root = new AnchorPane();
         for (Rectangle rect : simComponent.getCorners()){
-            System.out.println("Dim: "+rect.getX() + " " + rect.getY() + " " + rect.getWidth() + " " + rect.getHeight() );
             root.getChildren().add(rect);
         }
         for (Rectangle rect : simComponent.getLane_separation()){
-//            System.out.println("Dim: "+rect.getX() + " " + rect.getY() + " " + rect.getWidth() + " " + rect.getHeight() );
             root.getChildren().add(rect);
         }
-        stage.setScene(new Scene(root, 600,600));
+        stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
         stage.show();
     }
 
