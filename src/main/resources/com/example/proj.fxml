@@ -53,7 +53,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -109,7 +109,7 @@
                            <children>
                               <BorderPane layoutY="1.0" prefHeight="1022.0" prefWidth="1921.0">
                                  <left>
-                                    <ListView prefHeight="1022.0" prefWidth="359.0" BorderPane.alignment="CENTER" />
+                                    <ListView fx:id="simList" prefHeight="1022.0" prefWidth="359.0" BorderPane.alignment="CENTER" />
                                  </left>
                                  <center>
                                     <AnchorPane prefHeight="1022.0" prefWidth="1585.0" BorderPane.alignment="CENTER">
