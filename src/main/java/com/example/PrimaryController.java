@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class PrimaryController {
 
     private int numSimulations = 0;
+    private ListCell<SimListItem> selectedSimItem;
     @FXML
     private ListView<SimListItem> simList;
 
@@ -47,17 +49,47 @@ public class PrimaryController {
                         deleteButton.setOnAction(event -> {
                             simList.getItems().remove(item);
 
+                            if (selectedSimItem != null && selectedSimItem.getItem().equals(item)) {
+                                selectedSimItem.setStyle("");
+                                selectedSimItem = null;
+                            }
+
                         });
 
                         box.getChildren().addAll(titleText, deleteButton);
                         setGraphic(box);
                     }
 
+                    this.setOnMouseClicked(event -> {
+                        if (!item.getSimName().equals("New Simulation")) {
+                            simList.getItems().forEach(simItem -> {
+                                if (selectedSimItem != null) {
+                                    selectedSimItem.setStyle("");
+
+                                }
+
+                                setStyle("-fx-background-color: lightblue;");
+
+                                selectedSimItem = this;
+                            });
+
+                            setStyle("-fx-background-color: lightblue;");
+
+                            // For later use, load in details from simulation to text labels here
+                            // loadSimulationDetails(item);
+                        }
+
+
+                    });
+
 
                 }
 
             }
         });
+
+        simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        simList.getSelectionModel().clearSelection();
     }
 
     private void addNewSimulation() {
