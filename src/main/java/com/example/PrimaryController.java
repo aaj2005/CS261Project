@@ -10,14 +10,15 @@ import javafx.scene.text.Text;
 
 public class PrimaryController {
 
+    private int numSimulations = 0;
     @FXML
     private ListView<SimListItem> simList;
 
     @FXML
     public void initialize() {
-        SimListItem startingSim = new SimListItem("Simulation 1");
+        SimListItem newSimulationItem = new SimListItem("New Simulation");
 
-        simList.getItems().add(startingSim);
+        simList.getItems().add(newSimulationItem);
 
         simList.setCellFactory(param -> new ListCell<SimListItem>() {
             @Override
@@ -27,21 +28,41 @@ public class PrimaryController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    HBox box = new HBox(10);
-                    Text titleText = new Text(item.getSimName());
-                    Button deleteButton = new Button("Delete");
+                    if (item.getSimName().equals("New Simulation")) {
+                        // Special "New simulation" item: display only the title and a button
+                        HBox hbox = new HBox(10);
+                        Text titleText = new Text(item.getSimName());
+                        Button addButton = new Button("+");
 
-                    deleteButton.setOnAction(event -> {
-                        simList.getItems().remove(item);
+                        // Action for the "Add Simulation" button
+                        addButton.setOnAction(event -> addNewSimulation());
 
-                    });
+                        hbox.getChildren().addAll(titleText, addButton);
+                        setGraphic(hbox);
+                    } else {
+                        HBox box = new HBox(10);
+                        Text titleText = new Text(item.getSimName());
+                        Button deleteButton = new Button("Delete");
 
-                    box.getChildren().addAll(titleText, deleteButton);
-                    setGraphic(box);
+                        deleteButton.setOnAction(event -> {
+                            simList.getItems().remove(item);
+
+                        });
+
+                        box.getChildren().addAll(titleText, deleteButton);
+                        setGraphic(box);
+                    }
+
 
                 }
 
             }
         });
+    }
+
+    private void addNewSimulation() {
+            int newSimPosition = simList.getItems().size() - 1;
+            SimListItem newSimItem = new SimListItem("Simulation " + ++numSimulations);
+            simList.getItems().add(newSimPosition, newSimItem);
     }
 }
