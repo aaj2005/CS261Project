@@ -10,8 +10,12 @@ public class SimulationComponents {
 
     private ArrayList<Rectangle> lanes;
 
+
     private Rectangle[] corners;
     private Rectangle[] lane_separation;
+
+    private Road junction_arms_in[];
+    private Road junction_arms_out[];
 
     private int[] number_of_lanes = {1,1,1,1,1};
 
@@ -21,28 +25,28 @@ public class SimulationComponents {
     public static final double lane_w = 20;
 
 
-    // junction arm: left - top - bottom - right
+    // junction arm: top - right - bottom - left
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4) {
 
         // number of lanes exiting junction for each arm
         int max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
-
+        
         corners = new Rectangle[]{
                 new Rectangle( // top left
                         0,0, // X and Y
-                        (sim_w/2)-(max_out * lane_w), (sim_h/2)-lanes_arm1 * lane_w // Width and Height
+                        (sim_w/2)-(max_out * lane_w), (sim_h/2)-lanes_arm4 * lane_w // Width and Height
                 ),
                 new Rectangle( // top right
-                        sim_w - ((sim_w/2)-lanes_arm2 * lane_w), 0, // X and Y
-                        (sim_w/2)-lanes_arm2 * lane_w, (sim_h/2)-max_out * lane_w // Width and Height
+                        sim_w - ((sim_w/2)-lanes_arm1 * lane_w), 0, // X and Y
+                        (sim_w/2)-lanes_arm1 * lane_w, (sim_h/2)-max_out * lane_w // Width and Height
                 ),
                 new Rectangle( // bottom left
                         0, sim_h - ((sim_h/2)-max_out * lane_w), // X and Y
                         (sim_w/2)-lanes_arm3 * lane_w, (sim_h/2)-max_out * lane_w // Width and Height
                 ),
                 new Rectangle( // bottom right
-                        sim_w - ((sim_w/2)-max_out * lane_w), sim_h - ((sim_h/2)-lanes_arm4 * lane_w), // X and Y
-                        (sim_w/2)-max_out * lane_w, (sim_h/2)-lanes_arm4 * lane_w // Width and Height
+                        sim_w - ((sim_w/2)-max_out * lane_w), sim_h - ((sim_h/2)-lanes_arm2 * lane_w), // X and Y
+                        (sim_w/2)-max_out * lane_w, (sim_h/2)-lanes_arm2 * lane_w // Width and Height
                 ),
         };
 
@@ -68,6 +72,51 @@ public class SimulationComponents {
 
         };
 
+        junction_arms_in = new Road[4];
+        junction_arms_out = new Road[4];
+
+        junction_arms_in[0] = new Road(lanes_arm1,
+                getCornerDims("tl"), getCornerDims("tr"), Car.VER_DIR, false, Direction.TOP
+        );
+        junction_arms_in[0].set_start(
+                sim_w-getCornerDims("tr")[0]-lanes_arm1*Car.CAR_WIDTH,
+                Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
+        );
+
+
+        junction_arms_in[1] = new Road(lanes_arm2, getCornerDims("tr"), getCornerDims("br"), Car.HOR_DIR,false, Direction.RIGHT
+        );
+        junction_arms_in[1].set_start(
+                sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
+                sim_h-getCornerDims("br")[1]
+        );
+
+
+        junction_arms_in[2] = new Road(lanes_arm3, getCornerDims("br"), getCornerDims("bl"), Car.VER_DIR, false, Direction.BOTTOM
+        );
+        junction_arms_in[2].set_start(
+                getCornerDims("bl")[0],
+                sim_h-Math.min(getCornerDims("bl")[1],getCornerDims("br")[1])
+        );
+
+
+        junction_arms_in[3] = new Road(lanes_arm4, getCornerDims("bl"), getCornerDims("tl"), Car.HOR_DIR,false, Direction.LEFT
+        );
+        junction_arms_in[3].set_start(
+                getCornerDims("tl")[0],
+                getCornerDims("tl")[1]
+        );
+
+        carsToAdd = new Rectangle[]{
+                junction_arms_in[0].spawn_car_in_lane(0),
+                junction_arms_in[1].spawn_car_in_lane(1),
+                junction_arms_in[2].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(0),
+                junction_arms_in[0].spawn_car_in_lane(0),
+                junction_arms_in[1].spawn_car_in_lane(1),
+                junction_arms_in[2].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(0),
+        };
 
         corners[0].setFill(Color.BLACK);
         corners[1].setFill(Color.BLUE);
@@ -76,12 +125,31 @@ public class SimulationComponents {
 
 
     }
-
+    public Rectangle[] carsToAdd;
     public Rectangle[] getCorners() {
         return corners;
     }
-
+    public void setColour(int i, Color colour){
+        corners[i].setFill(colour);
+    }
     public Rectangle[] getLane_separation() {
         return lane_separation;
     }
+
+    private int cornerTranslate(String s){
+        switch (s){
+            case "tl": return 0; // top left
+            case "tr": return 1; // top right
+            case "bl": return 2; // bottom left
+            case "br": return 3; // bottom right
+            default: return -1;
+        }
+    }
+
+    public double[] getCornerDims(String corner){
+        Rectangle c = corners[cornerTranslate(corner)];
+        return new double[]{c.getWidth(), c.getHeight()};
+    }
+
+
 }
