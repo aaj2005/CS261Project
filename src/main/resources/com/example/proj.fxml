@@ -398,22 +398,12 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Metrics">
+                <Tab fx:id="metricsTab" text="Metrics">
                   <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <BarChart layoutX="555.0" layoutY="211.0">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </BarChart>
-                           </children></AnchorPane>
-
+                     <AnchorPane fx:id="graphContainer" minHeight="0.0" minWidth="0.0">
+                     </AnchorPane>
                   </content>
-                </Tab>
+               </Tab>      
               </tabs>
             </TabPane>
       </children>
