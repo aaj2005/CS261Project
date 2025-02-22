@@ -11,6 +11,7 @@ public class Road extends JunctionElement{
     private int priority = 1;
     public static int default_light_duration = 30;
     private int lane_capacity;
+    private Direction direction;
 
     public Road(int lane_count, double[] corner1, double[] corner2, int dir,  boolean has_pedestrian, Direction direction){
         light_status = false;
@@ -20,7 +21,8 @@ public class Road extends JunctionElement{
             lanes.add(new Lane(lane_capacity,has_pedestrian,0,0,direction,i));
         }
         this.lane_capacity = lane_capacity;
-        System.out.println(lane_capacity);
+        this.direction = direction;
+//        System.out.println(lane_capacity);
     }
 
     public Road(int lane_count, int priority, double[] corner1, double[] corner2, int dir,  boolean has_pedestrian, Direction direction){
@@ -53,4 +55,7 @@ public class Road extends JunctionElement{
         return lanes.get(lane_number).get_first_car();
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
 }

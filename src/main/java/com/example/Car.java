@@ -24,8 +24,8 @@ public class Car {
         shape.setX(pos_x);
         shape.setY(pos_y);
         Rotate rotate = new Rotate();
-        rotate.setPivotX(pos_x - direction.getX_offset());
-        rotate.setPivotY(pos_y - direction.getY_offset());
+        rotate.setPivotX(pos_x - direction.getRotation_pivot_x());
+        rotate.setPivotY(pos_y - direction.getRotation_pivot_y());
         rotate.setAngle(direction.getRotation());
         rotation = rotate;
         shape.getTransforms().add(rotate);

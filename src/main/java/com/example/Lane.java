@@ -1,7 +1,6 @@
 package com.example;
 
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 
 import java.util.ArrayList;
 
@@ -40,8 +39,8 @@ public class Lane {
     public Rectangle spawn_car(){
 
         cars.add(new Car(direction, spawn_position_x, spawn_position_y));
-        spawn_position_x += direction.getLane_pivot_x();
-        spawn_position_y += direction.getLane_pivot_y();
+        spawn_position_x += direction.get_next_in_lane_posX();
+        spawn_position_y += direction.get_next_in_lane_posY();
         return cars.get(cars.size()-1).getShape();
     }
 

@@ -2,49 +2,83 @@ package com.example;
 
 public enum Direction {
 
-    TOP(0, -Car.CAR_HEIGHT-Car.CAR_GAP,180, -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2, -1, 0 ),
-    BOTTOM(0,Car.CAR_HEIGHT+ Car.CAR_GAP,0, Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP, 1, 0),
-    RIGHT(Car.CAR_HEIGHT+Car.CAR_GAP, 0,-90, 0, 0, 0, -1),
-    LEFT(-Car.CAR_HEIGHT- Car.CAR_GAP, 0, 90, 0,0, 0, 1);
+    TOP(
+            0, -Car.CAR_HEIGHT-Car.CAR_GAP,
+            180,
+            -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2,
+            -1, 0,
+            1, -1
+    ),
+    BOTTOM(
+            0,Car.CAR_HEIGHT+ Car.CAR_GAP,
+            0,
+            Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP,
+            1, 0,
+            1, -1
+    ),
+    RIGHT(
+            Car.CAR_HEIGHT+Car.CAR_GAP, 0,
+            -90,
+            0, 0,
+            0, -1,
+            -1, 1
 
-    private final double lane_pivot_x;
-    private final double lane_pivot_y;
+    ),
+    LEFT(
+            -Car.CAR_HEIGHT- Car.CAR_GAP, 0,
+            90,
+            0,0,
+            0, 1,
+            1, 1
+    );
+
+    private final double next_in_lane_x;
+    private final double next_in_lane_y;
     private final double lane_switch_x;
     private final double lane_switch_y;
     private final double rotation;
-    private final double x_offset;
-    private final double y_offset;
+    private final double rotation_pivot_x;
+    private final double rotation_pivot_y;
+    private final double trans_x;
+    private final double trans_y;
 
 
-
-    Direction(double x, double y, double rotation, double x_offset, double y_offset, double lane_switch_x, double lane_switch_y){
-        lane_pivot_x = x;
-        lane_pivot_y = y;
+    Direction(
+            double next_in_lane_x, double next_in_lane_y,
+            double rotation,
+            double x_offset, double y_offset,
+            double lane_switch_x, double lane_switch_y,
+            double trans_x, double trans_y
+    ){
+        this.next_in_lane_x = next_in_lane_x;
+        this.next_in_lane_y = next_in_lane_y;
         this.rotation = rotation;
-        this.x_offset = x_offset;
-        this.y_offset = y_offset;
+        this.rotation_pivot_x = x_offset;
+        this.rotation_pivot_y = y_offset;
         this.lane_switch_x = lane_switch_x;
         this.lane_switch_y = lane_switch_y;
+        this.trans_x = trans_x;
+        this.trans_y = trans_y;
     }
 
-    public double getLane_pivot_x() {
-        return lane_pivot_x;
+    public double get_next_in_lane_posX() {
+        return next_in_lane_x;
     }
 
-    public double getLane_pivot_y() {
-        return lane_pivot_y;
+    public double get_next_in_lane_posY() {
+        return next_in_lane_y;
     }
 
     public double getRotation() {
         return rotation;
     }
 
-    public double getX_offset() {
-        return x_offset;
+    public double getRotation_pivot_x() {
+        return rotation_pivot_x;
     }
 
-    public double getY_offset() {
-        return y_offset;
+    public double getRotation_pivot_y() {
+        return rotation_pivot_y;
     }
 
     public double getLane_switch_x() {
@@ -54,6 +88,17 @@ public enum Direction {
     public double getLane_switch_y() {
         return lane_switch_y;
     }
+
+
+
+    public double getTrans_x() {
+        return trans_x;
+    }
+
+    public double getTrans_y() {
+        return trans_y;
+    }
+
 
 }
 

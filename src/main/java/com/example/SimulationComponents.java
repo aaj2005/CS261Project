@@ -84,7 +84,7 @@ public class SimulationComponents {
                 getCornerDims("tl"), getCornerDims("tr"), Car.VER_DIR, false, Direction.TOP
         );
         junction_arms_in[0].set_start(
-                sim_w-getCornerDims("tr")[0]-lanes_arm1*Car.CAR_WIDTH - (Lane.lane_w-Car.CAR_WIDTH)/2,
+                sim_w-getCornerDims("tr")[0]-Car.CAR_WIDTH- (Lane.lane_w-Car.CAR_WIDTH)/2,
                 Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
         );
 
@@ -113,25 +113,30 @@ public class SimulationComponents {
         );
 
         carsToAdd = new Rectangle[]{
+
+                junction_arms_in[0].spawn_car_in_lane(4),
+                junction_arms_in[0].spawn_car_in_lane(3),
+                junction_arms_in[0].spawn_car_in_lane(2),
+                junction_arms_in[0].spawn_car_in_lane(1),
                 junction_arms_in[0].spawn_car_in_lane(0),
-//                junction_arms_in[1].spawn_car_in_lane(4),
-//                junction_arms_in[1].spawn_car_in_lane(3),
-//                junction_arms_in[1].spawn_car_in_lane(2),
-//                junction_arms_in[1].spawn_car_in_lane(1),
-                junction_arms_in[1].spawn_car_in_lane(0),
+
+
+
                 junction_arms_in[2].spawn_car_in_lane(0),
                 junction_arms_in[3].spawn_car_in_lane(0),
                 junction_arms_in[0].spawn_car_in_lane(0),
                 junction_arms_in[1].spawn_car_in_lane(0),
                 junction_arms_in[2].spawn_car_in_lane(0),
                 junction_arms_in[3].spawn_car_in_lane(0),
-                junction_arms_in[0].spawn_car_in_lane(0),
+                junction_arms_in[0].spawn_car_in_lane(1),
         };
 
         corners[0].setFill(Color.BLACK);
         corners[1].setFill(Color.BLUE);
         corners[2].setFill(Color.RED);
         corners[3].setFill(Color.PINK);
+
+
 
 
     }
@@ -144,6 +149,19 @@ public class SimulationComponents {
     }
     public Rectangle[] getLane_separation() {
         return lane_separation;
+    }
+
+
+    // make first car in specific lane turn right
+    public void turn_right(int junc_arm, int lane_number){
+        Animations animations = new Animations(center_x, center_y);
+        Car car = junction_arms_in[junc_arm].get_car_from_lane(lane_number);
+        animations.turn_right(
+                car,
+                junction_arms_in[junc_arm].getDirection(),
+                car.getShape().getX()+ (Car.CAR_WIDTH/2),
+                car.getShape().getY()+ (Car.CAR_HEIGHT/2)
+        );
     }
 
     private int cornerTranslate(String s){
@@ -182,15 +200,6 @@ public class SimulationComponents {
 
     }
 
-    public double[] to_00_coordinate(double x, double y){
 
-        return new double[]{center_x-x, center_y - y};
-
-    }
-    public double[] from_00_coordinates(double x, double y){
-
-        return new double[]{center_x+x, center_y+y};
-
-    }
 
 }
