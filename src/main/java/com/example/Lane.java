@@ -14,10 +14,11 @@ public class Lane {
     private boolean is_bus;
     private boolean is_left;
     private boolean has_pedestrian;
-
+    public static final double lane_w = 30;
     private double spawn_position_x;
     private double spawn_position_y;
     private int lane_number;
+
     public Lane(int lane_capacity,boolean has_pedestrian, double start_x, double start_y, Direction direction, int lane_number) {
         cars = new ArrayList<>();
         this.direction = direction;
@@ -29,11 +30,11 @@ public class Lane {
     }
 
     public void setSpawn_position_x(double spawn_position_x) {
-        this.spawn_position_x = spawn_position_x + direction.getLane_switch_x() * lane_number;
+        this.spawn_position_x = spawn_position_x + direction.getLane_switch_x() * (lane_w * lane_number) ;
     }
 
     public void setSpawn_position_y(double spawn_position_y) {
-        this.spawn_position_y = spawn_position_y + direction.getLane_switch_y() * lane_number;
+        this.spawn_position_y = spawn_position_y + direction.getLane_switch_y() * (lane_w * lane_number);
     }
 
     public Rectangle spawn_car(){
@@ -42,6 +43,13 @@ public class Lane {
         spawn_position_x += direction.getLane_pivot_x();
         spawn_position_y += direction.getLane_pivot_y();
         return cars.get(cars.size()-1).getShape();
+    }
+
+    public Car get_first_car(){
+        if (!cars.isEmpty()){
+            return cars.get(0);
+        }
+        throw new IndexOutOfBoundsException("No car in specified lane");
     }
 
 }

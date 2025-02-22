@@ -2,11 +2,10 @@ package com.example;
 
 public enum Direction {
 
-    TOP(0, -Car.CAR_HEIGHT-Car.CAR_GAP,180, -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2, -Car.CAR_WIDTH, 0 ),
-    BOTTOM(0,Car.CAR_HEIGHT+ Car.CAR_GAP,0, Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP, Car.CAR_WIDTH, 0),
-    RIGHT(Car.CAR_HEIGHT+Car.CAR_GAP, 0,-90, 0, 0, 0, -Car.CAR_WIDTH),
-    LEFT(-Car.CAR_HEIGHT- Car.CAR_GAP, 0, 90, 0,0, 0, Car.CAR_WIDTH)
-    ;
+    TOP(0, -Car.CAR_HEIGHT-Car.CAR_GAP,180, -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2, -1, 0 ),
+    BOTTOM(0,Car.CAR_HEIGHT+ Car.CAR_GAP,0, Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP, 1, 0),
+    RIGHT(Car.CAR_HEIGHT+Car.CAR_GAP, 0,-90, 0, 0, 0, -1),
+    LEFT(-Car.CAR_HEIGHT- Car.CAR_GAP, 0, 90, 0,0, 0, 1);
 
     private final double lane_pivot_x;
     private final double lane_pivot_y;

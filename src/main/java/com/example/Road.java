@@ -49,4 +49,8 @@ public class Road extends JunctionElement{
 
     }
 
+    public Car get_car_from_lane(int lane_number){
+        return lanes.get(lane_number).get_first_car();
+    }
+
 }
