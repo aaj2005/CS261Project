@@ -5,6 +5,8 @@ import javafx.animation.PathTransition;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.QuadCurveTo;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class Animations {
@@ -21,11 +23,11 @@ public class Animations {
     private double[] to_00_coordinate(double x, double y, Direction direction){
         switch(direction){
             case TOP:
-                return new double[]{center_x-x, y-center_y};
             case BOTTOM:
-                return new double[]{center_x-x, y-center_y-Car.CAR_WIDTH};
-            case RIGHT: return new double[]{ x-center_x, center_y-y};
-            case LEFT: return new double[]{x-center_x, y-center_y};
+                return new double[]{center_x-x, y -center_y};
+            case RIGHT:
+            case LEFT:
+                return new double[]{ x-center_x, center_y-y};
             default: return new double[]{0,0};
         }
 
@@ -38,13 +40,11 @@ public class Animations {
         switch(direction){
 
             case TOP:
-                return new double[]{x +center_x+Car.CAR_HEIGHT/2, y+center_y};
             case BOTTOM:
                 return new double[]{x +center_x, y+center_y};
             case RIGHT:
-                return new double[]{center_x-x, center_y-y-Car.CAR_HEIGHT};
             case LEFT:
-                return new double[]{center_x-x, center_y-y+2*Car.CAR_HEIGHT};
+                return new double[]{center_x-x, center_y-y};
             default: return new double[]{0,0};
         }
 
@@ -59,8 +59,8 @@ public class Animations {
         double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
         // perform reflections/translations
-        double end_x_pre_transition = startY_trans * direction.getTrans_x() + Car.CAR_WIDTH * (direction.getLane_switch_x());
-        double end_y_pre_transition = startX_trans * direction.getTrans_y() + Car.CAR_WIDTH * (direction.getLane_switch_y());
+        double end_x_pre_transition = startY_trans * direction.getRight_trans_x() + direction.getRight_turn_offset_x();
+        double end_y_pre_transition = startX_trans * direction.getRight_trans_y() + direction.getRight_turn_offset_y();
 
         // convert back to default coordinate system
         double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0];
@@ -95,8 +95,7 @@ public class Animations {
         quad.setControlX(pivot_point_x);
         quad.setControlY(pivot_point_y);
 
-        double totalDuration = 1.5; // animation seconds
-
+        double totalDuration = 2.5; // animation seconds
 
         Path path = new Path();
         path.getElements().add(moveTo);
@@ -130,12 +129,16 @@ public class Animations {
                 ) * 180 / Math.PI;
                 switch (direction){
                     case TOP:
+                        newAngle = slope_angle -90;
+                        break;
                     case BOTTOM:
                         newAngle = slope_angle +90;
                         break;
                     case RIGHT:
-                    case LEFT:
                         newAngle = Math.abs(slope_angle);
+                        break;
+                    case LEFT:
+                        newAngle = -180+Math.abs(slope_angle);
                         break;
                 }
                 car.getShape().setRotate(newAngle);
@@ -149,8 +152,107 @@ public class Animations {
         pathTransition.play();
         timer.start();
 
+    }
 
+    public void turn_left(Car car, Direction direction, double carX, double carY){
+        double startX_trans = to_00_coordinate(carX, carY,direction)[0];
+        double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
+        // perform reflections/translations
+        double end_x_pre_transition = startY_trans * direction.getLeft_trans_x()+direction.getLeft_turn_offset_x();
+        double end_y_pre_transition = startX_trans * direction.getLeft_trans_y()+direction.getLeft_turn_offset_y();
+
+        // convert back to default coordinate system
+        double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0];
+        double endY = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[1];
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(carX);
+        moveTo.setY(carY);
+        double pivot_point_x;
+        double pivot_point_y;
+
+        switch (direction){
+            case TOP:
+            case BOTTOM:
+                pivot_point_x = carX;
+                pivot_point_y = endY;
+                break;
+            case RIGHT:
+            case LEFT:
+                pivot_point_x = endX;
+                pivot_point_y = carY;
+                break;
+            default:
+                pivot_point_x = 0;
+                pivot_point_y = 0;
+        }
+
+        // Quadratic Bezier Curve
+        QuadCurveTo quad = new QuadCurveTo();
+        quad.setX(endX);
+        quad.setY(endY);
+        quad.setControlX(pivot_point_x);
+        quad.setControlY(pivot_point_y);
+
+        double totalDuration = 3.5; // animation seconds
+
+//        car.getShape().getTransforms().clear();
+//        car.getShape().setRotate(90);
+        Path path = new Path();
+        path.getElements().add(moveTo);
+        path.getElements().add (quad);
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(totalDuration*1000));
+        pathTransition.setNode(car.getShape());
+        pathTransition.setPath(path);
+
+        AnimationTimer timer = new AnimationTimer() {
+            double startTime = 0;
+            @Override
+            public void handle(long now) {
+                double elapsedTime = (now - startTime);
+
+                if (startTime == 0.0){
+                    startTime = elapsedTime;
+                    elapsedTime = (now - startTime);
+                }
+
+                if (elapsedTime/1_000_000_000.0 >= totalDuration) {
+                    startTime = 0;
+                    elapsedTime = totalDuration* 1_000_000_000.0 ; // Clamp at total_duration
+                }
+
+                double progress = (elapsedTime/1_000_000_000.0) / totalDuration; // Normalize [0,1]
+                double newAngle=0;
+                double slope_angle = Math.atan(
+                        (-2 * (1 - progress) * carY + 2 * pivot_point_y * (-2 * progress + 1) + 2 * progress * endY)
+                                / (-2 * (1 - progress) * carX + 2 * pivot_point_x * (-2 * progress + 1) + 2 * progress * endX)
+                ) * 180 / Math.PI;
+                switch (direction){
+                    case TOP:
+                        newAngle = 180-(-slope_angle+90);
+                        break;
+                    case BOTTOM:
+                        newAngle = (slope_angle-90);
+                        break;
+                    case RIGHT:
+                        newAngle = -Math.abs(slope_angle);
+                        break;
+                    case LEFT:
+                        newAngle = 180-Math.abs(slope_angle);
+                        break;
+                }
+
+                car.getShape().setRotate(newAngle);
+
+                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
+                if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
+                    stop();
+                }
+            }
+        };
+        pathTransition.play();
+        timer.start();
     }
 
 }

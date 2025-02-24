@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * JavaFX App
@@ -39,12 +40,8 @@ public class App extends Application {
         }
         root.getChildren().addAll(simComponent.carsToAdd);
 
-        simComponent.turn_right(0, 1);
-        simComponent.turn_right(0, 2);
-        simComponent.turn_right(0, 3);
-        simComponent.turn_right(0, 0);
-        simComponent.turn_right(0, 4);
-//        simComponent.turn_right(2, 0);
+        simComponent.turn_left(1, 0);
+//        simComponent.turn_left(3, 1);
 
 
 
@@ -54,6 +51,7 @@ public class App extends Application {
                 new KeyFrame(Duration.millis(33), e -> animation(root, simComponent))
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
+
 //        timeline.play();
 
         Rectangle car1 = simComponent.get_first_car("right",1).getShape();

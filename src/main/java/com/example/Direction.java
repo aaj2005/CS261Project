@@ -7,29 +7,49 @@ public enum Direction {
             180,
             -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2,
             -1, 0,
-            1, -1
+            1, -1,
+            -1, 1,
+            0,0,
+            0,Car.CAR_HEIGHT,
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2
     ),
     BOTTOM(
             0,Car.CAR_HEIGHT+ Car.CAR_GAP,
             0,
             Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP,
             1, 0,
-            1, -1
+            1, -1,
+            -1,1,
+            0,0,
+            0,Car.CAR_HEIGHT,
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2
     ),
     RIGHT(
             Car.CAR_HEIGHT+Car.CAR_GAP, 0,
-            -90,
+            0,
             0, 0,
             0, -1,
-            -1, 1
+            -1, 1,
+            1,-1,
+            0,0,
+            0,0,
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2
 
     ),
     LEFT(
             -Car.CAR_HEIGHT- Car.CAR_GAP, 0,
-            90,
+            180,
             0,0,
             0, 1,
-            1, 1
+            -1, 1,
+            1,-1,
+            0,0,
+            0,0,
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2
     );
 
     private final double next_in_lane_x;
@@ -39,8 +59,19 @@ public enum Direction {
     private final double rotation;
     private final double rotation_pivot_x;
     private final double rotation_pivot_y;
-    private final double trans_x;
-    private final double trans_y;
+    private final double right_trans_x;
+    private final double right_trans_y;
+    private final double left_trans_x;
+    private final double left_trans_y;
+    private final double right_turn_offset_x;
+    private final double right_turn_offset_y;
+    private final double left_turn_offset_x;
+    private final double left_turn_offset_y;
+    private final double right_turn_pos_x;
+    private final double right_turn_pos_y;
+    private final double left_turn_pos_x;
+    private final double left_turn_pos_y;
+
 
 
     Direction(
@@ -48,7 +79,12 @@ public enum Direction {
             double rotation,
             double x_offset, double y_offset,
             double lane_switch_x, double lane_switch_y,
-            double trans_x, double trans_y
+            double right_trans_x, double right_trans_y,
+            double left_trans_x, double left_trans_y,
+            double right_turn_offset_x, double right_turn_offset_y,
+            double left_turn_offset_x, double left_turn_offset_y,
+            double right_turn_pos_x, double right_turn_pos_y,
+            double left_turn_pos_x, double left_turn_pos_y
     ){
         this.next_in_lane_x = next_in_lane_x;
         this.next_in_lane_y = next_in_lane_y;
@@ -57,8 +93,18 @@ public enum Direction {
         this.rotation_pivot_y = y_offset;
         this.lane_switch_x = lane_switch_x;
         this.lane_switch_y = lane_switch_y;
-        this.trans_x = trans_x;
-        this.trans_y = trans_y;
+        this.right_trans_x = right_trans_x;
+        this.right_trans_y = right_trans_y;
+        this.left_trans_x = left_trans_x;
+        this.left_trans_y = left_trans_y;
+        this.right_turn_offset_x = right_turn_offset_x;
+        this.right_turn_offset_y = right_turn_offset_y;
+        this.left_turn_offset_x = left_turn_offset_x;
+        this.left_turn_offset_y = left_turn_offset_y;
+        this.right_turn_pos_x = right_turn_pos_x;
+        this.right_turn_pos_y = right_turn_pos_y;
+        this.left_turn_pos_x = left_turn_pos_x;
+        this.left_turn_pos_y = left_turn_pos_y;
     }
 
     public double get_next_in_lane_posX() {
@@ -91,14 +137,52 @@ public enum Direction {
 
 
 
-    public double getTrans_x() {
-        return trans_x;
+    public double getRight_trans_x() {
+        return right_trans_x;
     }
 
-    public double getTrans_y() {
-        return trans_y;
+    public double getRight_trans_y() {
+        return right_trans_y;
     }
 
+    public double getLeft_trans_x() {
+        return left_trans_x;
+    }
 
+    public double getLeft_trans_y() {
+        return left_trans_y;
+    }
+
+    public double getRight_turn_offset_x() {
+        return right_turn_offset_x;
+    }
+
+    public double getRight_turn_offset_y() {
+        return right_turn_offset_y;
+    }
+
+    public double getLeft_turn_offset_x() {
+        return left_turn_offset_x;
+    }
+
+    public double getLeft_turn_offset_y() {
+        return left_turn_offset_y;
+    }
+
+    public double getLeft_turn_pos_x() {
+        return left_turn_pos_x;
+    }
+
+    public double getLeft_turn_pos_y() {
+        return left_turn_pos_y;
+    }
+
+    public double getRight_turn_pos_x() {
+        return right_turn_pos_x;
+    }
+
+    public double getRight_turn_pos_y() {
+        return right_turn_pos_y;
+    }
 }
 

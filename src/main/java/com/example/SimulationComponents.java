@@ -93,9 +93,8 @@ public class SimulationComponents {
         );
         junction_arms_in[1].set_start(
                 sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
-                sim_h-getCornerDims("br")[1] - (Lane.lane_w-Car.CAR_WIDTH)/2
+                sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH - Car.CAR_GAP
         );
-
 
         junction_arms_in[2] = new Road(lanes_arm3, getCornerDims("br"), getCornerDims("bl"), Car.VER_DIR, false, Direction.BOTTOM
         );
@@ -108,7 +107,7 @@ public class SimulationComponents {
         junction_arms_in[3] = new Road(lanes_arm4, getCornerDims("bl"), getCornerDims("tl"), Car.HOR_DIR,false, Direction.LEFT
         );
         junction_arms_in[3].set_start(
-                getCornerDims("tl")[0],
+                getCornerDims("tl")[0]- Car.CAR_HEIGHT,
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
@@ -126,12 +125,14 @@ public class SimulationComponents {
                 junction_arms_in[3].spawn_car_in_lane(0),
                 junction_arms_in[0].spawn_car_in_lane(0),
                 junction_arms_in[1].spawn_car_in_lane(0),
+//                junction_arms_in[1].spawn_car_in_lane(1),
                 junction_arms_in[2].spawn_car_in_lane(0),
                 junction_arms_in[3].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(1),
                 junction_arms_in[0].spawn_car_in_lane(1),
         };
 
-        corners[0].setFill(Color.BLACK);
+        corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.BLUE);
         corners[2].setFill(Color.RED);
         corners[3].setFill(Color.PINK);
@@ -159,10 +160,23 @@ public class SimulationComponents {
         animations.turn_right(
                 car,
                 junction_arms_in[junc_arm].getDirection(),
-                car.getShape().getX()+ (Car.CAR_WIDTH/2),
-                car.getShape().getY()+ (Car.CAR_HEIGHT/2)
+                car.getShape().getX()+ junction_arms_in[junc_arm].getDirection().getRight_turn_pos_x(),
+                car.getShape().getY()+ junction_arms_in[junc_arm].getDirection().getRight_turn_pos_y()
         );
     }
+
+    public void turn_left(int junc_arm, int lane_number){
+        Animations animations = new Animations(center_x, center_y);
+        Car car = junction_arms_in[junc_arm].get_car_from_lane(lane_number);
+        animations.turn_left(
+                car,
+                junction_arms_in[junc_arm].getDirection(),
+                car.getShape().getX() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_x(),
+                car.getShape().getY() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_y()
+        );
+    }
+
+
 
     private int cornerTranslate(String s){
         switch (s){

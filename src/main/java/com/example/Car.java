@@ -7,7 +7,8 @@ import javafx.scene.transform.Rotate;
 
 public class Car {
 
-    public static ImagePattern car_texture = new ImagePattern(new Image("car2dtopview.png"));
+    public static final ImagePattern car_texture = new ImagePattern(new Image("car2dtopviewver.png"));
+    public static final ImagePattern car_texture_hor = new ImagePattern(new Image("car2dtopviewhor.png"));
     private Rectangle shape;
     private double speed;
     private Rotate rotation;
@@ -19,16 +20,22 @@ public class Car {
     private String state;
 
     public Car(Direction direction, double pos_x, double pos_y){
-        shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
-        shape.setFill(car_texture);
+        if (direction == Direction.TOP || direction == Direction.BOTTOM){
+            shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
+            shape.setFill(car_texture);
+        }else{
+            shape = new Rectangle(CAR_HEIGHT, CAR_WIDTH);
+            shape.setFill(car_texture_hor);
+        }
         shape.setX(pos_x);
         shape.setY(pos_y);
         Rotate rotate = new Rotate();
-        rotate.setPivotX(pos_x - direction.getRotation_pivot_x());
-        rotate.setPivotY(pos_y - direction.getRotation_pivot_y());
-        rotate.setAngle(direction.getRotation());
+//        rotate.setPivotX(pos_x - direction.getRotation_pivot_x());
+//        rotate.setPivotY(pos_y - direction.getRotation_pivot_y());
+//        rotate.setAngle(direction.getRotation());
         rotation = rotate;
-        shape.getTransforms().add(rotate);
+        shape.setRotate(direction.getRotation());
+//        shape.getTransforms().add(rotate);
     }
 
     public Rectangle getShape() {
