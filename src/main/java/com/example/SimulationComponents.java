@@ -27,11 +27,13 @@ public class SimulationComponents {
 
     private static final double SCALE_FACTOR = 2;
 
+    private final int max_out;
+
     // junction arm: top - right - bottom - left
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4) {
 
         // number of lanes exiting junction for each arm
-        int max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
+        max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
 
         corners = new Rectangle[]{
                 new Rectangle( // top left
@@ -113,25 +115,26 @@ public class SimulationComponents {
 
         carsToAdd = new Rectangle[]{
 
-                junction_arms_in[0].spawn_car_in_lane(4),
-                junction_arms_in[0].spawn_car_in_lane(3),
-                junction_arms_in[0].spawn_car_in_lane(2),
-                junction_arms_in[0].spawn_car_in_lane(1),
+//                junction_arms_in[0].spawn_car_in_lane(4),
+//                junction_arms_in[0].spawn_car_in_lane(3),
+//                junction_arms_in[0].spawn_car_in_lane(2),
+//                junction_arms_in[0].spawn_car_in_lane(1),
                 junction_arms_in[0].spawn_car_in_lane(0),
 
 
 
                 junction_arms_in[2].spawn_car_in_lane(0),
                 junction_arms_in[3].spawn_car_in_lane(0),
-                junction_arms_in[0].spawn_car_in_lane(0),
+//                junction_arms_in[0].spawn_car_in_lane(0),
                 junction_arms_in[1].spawn_car_in_lane(0),
 //                junction_arms_in[1].spawn_car_in_lane(1),
-                junction_arms_in[2].spawn_car_in_lane(0),
-                junction_arms_in[3].spawn_car_in_lane(0),
-                junction_arms_in[3].spawn_car_in_lane(1),
-                junction_arms_in[0].spawn_car_in_lane(1),
+//                junction_arms_in[2].spawn_car_in_lane(0),
+//                junction_arms_in[3].spawn_car_in_lane(0),
+//                junction_arms_in[3].spawn_car_in_lane(1),
+//                junction_arms_in[0].spawn_car_in_lane(1),
         };
-
+//        corners[2].setArcHeight(100);
+//        corners[2].setArcWidth(100);
         corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.BLUE);
         corners[2].setFill(Color.RED);
@@ -172,7 +175,8 @@ public class SimulationComponents {
                 car,
                 junction_arms_in[junc_arm].getDirection(),
                 car.getShape().getX() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_x(),
-                car.getShape().getY() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_y()
+                car.getShape().getY() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_y(),
+                junction_arms_in[junc_arm].get_lane_size(), max_out
         );
     }
 

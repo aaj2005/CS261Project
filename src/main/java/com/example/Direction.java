@@ -5,7 +5,6 @@ public enum Direction {
     TOP(
             0, -Car.CAR_HEIGHT-Car.CAR_GAP,
             180,
-            -Car.CAR_WIDTH/2, (-Car.CAR_HEIGHT - Car.CAR_GAP)/2,
             -1, 0,
             1, -1,
             -1, 1,
@@ -17,7 +16,6 @@ public enum Direction {
     BOTTOM(
             0,Car.CAR_HEIGHT+ Car.CAR_GAP,
             0,
-            Car.CAR_WIDTH, Car.CAR_HEIGHT + Car.CAR_GAP,
             1, 0,
             1, -1,
             -1,1,
@@ -29,7 +27,6 @@ public enum Direction {
     RIGHT(
             Car.CAR_HEIGHT+Car.CAR_GAP, 0,
             0,
-            0, 0,
             0, -1,
             -1, 1,
             1,-1,
@@ -37,12 +34,10 @@ public enum Direction {
             0,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2
-
     ),
     LEFT(
             -Car.CAR_HEIGHT- Car.CAR_GAP, 0,
             180,
-            0,0,
             0, 1,
             -1, 1,
             1,-1,
@@ -57,8 +52,6 @@ public enum Direction {
     private final double lane_switch_x;
     private final double lane_switch_y;
     private final double rotation;
-    private final double rotation_pivot_x;
-    private final double rotation_pivot_y;
     private final double right_trans_x;
     private final double right_trans_y;
     private final double left_trans_x;
@@ -77,7 +70,6 @@ public enum Direction {
     Direction(
             double next_in_lane_x, double next_in_lane_y,
             double rotation,
-            double x_offset, double y_offset,
             double lane_switch_x, double lane_switch_y,
             double right_trans_x, double right_trans_y,
             double left_trans_x, double left_trans_y,
@@ -89,8 +81,6 @@ public enum Direction {
         this.next_in_lane_x = next_in_lane_x;
         this.next_in_lane_y = next_in_lane_y;
         this.rotation = rotation;
-        this.rotation_pivot_x = x_offset;
-        this.rotation_pivot_y = y_offset;
         this.lane_switch_x = lane_switch_x;
         this.lane_switch_y = lane_switch_y;
         this.right_trans_x = right_trans_x;
@@ -117,14 +107,6 @@ public enum Direction {
 
     public double getRotation() {
         return rotation;
-    }
-
-    public double getRotation_pivot_x() {
-        return rotation_pivot_x;
-    }
-
-    public double getRotation_pivot_y() {
-        return rotation_pivot_y;
     }
 
     public double getLane_switch_x() {
@@ -184,5 +166,6 @@ public enum Direction {
     public double getRight_turn_pos_y() {
         return right_turn_pos_y;
     }
+
 }
 

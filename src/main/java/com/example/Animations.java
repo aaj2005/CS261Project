@@ -11,8 +11,8 @@ import javafx.util.Duration;
 
 public class Animations {
 
-    private double center_x;
-    private double center_y;
+    private final double center_x;
+    private final double center_y;
 
     public Animations(double center_x, double center_y) {
         this.center_x = center_x;
@@ -154,7 +154,7 @@ public class Animations {
 
     }
 
-    public void turn_left(Car car, Direction direction, double carX, double carY){
+    public void turn_left(Car car, Direction direction, double carX, double carY, int lane_number, int max_lane_out){
         double startX_trans = to_00_coordinate(carX, carY,direction)[0];
         double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
@@ -163,8 +163,23 @@ public class Animations {
         double end_y_pre_transition = startX_trans * direction.getLeft_trans_y()+direction.getLeft_turn_offset_y();
 
         // convert back to default coordinate system
-        double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0];
-        double endY = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[1];
+        double[] offset = {0,0};
+        switch(direction){
+            case TOP:
+                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out-2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.CAR_GAP);
+                break;
+            case BOTTOM:
+                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out+2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.CAR_GAP);
+                break;
+            case RIGHT:
+                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number+1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.CAR_GAP);
+                break;
+            case LEFT:
+                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number-1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.CAR_GAP);
+                break;
+        }
+        double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0] - offset[0];
+        double endY = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[1]- offset[1] ;
         MoveTo moveTo = new MoveTo();
         moveTo.setX(carX);
         moveTo.setY(carY);
@@ -196,8 +211,6 @@ public class Animations {
 
         double totalDuration = 3.5; // animation seconds
 
-//        car.getShape().getTransforms().clear();
-//        car.getShape().setRotate(90);
         Path path = new Path();
         path.getElements().add(moveTo);
         path.getElements().add (quad);

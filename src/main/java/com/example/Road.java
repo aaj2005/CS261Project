@@ -58,4 +58,8 @@ public class Road extends JunctionElement{
     public Direction getDirection() {
         return direction;
     }
+
+    public int get_lane_size(){
+        return lanes.size();
+    }
 }
