@@ -24,7 +24,6 @@ public class SimulationComponents {
     public static final double sim_w = 600;
     public static final double sim_h = 600;
 
-
     private static final double SCALE_FACTOR = 2;
 
     private final int max_out;
@@ -121,9 +120,8 @@ public class SimulationComponents {
 //                junction_arms_in[0].spawn_car_in_lane(1),
                 junction_arms_in[0].spawn_car_in_lane(0),
 
-
-
                 junction_arms_in[2].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(0),
                 junction_arms_in[3].spawn_car_in_lane(0),
 //                junction_arms_in[0].spawn_car_in_lane(0),
                 junction_arms_in[1].spawn_car_in_lane(0),

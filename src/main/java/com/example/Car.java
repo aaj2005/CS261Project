@@ -11,7 +11,6 @@ public class Car {
     public static final ImagePattern car_texture_hor = new ImagePattern(new Image("car2dtopviewhor.png"));
     private Rectangle shape;
     private double speed;
-    private Rotate rotation;
     public static final double CAR_WIDTH = 18;
     public static final double CAR_HEIGHT = 43.6;
     public static final double CAR_GAP = 4;
@@ -29,13 +28,7 @@ public class Car {
         }
         shape.setX(pos_x);
         shape.setY(pos_y);
-        Rotate rotate = new Rotate();
-//        rotate.setPivotX(pos_x - direction.getRotation_pivot_x());
-//        rotate.setPivotY(pos_y - direction.getRotation_pivot_y());
-//        rotate.setAngle(direction.getRotation());
-        rotation = rotate;
         shape.setRotate(direction.getRotation());
-//        shape.getTransforms().add(rotate);
     }
 
     public Rectangle getShape() {

@@ -3,9 +3,13 @@ package com.example;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
@@ -29,6 +33,7 @@ public class App extends Application {
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(4,1,1,1);
         AnchorPane root = new AnchorPane();
+        root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
         stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
         stage.show();
 
@@ -40,8 +45,8 @@ public class App extends Application {
         }
         root.getChildren().addAll(simComponent.carsToAdd);
 
-        simComponent.turn_left(3, 0);
-//        simComponent.turn_left(3, 1);
+//        simComponent.turn_left(3, 0);
+        simComponent.turn_right(3, 0);
 
 
 
