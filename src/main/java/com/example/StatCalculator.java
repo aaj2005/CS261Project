@@ -66,7 +66,7 @@ public class StatCalculator {
      * Calculates how may seconds it takes for the jam to deplete
      */
     private float getJamDepletionTime() {
-        return this.jam_length * (Car.max_speed - this.jam_lengthening_rate);
+        return this.jam_length * Car.max_speed;
     }
 
     /*
