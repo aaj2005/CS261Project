@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * JavaFX App
@@ -32,7 +34,26 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        // launch();
+        Car.length = 1;
+        Car.distance = 1;
+        Car.max_speed = 10;
+
+        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
+            new Road(3, 4000, 2),
+            new Road(3, 4000, 2),
+            new Road(3, 4000, 2),
+            new Road(3, 4000, 2),
+            new PedestrianCrossing(1, 10)
+        }));
+
+        StatCalculator sc = new StatCalculator(0);
+        try {
+            System.out.println(sc.run().toString());
+        } catch (Exception e) {
+
+        }
+        System.out.println("done");
     }
 
 }
