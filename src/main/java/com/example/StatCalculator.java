@@ -7,6 +7,7 @@ package com.example;
  * Filip write tests for Rayan's part
  * 
  * Should I put a link to my image or pseudocode somewhere to explain this code?
+ * Why is the max allowed flow for the parameters I gave less than 500? Seems low.
  */
 
 /*
@@ -184,7 +185,7 @@ public class StatCalculator {
      * @param rTarget
      */
     private int[] getTrafficLightCycle(int rNext, int rTarget) {
-        int len = getRemainder(rTarget-rNext-1, 4);
+        int len = Math.max(0, Math.abs(rNext-rTarget)-1);
         int[] cycle = new int[len];
         for (int i=1; i<=len; i++) {
             int num = getRemainder(rNext+i, 4);

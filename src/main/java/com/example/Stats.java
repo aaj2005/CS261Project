@@ -20,4 +20,8 @@ public class Stats {
              this.max_queue_length * this.weight_max_queue_length +
             this.average_wait_time * this.weight_average_wait_time;
     }
+
+    public String toString() {
+        return "Max wait time: " + max_wait_time + "\nMax queue length: " + max_queue_length + "\nAverage wait time: " + average_wait_time;
+    }
 }

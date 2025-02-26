@@ -40,10 +40,10 @@ public class App extends Application {
         Car.max_speed = 10;
 
         DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(3, 4000, 2),
-            new Road(3, 4000, 2),
-            new Road(3, 4000, 2),
-            new Road(3, 4000, 2),
+            new Road(3, 350, 2),
+            new Road(3, 50, 2),
+            new Road(3, 50, 2),
+            new Road(3, 50, 2),
             new PedestrianCrossing(1, 10)
         }));
 
@@ -51,7 +51,7 @@ public class App extends Application {
         try {
             System.out.println(sc.run().toString());
         } catch (Exception e) {
-
+            System.out.println(e.toString());
         }
         System.out.println("done");
     }
