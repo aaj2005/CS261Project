@@ -114,175 +114,175 @@
                                           <Region layoutX="39.0" layoutY="35.0" prefHeight="851.0" prefWidth="732.0" style="-fx-border-color: #000000;" />
                                           <Region layoutX="865.0" layoutY="659.0" prefHeight="227.0" prefWidth="604.0" style="-fx-border-color: #000000;" />
                                           <AnchorPane layoutX="865.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #bbbbbb;" />
-                                          <Label fx:id="configuration_label" layoutX="62.0" layoutY="60.0" styleClass="subtitle-label" text="CONFIGURATION">
+                                          <Label fx:id="configuration_label" layoutX="77.0" layoutY="60.0" styleClass="subtitle-label" text="CONFIGURATION">
                                              <font>
                                                 <Font name="Istok Web Bold" size="23.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="78.0" layoutY="110.0" styleClass="bold-label" text="NORTHBOUND TRAFFIC">
+                                          <Label layoutX="85.0" layoutY="110.0" styleClass="bold-label" text="NORTHBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="78.0" layoutY="135.0" styleClass="input-label" text="Number of Lanes">
+                                          <Label layoutX="85.0" layoutY="135.0" styleClass="input-label" text="Number of Lanes">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <ChoiceBox fx:id="nb_lanes" layoutX="237.0" layoutY="139.0" prefHeight="26.0" prefWidth="58.0" />
-                                          <CheckBox fx:id="n_buslane" layoutX="276.0" layoutY="171.0" mnemonicParsing="false" />
-                                          <Label layoutX="78.0" layoutY="165.0" styleClass="input-label" text="Bus Lane">
+                                          <ChoiceBox fx:id="nb_lanes" layoutX="243.0" layoutY="139.0" prefHeight="26.0" prefWidth="58.0" />
+                                          <CheckBox fx:id="n_buslane" layoutX="282.0" layoutY="171.0" mnemonicParsing="false" />
+                                          <Label layoutX="85.0" layoutY="165.0" styleClass="input-label" text="Bus Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="78.0" layoutY="194.0" styleClass="input-label" text="Left Turn Lane">
+                                          <Label layoutX="85.0" layoutY="194.0" styleClass="input-label" text="Left Turn Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <CheckBox fx:id="n_leftturn" layoutX="276.0" layoutY="201.0" mnemonicParsing="false" />
-                                          <Label layoutX="79.0" layoutY="221.0" styleClass="input-label" text="Exiting North">
+                                          <CheckBox fx:id="n_leftturn" layoutX="282.0" layoutY="201.0" mnemonicParsing="false" />
+                                          <Label layoutX="85.0" layoutY="221.0" styleClass="input-label" text="Exiting North">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="79.0" layoutY="251.0" styleClass="input-label" text="Exiting East">
+                                          <Label layoutX="85.0" layoutY="251.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="79.0" layoutY="280.0" styleClass="input-label" text="Exiting West">
+                                          <Label layoutX="85.0" layoutY="280.0" styleClass="input-label" text="Exiting West">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_nn" layoutX="211.0" layoutY="223.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ne" layoutX="211.0" layoutY="252.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_nw" layoutX="211.0" layoutY="282.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <Label layoutX="378.0" layoutY="108.0" styleClass="bold-label" text="EASTBOUND TRAFFIC">
+                                          <TextField fx:id="txt_nn" layoutX="217.0" layoutY="223.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_ne" layoutX="217.0" layoutY="252.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_nw" layoutX="217.0" layoutY="282.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <Label layoutX="384.0" layoutY="108.0" styleClass="bold-label" text="EASTBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="378.0" layoutY="133.0" styleClass="input-label" text="Number of Lanes">
+                                          <Label layoutX="384.0" layoutY="133.0" styleClass="input-label" text="Number of Lanes">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <ChoiceBox fx:id="eb_lanes" layoutX="537.0" layoutY="137.0" prefHeight="26.0" prefWidth="58.0" />
-                                          <CheckBox fx:id="e_buslane" layoutX="576.0" layoutY="169.0" mnemonicParsing="false" />
-                                          <Label layoutX="378.0" layoutY="163.0" styleClass="input-label" text="Bus Lane">
+                                          <ChoiceBox fx:id="eb_lanes" layoutX="543.0" layoutY="137.0" prefHeight="26.0" prefWidth="58.0" />
+                                          <CheckBox fx:id="e_buslane" layoutX="582.0" layoutY="169.0" mnemonicParsing="false" />
+                                          <Label layoutX="384.0" layoutY="163.0" styleClass="input-label" text="Bus Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="378.0" layoutY="192.0" styleClass="input-label" text="Left Turn Lane">
+                                          <Label layoutX="384.0" layoutY="192.0" styleClass="input-label" text="Left Turn Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <CheckBox fx:id="e_leftturn" layoutX="576.0" layoutY="199.0" mnemonicParsing="false" />
-                                          <Label layoutX="379.0" layoutY="219.0" styleClass="input-label" text="Exiting North">
+                                          <CheckBox fx:id="e_leftturn" layoutX="582.0" layoutY="199.0" mnemonicParsing="false" />
+                                          <Label layoutX="384.0" layoutY="219.0" styleClass="input-label" text="Exiting North">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="379.0" layoutY="249.0" styleClass="input-label" text="Exiting East">
+                                          <Label layoutX="384.0" layoutY="249.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="379.0" layoutY="278.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="384.0" layoutY="278.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_en" layoutX="511.0" layoutY="221.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ee" layoutX="511.0" layoutY="250.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_es" layoutX="511.0" layoutY="280.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <Label layoutX="87.0" layoutY="343.0" styleClass="bold-label" text="SOUTHBOUND TRAFFIC">
+                                          <TextField fx:id="txt_en" layoutX="517.0" layoutY="221.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_ee" layoutX="516.0" layoutY="250.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_es" layoutX="515.0" layoutY="280.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <Label layoutX="85.0" layoutY="343.0" styleClass="bold-label" text="SOUTHBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="87.0" layoutY="368.0" styleClass="input-label" text="Number of Lanes">
+                                          <Label layoutX="85.0" layoutY="368.0" styleClass="input-label" text="Number of Lanes">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <ChoiceBox fx:id="sb_lanes" layoutX="246.0" layoutY="372.0" prefHeight="26.0" prefWidth="58.0" />
-                                          <CheckBox fx:id="s_buslane" layoutX="285.0" layoutY="404.0" mnemonicParsing="false" />
-                                          <Label layoutX="87.0" layoutY="398.0" styleClass="input-label" text="Bus Lane">
+                                          <ChoiceBox fx:id="sb_lanes" layoutX="243.0" layoutY="372.0" prefHeight="26.0" prefWidth="58.0" />
+                                          <CheckBox fx:id="s_buslane" layoutX="283.0" layoutY="404.0" mnemonicParsing="false" />
+                                          <Label layoutX="85.0" layoutY="398.0" styleClass="input-label" text="Bus Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="87.0" layoutY="427.0" styleClass="input-label" text="Left Turn Lane">
+                                          <Label layoutX="85.0" layoutY="427.0" styleClass="input-label" text="Left Turn Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <CheckBox fx:id="s_leftturn" layoutX="285.0" layoutY="434.0" mnemonicParsing="false" />
-                                          <Label layoutX="88.0" layoutY="454.0" styleClass="input-label" text="Exiting East">
+                                          <CheckBox fx:id="s_leftturn" layoutX="283.0" layoutY="434.0" mnemonicParsing="false" />
+                                          <Label layoutX="85.0" layoutY="454.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="88.0" layoutY="484.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="85.0" layoutY="484.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="88.0" layoutY="513.0" styleClass="input-label" text="Exiting West">
+                                          <Label layoutX="85.0" layoutY="513.0" styleClass="input-label" text="Exiting West">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_se" layoutX="220.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ss" layoutX="220.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_sw" layoutX="220.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_se" layoutX="218.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_ss" layoutX="218.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_sw" layoutX="218.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
                                           <Label layoutX="384.0" layoutY="343.0" styleClass="bold-label" text="WESTBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="383.0" layoutY="368.0" styleClass="input-label" text="Number of Lanes">
+                                          <Label layoutX="384.0" layoutY="368.0" styleClass="input-label" text="Number of Lanes">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <ChoiceBox fx:id="wb_lanes" layoutX="542.0" layoutY="372.0" prefHeight="26.0" prefWidth="58.0" />
-                                          <CheckBox fx:id="w_buslane" layoutX="581.0" layoutY="404.0" mnemonicParsing="false" />
-                                          <Label layoutX="383.0" layoutY="398.0" styleClass="input-label" text="Bus Lane">
+                                          <ChoiceBox fx:id="wb_lanes" layoutX="543.0" layoutY="372.0" prefHeight="26.0" prefWidth="58.0" />
+                                          <CheckBox fx:id="w_buslane" layoutX="582.0" layoutY="404.0" mnemonicParsing="false" />
+                                          <Label layoutX="384.0" layoutY="398.0" styleClass="input-label" text="Bus Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="383.0" layoutY="427.0" styleClass="input-label" text="Left Turn Lane">
+                                          <Label layoutX="385.0" layoutY="427.0" styleClass="input-label" text="Left Turn Lane">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <CheckBox fx:id="w_leftturn" layoutX="581.0" layoutY="434.0" mnemonicParsing="false" />
-                                          <Label layoutX="384.0" layoutY="454.0" styleClass="input-label" text="Exiting North">
+                                          <CheckBox fx:id="w_leftturn" layoutX="582.0" layoutY="434.0" mnemonicParsing="false" />
+                                          <Label layoutX="385.0" layoutY="454.0" styleClass="input-label" text="Exiting North">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="384.0" layoutY="484.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="385.0" layoutY="484.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="384.0" layoutY="513.0" styleClass="input-label" text="Exiting West">
+                                          <Label layoutX="385.0" layoutY="513.0" styleClass="input-label" text="Exiting West">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_wn" layoutX="516.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ws" layoutX="516.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ww" layoutX="516.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_wn" layoutX="517.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_ws" layoutX="517.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_ww" layoutX="517.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
                                           <Button fx:id="run_button" layoutX="295.0" layoutY="781.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="202.0" styleClass="bold-button" text="RUN SIMULATION">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
@@ -293,24 +293,24 @@
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="87.0" layoutY="604.0" styleClass="input-label" text="Pedestrian Crossing">
+                                          <Label layoutX="85.0" layoutY="604.0" styleClass="input-label" text="Pedestrian Crossing">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="lbl_duration" disable="true" layoutX="87.0" layoutY="634.0" styleClass="input-label" text="Duration of Crossing">
+                                          <Label fx:id="lbl_duration" disable="true" layoutX="85.0" layoutY="634.0" styleClass="input-label" text="Duration of Crossing">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="lbl_requests" disable="true" layoutX="87.0" layoutY="663.0" styleClass="input-label" text="Requests per Hour">
+                                          <Label fx:id="lbl_requests" disable="true" layoutX="85.0" layoutY="663.0" styleClass="input-label" text="Requests per Hour">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="crossing_duration" disable="true" layoutX="268.0" layoutY="636.0" prefHeight="26.0" prefWidth="37.0" />
-                                          <CheckBox fx:id="pc_enabled" layoutX="285.0" layoutY="610.0" mnemonicParsing="false" />
-                                          <TextField fx:id="crossing_requests" disable="true" layoutX="268.0" layoutY="666.0" prefHeight="26.0" prefWidth="37.0" />
+                                          <TextField fx:id="crossing_duration" disable="true" layoutX="266.0" layoutY="636.0" prefHeight="26.0" prefWidth="37.0" />
+                                          <CheckBox fx:id="pc_enabled" layoutX="283.0" layoutY="610.0" mnemonicParsing="false" />
+                                          <TextField fx:id="crossing_requests" disable="true" layoutX="266.0" layoutY="666.0" prefHeight="26.0" prefWidth="37.0" />
                                           <Label layoutX="887.0" layoutY="679.0" styleClass="subtitle-label" text="RESULTS">
                                              <font>
                                                 <Font name="Istok Web Bold" size="23.0" />
@@ -382,7 +382,7 @@
                                  <top>
                                     <AnchorPane prefHeight="84.0" prefWidth="1921.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <Label layoutX="415.0" layoutY="16.0" styleClass="title-label" text="SIMULATION 1">
+                                          <Label layoutX="397.0" layoutY="37.0" styleClass="title-label" text="SIMULATION 1">
                                              <font>
                                                 <Font name="Istok Web Bold" size="31.0" />
                                              </font>
