@@ -3,6 +3,7 @@ package com.example;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -12,8 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.control.TextFormatter;
 
 public class PrimaryController {
 
@@ -30,19 +33,79 @@ public class PrimaryController {
     private Tab metricsTab;
 
     @FXML
-    private ChoiceBox<Integer> nb_lanes;
+    private Label configuration_label;
 
+    @FXML
+    private Button run_button;
+
+    // Northbound input parameters
+
+    @FXML
+    private ChoiceBox<Integer> nb_lanes;
+    @FXML
+    private CheckBox n_buslane;
+    @FXML
+    private CheckBox n_leftturn;
+    @FXML
+    private TextField txt_nn;
+    @FXML
+    private TextField txt_ne;
+    @FXML
+    private TextField txt_nw;
+
+    // Eastbound input parameters
     @FXML
     private ChoiceBox<Integer> eb_lanes;
+    @FXML
+    private CheckBox e_buslane;
+    @FXML
+    private CheckBox e_leftturn;
+    @FXML
+    private TextField txt_en;
+    @FXML
+    private TextField txt_ee;
+    @FXML
+    private TextField txt_es;
 
+    // Southbound input parameters
     @FXML
     private ChoiceBox<Integer> sb_lanes;
+    @FXML
+    private CheckBox s_buslane;
+    @FXML
+    private CheckBox s_leftturn;
+    @FXML
+    private TextField txt_se;
+    @FXML
+    private TextField txt_ss;
+    @FXML
+    private TextField txt_sw;
 
+    // Westbound input parameters
     @FXML
     private ChoiceBox<Integer> wb_lanes;
-
     @FXML
-    private Label configuration_label;
+    private CheckBox w_buslane;
+    @FXML
+    private CheckBox w_leftturn;
+    @FXML
+    private TextField txt_wn;
+    @FXML
+    private TextField txt_ws;
+    @FXML
+    private TextField txt_ww;
+
+    // Pedestrian crossing input parameters
+    @FXML
+    private CheckBox pc_enabled;
+    @FXML
+    private TextField crossing_duration;
+    @FXML
+    private TextField crossing_requests;
+    @FXML
+    private Label lbl_duration;
+    @FXML
+    private Label lbl_requests;
 
     @FXML
     public void initialize() {
@@ -56,6 +119,7 @@ public class PrimaryController {
         eb_lanes.getItems().addAll(1, 2, 3, 4, 5);
         wb_lanes.getItems().addAll(1, 2, 3, 4, 5);
 
+        restrictTextFieldsToNumbers();
         simList.getItems().add(newSimulationItem);
 
         simList.setCellFactory(param -> new ListCell<SimListItem>() {
@@ -130,6 +194,28 @@ public class PrimaryController {
                 loadSimulationData();
             }
         });
+
+        pc_enabled.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            boolean enabled = newVal;
+            lbl_duration.setDisable(!enabled);
+            lbl_requests.setDisable(!enabled);
+            crossing_duration.setDisable(!enabled);
+            crossing_requests.setDisable(!enabled);
+        });
+
+        run_button.setOnAction(event -> {
+            run_button.setDisable(true);
+
+            // Get all parameter values - maybe check if they are empty?
+            // if (hasInvalidInput()) {
+            // System.out.println("Error: Please fill in all parameters.");
+            // run_button.setDisable(false); // Re-enable button if input is invalid
+            // return;
+            // }
+
+            // Call simulation function here
+        });
+
     }
 
     private void addNewSimulation() {
@@ -158,4 +244,26 @@ public class PrimaryController {
         graphContainer.setRightAnchor(graph, 0.0);
         graphContainer.getChildren().setAll(graph);
     }
+
+    public void restrictTextFieldsToNumbers() {
+        restrictToNumbers(txt_nn);
+        restrictToNumbers(txt_ne);
+        restrictToNumbers(txt_nw);
+        restrictToNumbers(txt_en);
+        restrictToNumbers(txt_ee);
+        restrictToNumbers(txt_es);
+        restrictToNumbers(txt_se);
+        restrictToNumbers(txt_ss);
+        restrictToNumbers(txt_sw);
+        restrictToNumbers(txt_wn);
+        restrictToNumbers(txt_ws);
+        restrictToNumbers(txt_ww);
+        restrictToNumbers(crossing_duration);
+        restrictToNumbers(crossing_requests);
+    }
+
+    public void restrictToNumbers(TextField textField) {
+        textField.setTextFormatter(new TextFormatter<>(change -> (change.getText().matches("[0-9]*")) ? change : null));
+    }
+
 }
