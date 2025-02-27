@@ -1,0 +1,41 @@
+/* @font-face {
+    font-family: "IstokWeb";
+    src: url("fonts/IstokWeb-Regular.ttf");
+}
+
+@font-face {
+    font-family: "IstokWeb-Bold";
+    src: url("fonts/IstokWeb-Bold.ttf");
+} */
+
+/* Typography hierarchy */
+
+.input-label {
+    -fx-font-family: "IstokWeb";
+    -fx-font-weight: normal;
+    -fx-font-size: 18px;
+}
+
+.bold-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.subtitle-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.title-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 32px;
+}
+
+.bold-button {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}

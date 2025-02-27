@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -17,7 +18,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        Font.loadFont(getClass().getResource("fonts/IstokWeb-Regular.ttf").toExternalForm(), 18);
+        Font.loadFont(getClass().getResource("fonts/IstokWeb-Bold.ttf").toExternalForm(), 18);
+
         scene = new Scene(loadFXML("proj"), 1920, 1200);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
