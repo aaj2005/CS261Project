@@ -25,8 +25,6 @@ public class App extends Application {
 
     private static Scene scene;
 
-
-
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Traffic Simulation");
@@ -45,24 +43,16 @@ public class App extends Application {
         }
         root.getChildren().addAll(simComponent.carsToAdd);
 
-//        simComponent.turn_left(3, 0);
-        simComponent.turn_right(3, 0);
-
-
-
-
+        // simComponent.turn_right(3, 0);
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.millis(33), e -> animation(root, simComponent))
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-//        timeline.play();
+        timeline.play();
 
-        Rectangle car1 = simComponent.get_first_car("right",1).getShape();
-
-
-//        PathTransition path_transition = new PathTransition();
+        // Rectangle car1 = simComponent.get_first_car("right",1).getShape();
 
     }
 
@@ -73,8 +63,9 @@ public class App extends Application {
     }
 
     private void animation(AnchorPane root, SimulationComponents simComponent){
-        Rectangle car1 = simComponent.get_first_car("right",1).getShape();
-        car1.setY(car1.getY()-1);
+        // Rectangle car1 = simComponent.get_first_car("right",1).getShape();
+        // car1.setY(car1.getY()-1);
+        simComponent.update(root);
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

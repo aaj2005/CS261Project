@@ -16,9 +16,12 @@ public class Car {
     public static final double CAR_GAP = 4;
     public static int HOR_DIR = 0;
     public static int VER_DIR = 1;
+    public static final double CAR_SPEED = 1;
     private String state;
 
-    public Car(Direction direction, double pos_x, double pos_y){
+    private Cardinal out_dir; // the direction in which the car will be leaving
+
+    public Car(Direction direction, double pos_x, double pos_y, Cardinal out_dir){
         if (direction == Direction.TOP || direction == Direction.BOTTOM){
             shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
             shape.setFill(car_texture);
@@ -29,6 +32,8 @@ public class Car {
         shape.setX(pos_x);
         shape.setY(pos_y);
         shape.setRotate(direction.getRotation());
+
+        this.out_dir = out_dir;
     }
 
     public Rectangle getShape() {

@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -27,6 +28,8 @@ public class SimulationComponents {
     private static final double SCALE_FACTOR = 2;
 
     private final int max_out;
+
+    private float time = 0;
 
     // junction arm: top - right - bottom - left
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4) {
@@ -81,35 +84,70 @@ public class SimulationComponents {
         junction_arms_in = new Road[4];
         junction_arms_out = new Road[4];
 
-        junction_arms_in[0] = new Road(lanes_arm1,
-                getCornerDims("tl"), getCornerDims("tr"), Car.VER_DIR, false, Direction.TOP
+        junction_arms_in[0] = new Road(
+            lanes_arm1,
+            getCornerDims("tl"),
+            getCornerDims("tr"),
+            Car.VER_DIR,
+            false,
+            Direction.TOP,
+            new float[] {0, 3600, 1800, 900}
         );
+
         junction_arms_in[0].set_start(
                 sim_w-getCornerDims("tr")[0]-Car.CAR_WIDTH- (Lane.lane_w-Car.CAR_WIDTH)/2,
-                Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
+                // Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
+                -Car.CAR_HEIGHT -Car.CAR_HEIGHT/2
         );
 
-
-        junction_arms_in[1] = new Road(lanes_arm2, getCornerDims("tr"), getCornerDims("br"), Car.HOR_DIR,false, Direction.RIGHT
+        junction_arms_in[1] = new Road(
+            lanes_arm2,
+            getCornerDims("tr"),
+            getCornerDims("br"),
+            Car.HOR_DIR,
+            false,
+            Direction.RIGHT,
+            new float[] {0, 0, 0, 0}
         );
+
         junction_arms_in[1].set_start(
-                sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
+                // sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
+                sim_w + Car.CAR_WIDTH/2,
                 sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH - Car.CAR_GAP
         );
 
-        junction_arms_in[2] = new Road(lanes_arm3, getCornerDims("br"), getCornerDims("bl"), Car.VER_DIR, false, Direction.BOTTOM
+        junction_arms_in[2] = new Road(
+            lanes_arm3,
+            getCornerDims("br"),
+            getCornerDims("bl"),
+            Car.VER_DIR,
+            false,
+            Direction.BOTTOM,
+            new float[] {0, 0, 0, 0}
         );
+        
         junction_arms_in[2].set_start(
                 getCornerDims("bl")[0]+ (Lane.lane_w-Car.CAR_WIDTH)/2,
-                sim_h-Math.min(getCornerDims("bl")[1],getCornerDims("br")[1])
+                // sim_h-Math.min(getCornerDims("bl")[1],getCornerDims("br")[1])
+                sim_h+Car.CAR_HEIGHT/2
         );
 
 
-        junction_arms_in[3] = new Road(lanes_arm4, getCornerDims("bl"), getCornerDims("tl"), Car.HOR_DIR,false, Direction.LEFT
+        junction_arms_in[3] = new Road(
+            lanes_arm4,
+            getCornerDims("bl"),
+            getCornerDims("tl"),
+            Car.HOR_DIR,
+            false,
+            Direction.LEFT,
+            new float[] {0, 0, 0, 0}
         );
+
         junction_arms_in[3].set_start(
-                getCornerDims("tl")[0]- Car.CAR_HEIGHT,
-                getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
+            // getCornerDims("tl")[0]- Car.CAR_HEIGHT,
+            // getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
+            -Car.CAR_WIDTH/2,
+            getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
         carsToAdd = new Rectangle[]{
@@ -118,13 +156,13 @@ public class SimulationComponents {
 //                junction_arms_in[0].spawn_car_in_lane(3),
 //                junction_arms_in[0].spawn_car_in_lane(2),
 //                junction_arms_in[0].spawn_car_in_lane(1),
-                junction_arms_in[0].spawn_car_in_lane(0),
+                // junction_arms_in[0].spawn_car_in_lane(0, Cardinal.S),
 
-                junction_arms_in[2].spawn_car_in_lane(0),
-                junction_arms_in[3].spawn_car_in_lane(0),
-                junction_arms_in[3].spawn_car_in_lane(0),
+                // junction_arms_in[2].spawn_car_in_lane(0, Cardinal.S),
+                // junction_arms_in[3].spawn_car_in_lane(0, Cardinal.S),
+                // junction_arms_in[3].spawn_car_in_lane(0, Cardinal.S),
 //                junction_arms_in[0].spawn_car_in_lane(0),
-                junction_arms_in[1].spawn_car_in_lane(0),
+                // junction_arms_in[1].spawn_car_in_lane(0, Cardinal.S),
 //                junction_arms_in[1].spawn_car_in_lane(1),
 //                junction_arms_in[2].spawn_car_in_lane(0),
 //                junction_arms_in[3].spawn_car_in_lane(0),
@@ -179,7 +217,9 @@ public class SimulationComponents {
     }
 
 
-
+    /*
+     * use enums u bozo
+     */
     private int cornerTranslate(String s){
         switch (s){
             case "tl": return 0; // top left
@@ -211,11 +251,36 @@ public class SimulationComponents {
 
 
     public void addCar(String junction_arm, int lane_number){
-
-        junction_arms_in[junction_arm_to_int(junction_arm)].spawn_car_in_lane(lane_number-1);
-
+        junction_arms_in[junction_arm_to_int(junction_arm)].spawn_car_in_lane(lane_number-1, Cardinal.N);
     }
 
+    /*
+     * runs each frame. Spawns and moves cars and the like
+     */
+    public void update(AnchorPane root) {
+        this.time += 0.033;
+        this.spawnCar(root);
+        this.moveCars();
+    }
 
+    private void spawnCar(AnchorPane root) {
+        for (Road road : this.junction_arms_in) {
+            Cardinal outRoad = road.dueSpawn(this.time); // check if a car is due to spawn
+            while (outRoad != null) {
+                // spawn the car
+                Rectangle carRect = road.spawnCar(outRoad);
+                root.getChildren().add(carRect);
+                
+                // continue to check if cars are due to spawn until
+                // all of the ones due to spawn have spawned
+                outRoad = road.dueSpawn(this.time);
+            }
+        }
+    }
 
+    private void moveCars() {
+        for (Road road : this.junction_arms_in) {
+            road.moveCars();
+        }
+    }
 }
