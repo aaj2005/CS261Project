@@ -59,7 +59,7 @@ public class Lane {
             Rectangle carRect = c.getShape();
             double x = carRect.getX(), y = carRect.getY();
 
-            System.out.println("car at x: " + x + ", y: " + y);
+            // System.out.println("car at x: " + x + ", y: " + y);
 
             // move the car
             double[] dirMod = this.getDirectionModifier(this.direction);

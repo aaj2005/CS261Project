@@ -208,7 +208,7 @@ public class Road extends JunctionElement{
             if (lane_nums.length == 1) {
                 return this.spawn_car_in_lane(lane_nums[0], dir);
             } else {
-                int best=0;
+                int best=lane_nums[0];
                 int i=0;
                 while (i+1 < lane_nums.length) {
                     int left_lane_index  = lane_nums[i+1];
@@ -308,6 +308,8 @@ public class Road extends JunctionElement{
         int best_lane = Math.round(proportion*this.lanes.size());
 
         ArrayList<Integer> lanes = new ArrayList<>();
+        lanes.add(best_lane);
+        
         int left_ptr=best_lane-1, right_ptr=best_lane+1;
         while(left_ptr >= 0 && right_ptr < this.lanes.size()) {
             lanes.add(left_ptr);
