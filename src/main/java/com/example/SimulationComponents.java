@@ -36,7 +36,6 @@ public class SimulationComponents {
     // junction arm: top - right - bottom - left
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4, boolean crossings_enabled){
 
-    public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4) {
         traffic_system = new TrafficLights(10,10,10,10,60,2);
         traffic_system.run_lights();
         // number of lanes exiting junction for each arm
