@@ -14,6 +14,7 @@ public class SimulationComponents {
     private double center_y;
 
     private Rectangle[] corners;
+    private ArrayList<Rectangle> crossings;
     private Rectangle[] lane_separation;
 
     private Road junction_arms_in[];
@@ -25,12 +26,16 @@ public class SimulationComponents {
     public static final double sim_h = 600;
 
     private static final double SCALE_FACTOR = 2;
+    private static final double PEDESTRIAN_SCALE_FACTOR = 15;
+    private static final int NUMBER_OF_LINES = 33;
 
     private final int max_out;
 
     private TrafficLights traffic_system;
 
     // junction arm: top - right - bottom - left
+    public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4, boolean crossings_enabled){
+
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4) {
         traffic_system = new TrafficLights(10,10,10,10,60,2);
         traffic_system.run_lights();
@@ -140,14 +145,56 @@ public class SimulationComponents {
         corners[1].setFill(Color.BLUE);
         corners[2].setFill(Color.RED);
         corners[3].setFill(Color.PINK);
-
+        if (crossings_enabled){
+                addCrossings(NUMBER_OF_LINES);
+        }
 
 
 
     }
+    public void addCrossings(int stripecount){
+        crossings = new ArrayList<>();
+        Rectangle [] verticalcrossings = new Rectangle[]{
+                new Rectangle(
+                        Math.min(getCornerPositions("tl")[0] + getCornerDims("tl")[0],getCornerPositions("bl")[0] + getCornerDims("bl")[0]) - (sim_w/PEDESTRIAN_SCALE_FACTOR), getCornerPositions("tl")[1]+ getCornerDims("tl")[1], (sim_w/PEDESTRIAN_SCALE_FACTOR), getCornerPositions("bl")[1] - getCornerPositions("tl")[1] - getCornerDims("tl")[1]
+                ),
+                new Rectangle(
+                        Math.max(getCornerPositions("tr")[0], getCornerPositions("br")[0]), getCornerPositions("tr")[1]+ getCornerDims("tr")[1], (sim_w/PEDESTRIAN_SCALE_FACTOR), getCornerPositions("br")[1] - getCornerPositions("tr")[1] - getCornerDims("tr")[1]
+                )
+        };
+        Rectangle [] horizontalcrossings = new Rectangle[]{
+                new Rectangle(
+                        getCornerPositions("tl")[0]+ getCornerDims("tl")[0], Math.min(getCornerPositions("tl")[1] + getCornerDims("tl")[1],getCornerPositions("tr")[1] + getCornerDims("tr")[1] )- (sim_w/PEDESTRIAN_SCALE_FACTOR), getCornerPositions("tr")[0] - getCornerPositions("tl")[0] - getCornerDims("tl")[0] , (sim_w/PEDESTRIAN_SCALE_FACTOR)
+                ),
+                new Rectangle(
+                        getCornerPositions("bl")[0] + getCornerDims("bl")[0], Math.max(getCornerPositions("bl")[1], getCornerPositions("br")[1]), getCornerPositions("br")[0] - getCornerPositions("bl")[0] - getCornerDims("bl")[0], (sim_w/PEDESTRIAN_SCALE_FACTOR)
+                )
+        };
+        for (Rectangle verticalrectangle: verticalcrossings){
+                for (int i = 1; i < stripecount; i+= 2){
+                        crossings.add(new Rectangle(verticalrectangle.getX(), verticalrectangle.getY() + i * verticalrectangle.getHeight()/stripecount, verticalrectangle.getWidth(), verticalrectangle.getHeight()/stripecount));
+                }
+        }
+        for (Rectangle horizontalrectangle: horizontalcrossings){
+                for (int i = 1; i < stripecount; i+= 2){
+                        crossings.add(new Rectangle(horizontalrectangle.getX() + i * horizontalrectangle.getWidth()/stripecount, horizontalrectangle.getY(), horizontalrectangle.getWidth()/stripecount, horizontalrectangle.getHeight()));
+                }
+        }
+
+        for (Rectangle crossing:crossings){
+                crossing.setFill(Color.WHITE);
+
+        }
+    }
     public Rectangle[] carsToAdd;
     public Rectangle[] getCorners() {
         return corners;
+    }
+    public ArrayList<Rectangle> getCrossings() {
+        if (crossings == null){
+            return new ArrayList<>();
+        }
+        return crossings;
     }
     public void setColour(int i, Color colour){
         corners[i].setFill(colour);
@@ -196,6 +243,10 @@ public class SimulationComponents {
     public double[] getCornerDims(String corner){
         Rectangle c = corners[cornerTranslate(corner)];
         return new double[]{c.getWidth(), c.getHeight()};
+    }
+    public double [] getCornerPositions(String corner){
+        Rectangle c = corners[cornerTranslate(corner)];
+        return new double[]{c.getX(), c.getY()};
     }
 
     public int junction_arm_to_int(String arm){
