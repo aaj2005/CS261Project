@@ -37,10 +37,63 @@ public class Lane {
         this.spawn_position_y = spawn_position_y + direction.getLane_switch_y() * (lane_w * lane_number);
     }
 
+    /*
+     * Spawns a car in the spawn zone (offscreen)
+     * @return {@code null} if another car is taking up a spawn zone, otherwise the gui component of the car
+     */
     public Rectangle spawn_car(Cardinal dir) {
         Car c = new Car(direction, spawn_position_x, spawn_position_y, dir);
-        cars.add(c);
-        return c.getShape();
+
+        // first check if a car is taking up the spawn zone
+        if (!this.existsCarInSpawnZone()) {
+
+            // if not, add a car
+            cars.add(c);
+            return c.getShape();
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * checks if there is a car in the spawn zone
+     * hence blocking other cars from spawning
+     */
+    public boolean existsCarInSpawnZone() {
+        for (Car car : this.cars) {
+            Rectangle carRect = car.getShape();
+            double x = carRect.getX(), y = carRect.getY();
+            // switch (this.direction) {
+            //     case TOP:
+            //         if (y < -Car.CAR_HEIGHT/2 + Car.CAR_GAP) { return true; }
+            //         break;
+            //     case RIGHT:
+            //         if (x > SimulationComponents.sim_w - Car.CAR_WIDTH/2 - Car.CAR_GAP) { return true; }
+            //         break;
+            //     case BOTTOM:
+            //         if (y > SimulationComponents.sim_h - Car.CAR_HEIGHT/2 - Car.CAR_GAP) { return true; }
+            //         break;
+            //     case LEFT:
+            //         if (x < -Car.CAR_WIDTH + Car.CAR_GAP) { return true; }
+            //         break;
+            // }
+
+            switch (this.direction) {
+                case TOP:
+                    if (y < -Car.CAR_HEIGHT/2 + Car.CAR_GAP) { return true; }
+                    break;
+                case RIGHT:
+                    if (x > SimulationComponents.sim_w - Car.CAR_HEIGHT/2 - Car.CAR_GAP) { return true; }
+                    break;
+                case BOTTOM:
+                    if (y > SimulationComponents.sim_h - Car.CAR_HEIGHT/2 - Car.CAR_GAP) { return true; }
+                    break;
+                case LEFT:
+                    if (x < Car.CAR_GAP) { return true; }
+                    break;
+            }
+        }
+        return false;
     }
 
     public Car get_first_car(){

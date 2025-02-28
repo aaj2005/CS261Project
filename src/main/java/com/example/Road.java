@@ -305,11 +305,11 @@ public class Road extends JunctionElement{
         // multiply this by the number of lanes and it gives you the rough lane that
         // straight-ahead cars prefer
         float proportion = (leftbound_rate + (total_spawn_rate-rightbound_rate-leftbound_rate)/2)/total_spawn_rate;
-        int best_lane = Math.round(proportion*this.lanes.size());
+        int best_lane = Math.max(Math.min(Math.round(proportion*this.lanes.size()), this.lanes.size()-1), 0);
 
         ArrayList<Integer> lanes = new ArrayList<>();
         lanes.add(best_lane);
-        
+
         int left_ptr=best_lane-1, right_ptr=best_lane+1;
         while(left_ptr >= 0 && right_ptr < this.lanes.size()) {
             lanes.add(left_ptr);

@@ -91,7 +91,7 @@ public class SimulationComponents {
             Car.VER_DIR,
             false,
             Direction.TOP,
-            new float[] {0, 3600, 1800, 900}
+            new float[] {0, 360000, 1800, 900}
         );
 
         junction_arms_in[0].set_start(
@@ -107,12 +107,12 @@ public class SimulationComponents {
             Car.HOR_DIR,
             false,
             Direction.RIGHT,
-            new float[] {0, 0, 0, 0}
+            new float[] {0, 0, 3000, 50000000}
         );
 
         junction_arms_in[1].set_start(
                 // sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
-                sim_w + Car.CAR_WIDTH/2,
+                sim_w + Car.CAR_HEIGHT/2,
                 sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH - Car.CAR_GAP
         );
 
@@ -123,7 +123,7 @@ public class SimulationComponents {
             Car.VER_DIR,
             false,
             Direction.BOTTOM,
-            new float[] {0, 0, 0, 0}
+            new float[] {90000, 0, 0, 0}
         );
         
         junction_arms_in[2].set_start(
@@ -140,13 +140,12 @@ public class SimulationComponents {
             Car.HOR_DIR,
             false,
             Direction.LEFT,
-            new float[] {0, 0, 0, 0}
+            new float[] {0, 10000, 0, 1800}
         );
 
         junction_arms_in[3].set_start(
             // getCornerDims("tl")[0]- Car.CAR_HEIGHT,
-            // getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
-            -Car.CAR_WIDTH/2,
+            -Car.CAR_HEIGHT,
             getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
@@ -269,7 +268,8 @@ public class SimulationComponents {
             while (outRoad != null) {
                 // spawn the car
                 Rectangle carRect = road.spawnCar(outRoad);
-                root.getChildren().add(carRect);
+                // the car may not be able to spawn due to traffic going offscreen. If this is the case, ignore this car :)
+                if (carRect != null) { root.getChildren().add(carRect); }
                 
                 // continue to check if cars are due to spawn until
                 // all of the ones due to spawn have spawned
