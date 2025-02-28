@@ -24,21 +24,24 @@ public class TrafficLights {
         this.time4 = time4;
         this.s_per_request = 1/(requests_ph/3600);
         this.crossing_dur = crossing_dur;
+        if (time1+time2+time3+time4 == 0){
+            light_status[0] = false;
+        }
 
     }
 
     private boolean[] light_status = {true,false,false,false};
 
-    private boolean pedestrian_crossing = false;
+    private boolean pedestrian_crossing = false; // run pedestrian crossings after current traffic lights finish
 
-    private double time_crossing = 0;
-    private double time_traffic = 0;
-    private double time_traffic1 = 0;
-    private double time_traffic2 = 0;
-    private double time_traffic3 = 0;
-    private double time_traffic4 = 0;
+    private double time_crossing = 0; // current time duration for crossing
+    private double time_traffic = 0;  // current time duration for traffic lights
+    private double time_traffic2 = 0; // current time duration for traffic light 1
+    private double time_traffic3 = 0; // current time duration for traffic light 2
+    private double time_traffic1 = 0; // current time duration for traffic light 3
+    private double time_traffic4 = 0; // current time duration for traffic light 4
 
-    private boolean run_crossing =false;
+    private boolean run_crossing =false; // disable all lights and allow pedestrians to move
 
 
     public void run_lights(){
@@ -73,12 +76,12 @@ public class TrafficLights {
 
         Timeline traffic_timeline = new Timeline(new KeyFrame(Duration.millis(100), event ->{
             time_traffic+=0.1;
-            if (time_traffic - Math.floor(time_traffic) >= 0.8){
-                System.out.println("Current Time: " + time_traffic);
-                System.out.println("Light 1: "+ light_status[0] + " Light 2: "+ light_status[1] + " Light 3: "+ light_status[2] + " Light 4: "+ light_status[3]);
-                System.out.println("Pedestrian Crossing:" + pedestrian_crossing);
-                System.out.println("----------------------------------------------------");
-            }
+//            if (time_traffic - Math.floor(time_traffic) >= 0.8){
+//                System.out.println("Current Time: " + time_traffic);
+//                System.out.println("Light 1: "+ light_status[0] + " Light 2: "+ light_status[1] + " Light 3: "+ light_status[2] + " Light 4: "+ light_status[3]);
+//                System.out.println("Pedestrian Crossing:" + pedestrian_crossing);
+//                System.out.println("----------------------------------------------------");
+//            }
 
             if (!run_crossing){
                 if (light_status[0]){
@@ -94,7 +97,7 @@ public class TrafficLights {
 
             if (pedestrian_crossing &&  (time_traffic1 >=time1 || time_traffic2 >=time2 || time_traffic3 >= time3 || time_traffic4 >= time4 ) ){
                 run_crossing = true;
-            }else{
+            }else if (time1+time2+time3+time4 != 0){
                 if (time_traffic1 >=time1){
                     time_traffic1 = 0;
                     light_status[0] = false;
@@ -125,4 +128,7 @@ public class TrafficLights {
 
     }
 
+    public boolean[] getLight_status() {
+        return light_status;
+    }
 }

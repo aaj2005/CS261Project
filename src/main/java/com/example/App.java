@@ -31,7 +31,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
-        SimulationComponents simComponent = new SimulationComponents(4,1,1,1, true);
+        SimulationComponents simComponent = new SimulationComponents(5,5,5,5, true);
         AnchorPane root = new AnchorPane();
         root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
         stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
@@ -48,8 +48,12 @@ public class App extends Application {
         }
         root.getChildren().addAll(simComponent.carsToAdd);
 
-//        simComponent.turn_left(3, 0);
-        simComponent.turn_right(3, 0);
+        simComponent.turn_left(3, 0);
+//        simComponent.go_straight(2, 1);
+//        simComponent.go_straight(2, 2);
+//        simComponent.go_straight(2, 3);
+//        simComponent.go_straight(2, 0);
+//        simComponent.go_straight(2, 4);
 
 
 

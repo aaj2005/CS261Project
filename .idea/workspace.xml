@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2cc2d573-e7e1-4c0a-abe5-e452e164f4be" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/Animations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/Animations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/Direction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/Direction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SimulationComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SimulationComponents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/TrafficLights.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/TrafficLights.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +40,7 @@
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+    <configuration name="App" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="graalvm-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.App" />

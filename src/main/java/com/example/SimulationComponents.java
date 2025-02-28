@@ -36,7 +36,7 @@ public class SimulationComponents {
     // junction arm: top - right - bottom - left
     public SimulationComponents(int lanes_arm1, int lanes_arm2, int lanes_arm3, int lanes_arm4, boolean crossings_enabled){
 
-        traffic_system = new TrafficLights(10,10,10,10,60,2);
+        traffic_system = new TrafficLights(10,10,10,10,60,5);
         traffic_system.run_lights();
         // number of lanes exiting junction for each arm
         max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
@@ -121,22 +121,32 @@ public class SimulationComponents {
 
         carsToAdd = new Rectangle[]{
 
-//                junction_arms_in[0].spawn_car_in_lane(4),
-//                junction_arms_in[0].spawn_car_in_lane(3),
-//                junction_arms_in[0].spawn_car_in_lane(2),
-//                junction_arms_in[0].spawn_car_in_lane(1),
+                junction_arms_in[0].spawn_car_in_lane(3),
+                junction_arms_in[0].spawn_car_in_lane(2),
+                junction_arms_in[0].spawn_car_in_lane(1),
                 junction_arms_in[0].spawn_car_in_lane(0),
+                junction_arms_in[0].spawn_car_in_lane(4),
 
                 junction_arms_in[2].spawn_car_in_lane(0),
+                junction_arms_in[2].spawn_car_in_lane(1),
+                junction_arms_in[2].spawn_car_in_lane(2),
+                junction_arms_in[2].spawn_car_in_lane(3),
+                junction_arms_in[2].spawn_car_in_lane(4),
                 junction_arms_in[3].spawn_car_in_lane(0),
-                junction_arms_in[3].spawn_car_in_lane(0),
-//                junction_arms_in[0].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(1),
+                junction_arms_in[3].spawn_car_in_lane(2),
+                junction_arms_in[3].spawn_car_in_lane(3),
+                junction_arms_in[3].spawn_car_in_lane(4),
+                junction_arms_in[0].spawn_car_in_lane(0),
                 junction_arms_in[1].spawn_car_in_lane(0),
-//                junction_arms_in[1].spawn_car_in_lane(1),
-//                junction_arms_in[2].spawn_car_in_lane(0),
-//                junction_arms_in[3].spawn_car_in_lane(0),
-//                junction_arms_in[3].spawn_car_in_lane(1),
-//                junction_arms_in[0].spawn_car_in_lane(1),
+                junction_arms_in[1].spawn_car_in_lane(1),
+                junction_arms_in[1].spawn_car_in_lane(2),
+                junction_arms_in[1].spawn_car_in_lane(3),
+                junction_arms_in[1].spawn_car_in_lane(4),
+                junction_arms_in[2].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(0),
+                junction_arms_in[3].spawn_car_in_lane(1),
+                junction_arms_in[0].spawn_car_in_lane(1),
         };
 //        corners[2].setArcHeight(100);
 //        corners[2].setArcWidth(100);
@@ -226,6 +236,17 @@ public class SimulationComponents {
                 junction_arms_in[junc_arm].get_lane_size(), max_out
         );
     }
+    public void go_straight(int junc_arm, int lane_number){
+        Animations animations = new Animations(center_x, center_y);
+        Car car = junction_arms_in[junc_arm].get_car_from_lane(lane_number);
+        animations.go_straight(
+                car,
+                junction_arms_in[junc_arm].getDirection(),
+                car.getShape().getX() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_x(),
+                car.getShape().getY() + junction_arms_in[junc_arm].getDirection().getLeft_turn_pos_y(),
+                junction_arms_in[junc_arm].get_lane_size(), max_out
+        );
+    }
 
 
 
@@ -261,6 +282,7 @@ public class SimulationComponents {
     public Car get_first_car(String junction_arm, int lane_number){
         return junction_arms_in[junction_arm_to_int(junction_arm)].get_car_from_lane(lane_number-1);
     }
+
 
 
     public void addCar(String junction_arm, int lane_number){

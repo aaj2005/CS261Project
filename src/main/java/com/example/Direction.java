@@ -11,7 +11,8 @@ public enum Direction {
             0,0,
             0,Car.CAR_HEIGHT,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+            -1,-1
     ),
     BOTTOM(
             0,Car.CAR_HEIGHT+ Car.CAR_GAP,
@@ -22,7 +23,8 @@ public enum Direction {
             0,0,
             0,Car.CAR_HEIGHT,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2
+            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+            -1,-1
     ),
     RIGHT(
             Car.CAR_HEIGHT+Car.CAR_GAP, 0,
@@ -33,7 +35,8 @@ public enum Direction {
             0,0,
             0,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+            1,-1
     ),
     LEFT(
             -Car.CAR_HEIGHT- Car.CAR_GAP, 0,
@@ -44,7 +47,8 @@ public enum Direction {
             0,0,
             0,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2
+            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+            1,-1
     );
 
     private final double next_in_lane_x;
@@ -56,6 +60,8 @@ public enum Direction {
     private final double right_trans_y;
     private final double left_trans_x;
     private final double left_trans_y;
+    private final double straight_trans_x;
+    private final double straight_trans_y;
     private final double right_turn_offset_x;
     private final double right_turn_offset_y;
     private final double left_turn_offset_x;
@@ -76,7 +82,8 @@ public enum Direction {
             double right_turn_offset_x, double right_turn_offset_y,
             double left_turn_offset_x, double left_turn_offset_y,
             double right_turn_pos_x, double right_turn_pos_y,
-            double left_turn_pos_x, double left_turn_pos_y
+            double left_turn_pos_x, double left_turn_pos_y,
+            double straight_trans_x, double straight_trans_y
     ){
         this.next_in_lane_x = next_in_lane_x;
         this.next_in_lane_y = next_in_lane_y;
@@ -95,6 +102,8 @@ public enum Direction {
         this.right_turn_pos_y = right_turn_pos_y;
         this.left_turn_pos_x = left_turn_pos_x;
         this.left_turn_pos_y = left_turn_pos_y;
+        this.straight_trans_x = straight_trans_x;
+        this.straight_trans_y = straight_trans_y;
     }
 
     public double get_next_in_lane_posX() {
@@ -167,5 +176,12 @@ public enum Direction {
         return right_turn_pos_y;
     }
 
+    public double getStraight_trans_x() {
+        return straight_trans_x;
+    }
+
+    public double getStraight_trans_y() {
+        return straight_trans_y;
+    }
 }
 

@@ -50,6 +50,12 @@ public class Animations {
 
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////                                                            //////////////////////////////////////////
+    ////////////////////                     Turn Right                             ///////////////////////////////////////////
+    ////////////////////                                                             //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void turn_right(Car car, Direction direction, double carX, double carY){
 
@@ -153,6 +159,14 @@ public class Animations {
         timer.start();
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////                                                            //////////////////////////////////////////
+    ////////////////////                     Turn Left                               ///////////////////////////////////////////
+    ////////////////////                                                             //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public void turn_left(Car car, Direction direction, double carX, double carY, int lane_number, int max_lane_out){
         double startX_trans = to_00_coordinate(carX, carY,direction)[0];
@@ -266,6 +280,107 @@ public class Animations {
         };
         pathTransition.play();
         timer.start();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////                                                            //////////////////////////////////////////
+    ////////////////////                     Go Straight                             ///////////////////////////////////////////
+    ////////////////////                                                             //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private double[] from_00_coordinates_straight(double x, double y, Direction direction){
+
+        switch(direction){
+
+            case TOP:
+            case BOTTOM:
+                return new double[]{x +center_x, y+center_y};
+            case RIGHT:
+            case LEFT:
+                return new double[]{center_x-x, y+center_y};
+            default: return new double[]{0,0};
+        }
+
+    }
+
+
+    public void go_straight(Car car, Direction direction, double carX, double carY,int lane_number, int max_lane_out){
+        double startX_trans = to_00_coordinate(carX, carY,direction)[0];
+        double startY_trans = to_00_coordinate(carX, carY,direction)[1];
+
+        // perform reflections/translations
+        double end_x_pre_transition = startX_trans * direction.getStraight_trans_x();
+        double end_y_pre_transition = startY_trans * direction.getStraight_trans_y();
+        System.out.println("Car X "+carX);
+        System.out.println("Car Y "+carY);
+        System.out.println("Start X "+startX_trans);
+        System.out.println("Start Y "+startY_trans);
+        System.out.println("End X Pre transition "+end_x_pre_transition);
+        System.out.println("End Y Pre transition"+end_y_pre_transition);
+        // convert back to default coordinate system
+
+        double[] offset = {0,0};
+        switch(direction){
+            case TOP:
+            case BOTTOM:
+                offset[0] = 0;
+                break;
+            case RIGHT:
+                offset[1] = Lane.lane_w*((lane_number-Math.ceil((double) max_lane_out /2)) *-2)+Car.CAR_GAP;
+                break;
+            case LEFT:
+                offset[1] = -(Lane.lane_w*((lane_number+1-Math.ceil((double) max_lane_out /2)) *2));
+                break;
+        }
+
+        double endX = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[0] ;//+offset[0];
+        double endY = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[1] ;//+offset[1];
+
+        System.out.println("End X"+endX);
+        System.out.println("End Y"+endY);
+        //
+
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(carX);
+        moveTo.setY(carY);
+        double pivot_point_x;
+        double pivot_point_y;
+
+        switch (direction){
+            case TOP:
+            case BOTTOM:
+                pivot_point_x = carX;
+                pivot_point_y = endY;
+                break;
+            case RIGHT:
+            case LEFT:
+                pivot_point_x = endX;
+                pivot_point_y = carY;
+                break;
+            default:
+                pivot_point_x = 0;
+                pivot_point_y = 0;
+        }
+
+        // Quadratic Bezier Curve
+        QuadCurveTo quad = new QuadCurveTo();
+        quad.setX(endX);
+        quad.setY(endY);
+        quad.setControlX(pivot_point_x);
+        quad.setControlY(pivot_point_y);
+
+        double totalDuration = 3.5; // animation seconds
+
+        Path path = new Path();
+        path.getElements().add(moveTo);
+        path.getElements().add (quad);
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(totalDuration*1000));
+        pathTransition.setNode(car.getShape());
+        pathTransition.setPath(path);
+        pathTransition.play();
     }
 
 }
