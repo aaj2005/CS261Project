@@ -21,11 +21,11 @@ public class PrimaryController {
 
     @FXML
     public void initialize() {
-//        simList.setPrefHeight(simList.getItems().size() * 50); // Adjust height based on items
         simulationManager = new SimulationManager(simList.getItems());
 
-
+        simList.getItems().add(new SimListItem("Simulation 1"));
         simList.getItems().add(new SimListItem("New Simulation"));
+
         simList.setCellFactory(param -> new SimulationCellFactory(simulationManager, this));
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         simList.getSelectionModel().clearSelection();

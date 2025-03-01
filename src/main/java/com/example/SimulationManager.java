@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class SimulationManager {
-    private int numSimulations = 0;
+    private int numSimulations = 1;
     private ObservableList<SimListItem> simList;
 
     public SimulationManager(ObservableList<SimListItem> simList) {
@@ -22,6 +22,10 @@ public class SimulationManager {
     }
 
     public void deleteSimulation(SimListItem item) {
+        if (simList.size() - 1 <= 1) {
+            showAlert("Cannot Delete", "At least one simulation must remain.");
+            return;
+        }
         simList.remove(item);
     }
 

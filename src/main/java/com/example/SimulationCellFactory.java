@@ -2,9 +2,10 @@ package com.example;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 
 public class SimulationCellFactory extends ListCell<SimListItem> {
     private final SimulationManager simulationManager;
@@ -42,7 +43,8 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         HBox hbox = new HBox(10);
         hbox.setPrefHeight(20);
         Text titleText = new Text("New Simulation");
-        Button addButton = new Button("+");
+
+        Button addButton = new Button("add");
         addButton.getStyleClass().add("button");
         addButton.setOnAction(event -> simulationManager.addNewSimulation());
         hbox.getChildren().addAll(titleText, addButton);
@@ -52,19 +54,31 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     private HBox createRegularSimulationCell(SimListItem item) {
         HBox hbox = new HBox(10);
         hbox.setPrefHeight(75);
-       hbox.setPrefHeight(75);
-       hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
+        hbox.setPrefHeight(75);
+        hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
 
         Text titleText = new Text(item.getSimName());
+
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button renameButton = new Button("RENAME");
+        Button renameButton = new Button();
+        FontIcon renameIcon = new FontIcon(FontAwesomeSolid.PENCIL_ALT);
+        renameIcon.setIconSize(30);  // Set size
+//        renameIcon.setStyle("-fx-icon-color: white;");  // Set color to white
+        renameIcon.setIconColor(Color.WHITE);
+        renameButton.setGraphic(renameIcon);
         renameButton.getStyleClass().add("button-rename");
 
-        Button deleteButton = new Button("DELETE");
+        Button deleteButton = new Button();
+        FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
+        deleteIcon.setIconSize(30);  // Set size
+        deleteIcon.setIconColor(Color.WHITE);
+//        deleteIcon.setStyle("-fx-icon-color: white;");  // Set color to white
+        deleteButton.setGraphic(deleteIcon);
         deleteButton.getStyleClass().add("button-delete");
+
 
         renameButton.setVisible(false);
         deleteButton.setVisible(false);
@@ -91,7 +105,7 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     }
 
     private void handleRename(SimListItem item, HBox box) {
-        TextField renameField = new TextField(item.getSimName());
+        TextField renameField = new TextField();
         renameField.setOnAction(e -> validateAndApplyRename(renameField, item, box));
         renameField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) validateAndApplyRename(renameField, item, box);
