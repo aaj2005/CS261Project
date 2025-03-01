@@ -72,12 +72,16 @@ public class Animations {
         double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0];
         double endY = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[1];
 
+        // set the start position of the transition
         MoveTo moveTo = new MoveTo();
         moveTo.setX(carX);
         moveTo.setY(carY);
+
+        // pivot point for the curve
         double pivot_point_x;
         double pivot_point_y;
 
+        // determine pivot point based on which junction arm the car is in
         switch (direction){
             case TOP:
             case BOTTOM:
@@ -96,43 +100,53 @@ public class Animations {
 
         // Quadratic Bezier Curve
         QuadCurveTo quad = new QuadCurveTo();
-        quad.setX(endX);
-        quad.setY(endY);
-        quad.setControlX(pivot_point_x);
-        quad.setControlY(pivot_point_y);
+        quad.setX(endX); // set X coordinate of destination
+        quad.setY(endY); // set Y coordinate of destination
+        quad.setControlX(pivot_point_x); // set X pivot point
+        quad.setControlY(pivot_point_y); // set Y pivot point
 
         double totalDuration = 2.5; // animation seconds
 
+        // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
         path.getElements().add (quad);
+
+        // create the path transition animation object
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
 
+        // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
             double startTime = 0;
             @Override
             public void handle(long now) {
+                // time passed in the animation
                 double elapsedTime = (now - startTime);
 
+                // determine start time
                 if (startTime == 0.0){
                     startTime = elapsedTime;
                     elapsedTime = (now - startTime);
                 }
 
+                // determine if end time is reached
                 if (elapsedTime/1_000_000_000.0 >= totalDuration) {
                     startTime = 0;
                     elapsedTime = totalDuration* 1_000_000_000.0 ; // Clamp at total_duration
                 }
 
+                // percentage into the animation
                 double progress = (elapsedTime/1_000_000_000.0) / totalDuration; // Normalize [0,1]
                 double newAngle=0;
+                // calculate the angle based on derivative
                 double slope_angle = Math.atan(
                         (-2 * (1 - progress) * carY + 2 * pivot_point_y * (-2 * progress + 1) + 2 * progress * endY)
                                 / (-2 * (1 - progress) * carX + 2 * pivot_point_x * (-2 * progress + 1) + 2 * progress * endX)
                 ) * 180 / Math.PI;
+                // unit circle angle shifting based on the junction arm the car is initially in
                 switch (direction){
                     case TOP:
                         newAngle = slope_angle -90;
@@ -147,9 +161,12 @@ public class Animations {
                         newAngle = -180+Math.abs(slope_angle);
                         break;
                 }
+                // rotate the car
                 car.getShape().setRotate(newAngle);
 
+                // make the path transition run alongside the rotation
                 pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
+                // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     stop();
                 }
@@ -169,6 +186,7 @@ public class Animations {
 
 
     public void turn_left(Car car, Direction direction, double carX, double carY, int lane_number, int max_lane_out){
+        // covert to quadrant-based system
         double startX_trans = to_00_coordinate(carX, carY,direction)[0];
         double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
@@ -176,7 +194,9 @@ public class Animations {
         double end_x_pre_transition = startY_trans * direction.getLeft_trans_x()+direction.getLeft_turn_offset_x();
         double end_y_pre_transition = startX_trans * direction.getLeft_trans_y()+direction.getLeft_turn_offset_y();
 
-        // convert back to default coordinate system
+
+
+        // offsets because javafx is funny
         double[] offset = {0,0};
         switch(direction){
             case TOP:
@@ -192,14 +212,21 @@ public class Animations {
                 offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number-1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.CAR_GAP);
                 break;
         }
+
+        // convert back to default coordinate system
         double endX = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[0] - offset[0];
         double endY = from_00_coordinates(end_x_pre_transition, end_y_pre_transition,direction)[1]- offset[1] ;
+
+        // set the start position of the transition
         MoveTo moveTo = new MoveTo();
         moveTo.setX(carX);
         moveTo.setY(carY);
+
+        // pivot point for the curve
         double pivot_point_x;
         double pivot_point_y;
 
+        // determine pivot point based on which junction arm the car is in
         switch (direction){
             case TOP:
             case BOTTOM:
@@ -225,36 +252,49 @@ public class Animations {
 
         double totalDuration = 3.5; // animation seconds
 
+        // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
         path.getElements().add (quad);
+
+        // create the path transition animation object
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
 
+        // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
             double startTime = 0;
             @Override
             public void handle(long now) {
+
+                // time passed in the animation
                 double elapsedTime = (now - startTime);
 
+                // determine start time
                 if (startTime == 0.0){
                     startTime = elapsedTime;
                     elapsedTime = (now - startTime);
                 }
 
+                // determine if end time is reached
                 if (elapsedTime/1_000_000_000.0 >= totalDuration) {
                     startTime = 0;
                     elapsedTime = totalDuration* 1_000_000_000.0 ; // Clamp at total_duration
                 }
 
+                // percentage into the animation
                 double progress = (elapsedTime/1_000_000_000.0) / totalDuration; // Normalize [0,1]
                 double newAngle=0;
+
+                // calculate the angle based on derivative
                 double slope_angle = Math.atan(
                         (-2 * (1 - progress) * carY + 2 * pivot_point_y * (-2 * progress + 1) + 2 * progress * endY)
                                 / (-2 * (1 - progress) * carX + 2 * pivot_point_x * (-2 * progress + 1) + 2 * progress * endX)
                 ) * 180 / Math.PI;
+
+                // unit circle angle shifting based on the junction arm the car is initially in
                 switch (direction){
                     case TOP:
                         newAngle = 180-(-slope_angle+90);
@@ -270,9 +310,12 @@ public class Animations {
                         break;
                 }
 
+                // rotate the car
                 car.getShape().setRotate(newAngle);
-
+                // make the path transition run alongside the rotation
                 pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
+
+                // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     stop();
                 }
@@ -289,11 +332,11 @@ public class Animations {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    // special function converting back to javafx coordinate system (only when going straight)
+    // i hate javafx
     private double[] from_00_coordinates_straight(double x, double y, Direction direction){
 
         switch(direction){
-
             case TOP:
             case BOTTOM:
                 return new double[]{x +center_x, y+center_y};
@@ -307,20 +350,15 @@ public class Animations {
 
 
     public void go_straight(Car car, Direction direction, double carX, double carY,int lane_number, int max_lane_out){
+        // covert to quadrant-based system
         double startX_trans = to_00_coordinate(carX, carY,direction)[0];
         double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
         // perform reflections/translations
         double end_x_pre_transition = startX_trans * direction.getStraight_trans_x();
         double end_y_pre_transition = startY_trans * direction.getStraight_trans_y();
-        System.out.println("Car X "+carX);
-        System.out.println("Car Y "+carY);
-        System.out.println("Start X "+startX_trans);
-        System.out.println("Start Y "+startY_trans);
-        System.out.println("End X Pre transition "+end_x_pre_transition);
-        System.out.println("End Y Pre transition"+end_y_pre_transition);
-        // convert back to default coordinate system
 
+        // offsets because javafx is funny
         double[] offset = {0,0};
         switch(direction){
             case TOP:
@@ -335,19 +373,20 @@ public class Animations {
                 break;
         }
 
+        // convert back to default coordinate system
         double endX = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[0] ;//+offset[0];
         double endY = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[1] ;//+offset[1];
 
-        System.out.println("End X"+endX);
-        System.out.println("End Y"+endY);
-        //
-
+        // set the start position of the transition
         MoveTo moveTo = new MoveTo();
         moveTo.setX(carX);
         moveTo.setY(carY);
+
+        // pivot point for the curve
         double pivot_point_x;
         double pivot_point_y;
 
+        // determine pivot point based on which junction arm the car is in
         switch (direction){
             case TOP:
             case BOTTOM:
@@ -373,13 +412,17 @@ public class Animations {
 
         double totalDuration = 3.5; // animation seconds
 
+        // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
         path.getElements().add (quad);
+
+        // create the path transition animation object
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
+
         pathTransition.play();
     }
 

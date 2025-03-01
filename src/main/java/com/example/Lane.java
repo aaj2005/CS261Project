@@ -23,16 +23,18 @@ public class Lane {
         this.direction = direction;
         this.lane_capacity = lane_capacity;
         this.has_pedestrian = has_pedestrian;
-        this.lane_number = lane_number;
+        this.lane_number = lane_number; // the lane number in the particular road
 
         spawn_position_x = 0;
         spawn_position_y = 0;
     }
 
+    // set the Y spawn position for the lane
     public void setSpawn_position_x(double spawn_position_x) {
         this.spawn_position_x = spawn_position_x + direction.getLane_switch_x() * (lane_w * lane_number) ;
     }
 
+    // set the X spawn position for the lane
     public void setSpawn_position_y(double spawn_position_y) {
         this.spawn_position_y = spawn_position_y + direction.getLane_switch_y() * (lane_w * lane_number);
     }

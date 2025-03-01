@@ -6,10 +6,19 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class Road extends JunctionElement{
+
+    // each lane object in the particular road
     private ArrayList<Lane> lanes;
+
+    // priority of this junction arm
     private int priority = 1;
+
     public static int default_light_duration = 30;
+
+    // number of cars that can fit in the lane
     private int lane_capacity;
+
+    // direction of the road (TOP, RIGHT, BOTTOM, LEFT)
     private Direction direction;
     private boolean has_left_turn;
     private boolean has_right_turn;
@@ -36,16 +45,22 @@ public class Road extends JunctionElement{
      */
     public Road(
         int lane_count,
-        double[] corner1,
-        double[] corner2,
-        int dir,
+        double[] corner1, // two adjacent corners to the road
+        double[] corner2, // two adjacent corners to the road
+        int dir, // direction used for calculating number of cars that can fit in one lane
         boolean has_pedestrian,
         Direction direction,
         float[] vph
     ){
         light_status = false;
+
+        // number of cars that can fit in one lane
         int lane_capacity = (int) (Math.floor(Math.min(corner1[dir], corner2[dir])/(Car.CAR_HEIGHT+Car.CAR_GAP)));
+
+        // lane object
         lanes = new ArrayList<>(5);
+
+        // instantiate lane object for each lane
         for (int i=0; i<lane_count;i++){
             lanes.add(new Lane(lane_capacity,has_pedestrian,0,0,direction,i));
         }
@@ -110,6 +125,7 @@ public class Road extends JunctionElement{
         };
     }
 
+    // set the start spawn position for the cars
     public void set_start(double start_x, double start_y){
         for (Lane lane : lanes){
             lane.setSpawn_position_x(start_x);

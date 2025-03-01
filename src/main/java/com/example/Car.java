@@ -22,6 +22,7 @@ public class Car {
     private Cardinal out_dir; // the direction in which the car will be leaving
 
     public Car(Direction direction, double pos_x, double pos_y, Cardinal out_dir){
+        // choose appropriate texture based on junction arm
         if (direction == Direction.TOP || direction == Direction.BOTTOM){
             shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
             shape.setFill(car_texture);
@@ -29,8 +30,10 @@ public class Car {
             shape = new Rectangle(CAR_HEIGHT, CAR_WIDTH);
             shape.setFill(car_texture_hor);
         }
+        // set the spawn position of the car
         shape.setX(pos_x);
         shape.setY(pos_y);
+        // rotate to face correct direction
         shape.setRotate(direction.getRotation());
 
         this.out_dir = out_dir;
