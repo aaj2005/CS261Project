@@ -3,6 +3,8 @@ package com.example;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 public class SimulationCellFactory extends ListCell<SimListItem> {
     private final SimulationManager simulationManager;
@@ -80,7 +82,12 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     private void updateButtonVisibility(Button renameButton, Button deleteButton, boolean visible) {
         renameButton.setVisible(visible);
         deleteButton.setVisible(visible);
-        setStyle(visible ? "-fx-background-color: lightgrey;" : "");
+
+        if (controller.getSelectedCell() != this) {
+            setStyle(visible ? "-fx-background-color: lightgrey;" : "");
+        } else {
+            setStyle("");
+        }
     }
 
     private void handleRename(SimListItem item, HBox box) {
