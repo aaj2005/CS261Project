@@ -6,14 +6,17 @@ import javafx.scene.text.Text;
 
 public class SimulationCellFactory extends ListCell<SimListItem> {
     private final SimulationManager simulationManager;
+    private final PrimaryController controller;
 
-    public SimulationCellFactory(SimulationManager simulationManager) {
+    public SimulationCellFactory(SimulationManager simulationManager, PrimaryController controller) {
         this.simulationManager = simulationManager;
+        this.controller = controller;
     }
 
     @Override
     protected void updateItem(SimListItem item, boolean empty) {
         super.updateItem(item, empty);
+
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
@@ -25,10 +28,17 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         } else {
             setGraphic(createRegularSimulationCell(item));
         }
+
+        this.setOnMouseClicked(event -> {
+            if (!item.getSimName().equals("New Simulation")) {
+                controller.setSelectedCell(this);
+            }
+        });
     }
 
     private HBox createNewSimulationCell() {
-        HBox hbox = new HBox(5);
+        HBox hbox = new HBox(10);
+        hbox.setPrefHeight(20);
         Text titleText = new Text("New Simulation");
         Button addButton = new Button("+");
         addButton.getStyleClass().add("button");
@@ -38,9 +48,10 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     }
 
     private HBox createRegularSimulationCell(SimListItem item) {
-        HBox box = new HBox(10);
-        box.setPrefHeight(75);
-        box.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
+        HBox hbox = new HBox(10);
+        hbox.setPrefHeight(75);
+       hbox.setPrefHeight(75);
+       hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
 
         Text titleText = new Text(item.getSimName());
 
@@ -56,14 +67,14 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         renameButton.setVisible(false);
         deleteButton.setVisible(false);
 
-        this.setOnMouseEntered(event -> updateButtonVisibility(renameButton, deleteButton, true));
-        this.setOnMouseExited(event -> updateButtonVisibility(renameButton, deleteButton, false));
+        hbox.setOnMouseEntered(event -> updateButtonVisibility(renameButton, deleteButton, true));
+        hbox.setOnMouseExited(event -> updateButtonVisibility(renameButton, deleteButton, false));
 
         deleteButton.setOnAction(event -> simulationManager.deleteSimulation(item));
-        renameButton.setOnAction(event -> handleRename(item, box));
+        renameButton.setOnAction(event -> handleRename(item, hbox));
 
-        box.getChildren().addAll(titleText, spacer, renameButton, deleteButton);
-        return box;
+        hbox.getChildren().addAll(titleText, spacer, renameButton, deleteButton);
+        return hbox;
     }
 
     private void updateButtonVisibility(Button renameButton, Button deleteButton, boolean visible) {
@@ -73,19 +84,25 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     }
 
     private void handleRename(SimListItem item, HBox box) {
-        TextField renameField = new TextField("");
+        TextField renameField = new TextField(item.getSimName());
         renameField.setOnAction(e -> validateAndApplyRename(renameField, item, box));
         renameField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) validateAndApplyRename(renameField, item, box);
         });
+
         box.getChildren().set(0, renameField);
         renameField.requestFocus();
     }
 
     private void validateAndApplyRename(TextField renameField, SimListItem item, HBox box) {
         String newName = renameField.getText().trim();
-        item.setSimName(newName);
-        Text updatedText = new Text(newName);
+        if (!newName.isEmpty()) {
+            item.setSimName(newName);
+        }
+        Text updatedText = new Text(item.getSimName());
         box.getChildren().set(0, updatedText);
+
+        // Force update to refresh UI
+        setText(null);
     }
 }
