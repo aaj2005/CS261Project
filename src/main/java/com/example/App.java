@@ -34,13 +34,12 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        // launch();
         Car.length = 1;
         Car.distance = 1;
         Car.max_speed = 10;
 
         DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(3, 1, 2),
+            new Road(3, 350, 2),
             new Road(2, 50, 2),
             new Road(0, 50, 2),
             new Road(0, 50, 2),
