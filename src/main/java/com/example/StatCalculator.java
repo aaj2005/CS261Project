@@ -41,6 +41,8 @@ public class StatCalculator {
     private double total_wait_time = 0;
 
     private double cycle_length; // gets the length of a traffic light cycle in seconds
+
+    private double max_queue_length = 0;
     
     /*
      * Constructor for StatCalculator
@@ -109,6 +111,9 @@ public class StatCalculator {
             // increase the total wait time
             this.total_wait_time += this.getWaitTime(this.jam_length, this.t-tRedStart);
             
+            // update max queue length
+            this.max_queue_length = Math.max(this.max_queue_length, this.jam_length);
+
             // calculate when the green light will end
             double t_green_end = this.t + getRoadLightLength(this.road);
 
@@ -148,6 +153,7 @@ public class StatCalculator {
         double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
         this.t += jam_depletion_time;
         this.jam_length -= jam_depletion_time*Car.max_speed;
+        this.max_queue_length = Math.max(this.max_queue_length, this.jam_length); // final check for max queue length
 
         if (DoubleCompare.greaterThan(this.jam_length, this.initial_jam_length)) {
             throw new InvalidParametersException("Traffic length grows to infinity!");
@@ -155,7 +161,7 @@ public class StatCalculator {
 
         return new Stats(
             0,
-            0,
+            this.max_queue_length/ (Car.length + Car.distance),
             this.total_wait_time/(this.cycle_length*this.getArrivalRate())
         );
     }
