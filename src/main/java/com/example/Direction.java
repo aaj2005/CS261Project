@@ -1,7 +1,14 @@
 package com.example;
 
 public enum Direction {
-
+    // next in lane: offset factor to determine position of the next car in the lane
+    // rotation: determine angle to rotate car so that it faces in the correct direction
+    // lane switch: factor to determine direction of offsetting a car left/right or top/bottom when choosing a lane
+    // right_trans/left_trans: to determine factor for mathematical equation when performing reflections/transformations for turning right/left
+    // right/left _turn_pos: offset to the car's initial position before turning (javafx weirdness)
+    // straight_trans(straight + transgender): to determine factor for mathematical equation when performing reflections/transformations
+    //                                         for going straight, exists because javafx is horrible
+    
     TOP(
             0, -Car.CAR_HEIGHT-Car.CAR_GAP,
             180,
