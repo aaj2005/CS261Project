@@ -20,21 +20,27 @@ package com.example;
  */
 public class StatCalculator {
     // the time that is currently being simulated (in seconds)
-    private float t = 0;
+    private double t = 0;
     
     // the last time that the pedestrian light was due to turn green
-    private float last_ped_light = -getPedLightRate();
+    private double last_ped_light = -getPedLightRate();
 
-    private float jam_length = 0; // length of the traffic jam on the specified road in metres
+    private double jam_length = 0; // length of the traffic jam on the specified road in metres
     
     // the initial length of the jam 
     // we need to track this in order to see if at the end of a cycle, the jam has lengthened
     // if it has lengthened, since each cycle is exactly the same, the jam will continue to lengthen to infinity
     // -1 means that the variable is yet to be assigned a value to
-    private float initial_jam_length = -1;
+    private double initial_jam_length = -1;
 
     private int   road; // the road under inspection
-    private float jam_lengthening_rate; // the rate at which the jam lengthens in metres per second
+    private double jam_lengthening_rate; // the rate at which the jam lengthens in metres per second
+
+    // the total amount of time that all cars (on the specified road) have cumulatively waited for
+    // used to calculate average wait time
+    private double total_wait_time = 0;
+
+    private double cycle_length; // gets the length of a traffic light cycle in seconds
     
     /*
      * Constructor for StatCalculator
@@ -50,14 +56,14 @@ public class StatCalculator {
      * Saves the calculated variable in this.jamLengtheningRate
      */
     private void calculateJamLengtheningRate() {
-        float r = ((Road)DynamicComponents.junction_elements.get(this.road)).inbound_vph/3600;
+        double r = this.getArrivalRate();
         
-        if (approximatelyEqual(r, 0)) { // avoids a divisionby0 error
+        if (DoubleCompare.approximatelyEqual(r, 0)) { // avoids a divisionby0 error
             this.jam_lengthening_rate = 0;
         } else {
             int num_lanes = ((Road)DynamicComponents.junction_elements.get(this.road)).lanes;
-            float cs = (Car.length + Car.distance)/num_lanes;
-            float r_prime = 1/(1/r - cs*Car.max_speed);
+            double cs = (Car.length + Car.distance)/num_lanes;
+            double r_prime = 1/(1/r - cs*Car.max_speed);
             this.jam_lengthening_rate = r_prime * cs;
         }
     }
@@ -65,7 +71,7 @@ public class StatCalculator {
     /*
      * Calculates how may seconds it takes for the jam to deplete
      */
-    private float getJamDepletionTime() {
+    private double getJamDepletionTime() {
         return this.jam_length * Car.max_speed;
     }
 
@@ -75,7 +81,7 @@ public class StatCalculator {
      * @throws InvalidMethodCallException when method is called more than once
      */
     public Stats run() throws InvalidParametersException, InvalidMethodCallException {
-        if (!approximatelyEqual(t,0)) {
+        if (!DoubleCompare.approximatelyEqual(t,0)) {
             throw new InvalidMethodCallException("run() method in StatCalculator cannot be called more than once!");
         }
 
@@ -91,7 +97,7 @@ public class StatCalculator {
         // keeps track of when the light turned red
         // used to see how long the light was red for
         // which in turn is used to calculate the length of the traffic jam that builds up
-        float tRedStart = this.t;
+        double tRedStart = this.t;
 
         while (!this.endOfCycleReached()) {
             // red light from road 0 to road n
@@ -99,14 +105,17 @@ public class StatCalculator {
             
             // lengthen the traffic jam due to the fact that the light was red
             this.jam_length += (this.t-tRedStart)*this.jam_lengthening_rate;
+
+            // increase the total wait time
+            this.total_wait_time += this.getWaitTime(this.jam_length, this.t-tRedStart);
             
             // calculate when the green light will end
-            float t_green_end = this.t + getRoadLightLength(this.road);
+            double t_green_end = this.t + getRoadLightLength(this.road);
 
             // the traffic jam take n seconds to deplete
             // the green light is on for g seconds
             // hence the traffic jam will actually deplete for s = min(g, n) seconds
-            float jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
+            double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
 
             // jump to the end of the green light
             t = t_green_end;
@@ -124,23 +133,31 @@ public class StatCalculator {
             // to when the light turns green for road 0
             // this allows us to check if the end of the cycle has been reached
             tRedStart = this.t;
-            tickRedLight(this.road, 0);
+            tickRedLight(this.road+1, 0);
         }
+
+        // first cycle done! Now store how long the cycle was
+        this.cycle_length = this.t;
 
         // continue the simulation up until the end of next green light for the road currently under inspection
         // this allows us to compare the queue length at this point in cycle 2 to
         // the queue length at this point in cycle 1 (this.initialqueuelength)
         tickRedLight(0, this.road);
         this.jam_length += (this.t-tRedStart)*this.jam_lengthening_rate;
-        float jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
+        this.total_wait_time += this.getWaitTime(this.jam_length, this.t-tRedStart);
+        double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
         this.t += jam_depletion_time;
         this.jam_length -= jam_depletion_time*Car.max_speed;
 
-        if (greaterThan(this.jam_length, this.initial_jam_length)) {
+        if (DoubleCompare.greaterThan(this.jam_length, this.initial_jam_length)) {
             throw new InvalidParametersException("Traffic length grows to infinity!");
         }
 
-        return new Stats(0, 0, 0);
+        return new Stats(
+            0,
+            0,
+            this.total_wait_time/(this.cycle_length*this.getArrivalRate())
+        );
     }
 
     /*
@@ -153,11 +170,11 @@ public class StatCalculator {
             // (this condition is implicit because this function only runs when
             //  road 0 is the next road to have its green light turn on)
         // 2) the pedestrian light is just turning red
-        return approximatelyEqual(this.t % getPedLightRate(), getPedLightLength())
+        return DoubleCompare.approximatelyEqual(this.t % getPedLightRate(), getPedLightLength())
 
             // we also check that the time isn't ped_light_length, because that is the beginning of the first cycle
             // and we are only checking for when cycles end
-            && !approximatelyEqual(this.t, getPedLightLength());
+            && !DoubleCompare.approximatelyEqual(this.t, getPedLightLength());
     }
 
     /*
@@ -173,7 +190,7 @@ public class StatCalculator {
         }
 
         // keep the pedestrian light green for as many times as it should be turned green for
-        while (geq(t, this.last_ped_light + getPedLightRate())) {
+        while (DoubleCompare.geq(t, this.last_ped_light + getPedLightRate())) {
             this.t += getPedLightLength();
             this.last_ped_light += getPedLightRate();
         }
@@ -181,13 +198,13 @@ public class StatCalculator {
 
     /*
      * Returns a list of all the traffic lights that will be green in-between rNext and rTarget
-     * @param rNext
-     * @param rTarget
+     * @param rNext the first traffic light in the sequence
+     * @param rTarget the first traffic light not in the sequence
      */
     private int[] getTrafficLightCycle(int rNext, int rTarget) {
-        int len = Math.max(0, Math.abs(rNext-rTarget)-1);
+        int len = getRemainder(rTarget-rNext, 4);
         int[] cycle = new int[len];
-        for (int i=1; i<=len; i++) {
+        for (int i=0; i<len; i++) {
             int num = getRemainder(rNext+i, 4);
             cycle[i] = num;
         }
@@ -204,34 +221,39 @@ public class StatCalculator {
         return ((num%dem)+dem)%dem;
     }
 
-    /*
-     * Checks if floats a and b are equal. Should be used everywhere instead of "=="
-     */
-    private boolean approximatelyEqual(float a, float b) {
-        return Math.abs(a-b) < 0.01;
-    }
-
-    /*
-     * Checks if float a is greater than b. Excludes the case where a and b
-     * are similar enough to be approximately equal
-     */
-    private boolean greaterThan(float a, float b) {
-        return !approximatelyEqual(a, b) && a > b;
-    }
-
-    private boolean geq(float a, float b) {
-        return approximatelyEqual(a, b) || a > b;
-    }
-
-    private float getPedLightRate() {
+    private double getPedLightRate() {
         return ((PedestrianCrossing)DynamicComponents.junction_elements.get(DynamicComponents.junction_elements.size()-1)).ped_light_rate;
     }
 
-    private float getPedLightLength() {
+    private double getPedLightLength() {
         return ((PedestrianCrossing)DynamicComponents.junction_elements.get(DynamicComponents.junction_elements.size()-1)).ped_light_length;
     }
 
-    private float getRoadLightLength(int r) {
+    private double getRoadLightLength(int r) {
         return ((Road)DynamicComponents.junction_elements.get(r)).actual_light_duration;
+    }
+
+    /*
+     * gets the cumulative wait time on a road
+     * @param queueLen length of the initial queue (at the start of the red light) in metres
+     * @param t length of the red light in seconds
+     */
+    private double getWaitTime(double queueLen, double t) {
+        // okay so scrap whatever calculation we were doing
+        // this calculation is much simpler and achieves the same result
+        // r cars arrive per second where r = jam_lengthening_rate/car.length
+        // so in t seconds, t*r cars arrive
+        // arriving cars wait on average t/2 seconds
+
+        double r = this.getArrivalRate();
+        return t*r*(queueLen/Car.length) // how long the cars in the initial queue have to wait
+             + t*r*t/2;                  // how long the arriving cars have to wait
+    }
+
+    /*
+     * returns the arrival rate of cars to the junction
+     */
+    private double getArrivalRate() {
+        return ((Road)DynamicComponents.junction_elements.get(this.road)).inbound_vph/3600;
     }
 }

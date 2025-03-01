@@ -1,15 +1,15 @@
 package com.example;
 
 public class Stats {
-    public final float max_wait_time;
-    public final float max_queue_length;
-    public final float average_wait_time;
-    public final float weight_max_wait_time = 1;
-    public final float weight_max_queue_length = 1;
-    public final float weight_average_wait_time = 1;
-    public       float overall_score;
+    public final double max_wait_time;
+    public final double max_queue_length;
+    public final double average_wait_time;
+    public final double weight_max_wait_time = 1;
+    public final double weight_max_queue_length = 1;
+    public final double weight_average_wait_time = 1;
+    public       double overall_score;
 
-    public Stats(float max_wait_time, float max_queue_length, float average_wait_time) {
+    public Stats(double max_wait_time, double max_queue_length, double average_wait_time) {
         this.max_wait_time = max_wait_time;
         this.max_queue_length = max_queue_length;
         this.average_wait_time = average_wait_time;

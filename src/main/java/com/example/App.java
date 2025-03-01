@@ -40,11 +40,11 @@ public class App extends Application {
         Car.max_speed = 10;
 
         DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(3, 350, 2),
-            new Road(3, 50, 2),
-            new Road(3, 50, 2),
-            new Road(3, 50, 2),
-            new PedestrianCrossing(1, 10)
+            new Road(3, 1, 2),
+            new Road(2, 50, 2),
+            new Road(0, 50, 2),
+            new Road(0, 50, 2),
+            new PedestrianCrossing(0, 1)
         }));
 
         StatCalculator sc = new StatCalculator(0);
