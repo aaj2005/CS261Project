@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -44,16 +45,30 @@ public class PrimaryController {
     public void initialize() {
         simulationManager = new SimulationManager(simList.getItems());
 
+
         simList.getItems().add(new Simulation("Simulation 1"));
         simList.getItems().add(new Simulation("New Simulation"));
 
         simList.setCellFactory(param -> new SimulationCellFactory(simulationManager, this));
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        simList.getSelectionModel().clearSelection();
+
+        Platform.runLater(() -> {
+            if (!simList.getItems().isEmpty()) {
+                simList.getSelectionModel().select(0);
+                selectedCell = (ListCell<Simulation>) simList.lookup(".list-cell");
+            }
+        });
+
+        // Update `selectedCell` when a new selection is made
+        simList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedCell = (ListCell<Simulation>) simList.lookup(".list-cell");
+        });
 
         metricsTab.setOnSelectionChanged(event -> {
             if (metricsTab.isSelected()) loadSimulationData();
         });
+
+        setListeners();
 
         pc_enabled.selectedProperty().addListener((obs, oldVal, newVal) -> togglePedestrianInputs(newVal));
         run_button.setOnAction(event -> runSimulation());
@@ -66,7 +81,6 @@ public class PrimaryController {
         crossing_requests.setDisable(!enabled);
     }
 
-
     private void loadSimulationData() {
         SimulationData[] runs = new SimulationData[5];
         runs[0] = new SimulationData("Run 1", new double[]{2.5, 3.0, 4.5, 1.5}, new double[]{5.0, 6.0, 8.0, 3.0}, new double[]{3.2, 4.0, 5.5, 2.5});
@@ -74,8 +88,6 @@ public class PrimaryController {
         runs[2] = new SimulationData("Run 3", new double[]{3.0, 3.8, 5.0, 2.0}, new double[]{6.0, 7.0, 9.0, 4.0}, new double[]{3.8, 4.5, 6.0, 3.0});
         runs[3] = new SimulationData("Run 4", new double[]{2.6, 3.2, 4.6, 1.6}, new double[]{5.2, 6.2, 8.2, 3.2}, new double[]{3.3, 4.1, 5.6, 2.6});
         runs[4] = new SimulationData("Run 5", new double[]{2.6, 3.2, 4.6, 1.6}, new double[]{5.2, 6.2, 8.2, 3.2}, new double[]{3.3, 4.1, 5.6, 2.6});
-
-
 
         VBox graph = Graph.createGraph(runs);
         graphContainer.setTopAnchor(graph, 0.0);
@@ -102,6 +114,62 @@ public class PrimaryController {
 
     public ListCell<Simulation> getSelectedCell() {
         return selectedCell;
+    }
+
+    public void setListeners() {
+
+        nb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setNorthNumLanes(newVal);
+
+        });
+        n_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setNorthBusLane(newValue);
+            System.out.print("SET value to " + newValue);
+            lbl_duration.setText(newValue.toString());
+        });
+        n_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setNorthLeftTurn(newValue);
+        });
+        eb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setEastNumLanes(newVal);
+        });
+        e_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setEastBusLane(newValue);
+        });
+        e_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setEastLeftTurn(newValue);
+        });
+        sb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setSouthNumLanes(newVal);
+        });
+        s_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setSouthBusLane(newValue);
+        });
+        s_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setSouthLeftTurn(newValue);
+        });
+        wb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setWestNumLanes(newVal);
+        });
+        w_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setWestBusLane(newValue);
+        });
+        w_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setWestLeftTurn(newValue);
+        });
+
     }
 
 
