@@ -157,9 +157,9 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_nn" layoutX="217.0" layoutY="223.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ne" layoutX="217.0" layoutY="252.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_nw" layoutX="217.0" layoutY="282.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_nn" layoutX="217.0" layoutY="223.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ne" layoutX="217.0" layoutY="252.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_nw" layoutX="217.0" layoutY="282.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="384.0" layoutY="108.0" styleClass="bold-label" text="EASTBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
@@ -198,9 +198,9 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_en" layoutX="517.0" layoutY="221.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ee" layoutX="516.0" layoutY="250.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_es" layoutX="515.0" layoutY="280.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_en" layoutX="517.0" layoutY="221.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ee" layoutX="516.0" layoutY="250.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_es" layoutX="515.0" layoutY="280.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="85.0" layoutY="343.0" styleClass="bold-label" text="SOUTHBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
@@ -239,9 +239,9 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_se" layoutX="218.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ss" layoutX="218.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_sw" layoutX="218.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_se" layoutX="218.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ss" layoutX="218.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_sw" layoutX="218.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="384.0" layoutY="343.0" styleClass="bold-label" text="WESTBOUND TRAFFIC">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
@@ -280,9 +280,9 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_wn" layoutX="517.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ws" layoutX="517.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" />
-                                          <TextField fx:id="txt_ww" layoutX="517.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" />
+                                          <TextField fx:id="txt_wn" layoutX="517.0" layoutY="456.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ws" layoutX="517.0" layoutY="485.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ww" layoutX="517.0" layoutY="515.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Button fx:id="run_button" layoutX="295.0" layoutY="781.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="202.0" styleClass="bold-button" text="RUN SIMULATION">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
