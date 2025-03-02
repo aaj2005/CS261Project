@@ -16,7 +16,7 @@ public class Car {
     public static final double CAR_GAP = 4;
     public static int HOR_DIR = 0;
     public static int VER_DIR = 1;
-    public static final double CAR_SPEED = 1;
+    public static final double CAR_SPEED = 2;
     private String state;
 
     private Cardinal out_dir; // the direction in which the car will be leaving

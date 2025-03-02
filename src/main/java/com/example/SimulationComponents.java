@@ -36,11 +36,15 @@ public class SimulationComponents {
     private static final double SCALE_FACTOR = 2;
     private static final double PEDESTRIAN_SCALE_FACTOR = 15;
     private static final int NUMBER_OF_LINES = 33;
-
+    private static double PEDESTRIAN_CROSSING_WIDTH;
     // maximum number of lanes set
     private final int max_out;
 
     private float time = 0;
+
+    public static double GET_PEDESTRIAN_CROSSING_WIDTH(){
+        return PEDESTRIAN_CROSSING_WIDTH;
+    }
 
     // traffic light logic instance
     private TrafficLights traffic_system;
@@ -112,7 +116,7 @@ public class SimulationComponents {
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 Car.VER_DIR, // this is for calculating the number of cars which each lane can hold
-                false, // pedestrian crossings
+                crossings_enabled, // pedestrian crossings
                 Direction.TOP, // the junction arm direction
                 vph_1 // VPH for each outbound direction
         );
@@ -130,7 +134,7 @@ public class SimulationComponents {
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 Car.HOR_DIR, // this is for calculating the number of cars which each lane can hold
-                false,  // pedestrian crossings
+                crossings_enabled,  // pedestrian crossings
                 Direction.RIGHT, // the junction arm direction
                 vph_2 // VPH for each outbound direction
         );
@@ -148,7 +152,7 @@ public class SimulationComponents {
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 Car.VER_DIR, // this is for calculating the number of cars which each lane can hold
-                false,  // pedestrian crossings
+                crossings_enabled,  // pedestrian crossings
                 Direction.BOTTOM, // the junction arm direction
                 vph_3 // VPH for each outbound direction
         );
@@ -166,7 +170,7 @@ public class SimulationComponents {
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 Car.HOR_DIR, // this is for calculating the number of cars which each lane can hold
-                false,  // pedestrian crossings
+                crossings_enabled,  // pedestrian crossings
                 Direction.LEFT, // the junction arm direction
                 vph_4 // VPH for each outbound direction
         );
@@ -187,31 +191,12 @@ public class SimulationComponents {
         traffic_system = new TrafficLights(10,10,10,10,60,2,junction_arms_out);
         traffic_system.run_lights();
 
-        carsToAdd = new Rectangle[]{
-
-//                junction_arms_in[0].spawn_car_in_lane(4),
-//                junction_arms_in[0].spawn_car_in_lane(3),
-//                junction_arms_in[0].spawn_car_in_lane(2),
-//                junction_arms_in[0].spawn_car_in_lane(1),
-                // junction_arms_in[0].spawn_car_in_lane(0, Cardinal.S),
-
-                // junction_arms_in[2].spawn_car_in_lane(0, Cardinal.S),
-                // junction_arms_in[3].spawn_car_in_lane(0, Cardinal.S),
-                // junction_arms_in[3].spawn_car_in_lane(0, Cardinal.S),
-//                junction_arms_in[0].spawn_car_in_lane(0),
-                // junction_arms_in[1].spawn_car_in_lane(0, Cardinal.S),
-//                junction_arms_in[1].spawn_car_in_lane(1),
-//                junction_arms_in[2].spawn_car_in_lane(0),
-//                junction_arms_in[3].spawn_car_in_lane(0),
-//                junction_arms_in[3].spawn_car_in_lane(1),
-//                junction_arms_in[0].spawn_car_in_lane(1),
-        };
-//        corners[2].setArcHeight(100);
-//        corners[2].setArcWidth(100);
         corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.BLUE);
         corners[2].setFill(Color.RED);
         corners[3].setFill(Color.PINK);
+
+
         if (crossings_enabled){
             addCrossings(NUMBER_OF_LINES);
         }
@@ -237,6 +222,7 @@ public class SimulationComponents {
                         getCornerPositions("bl")[0] + getCornerDims("bl")[0], Math.max(getCornerPositions("bl")[1], getCornerPositions("br")[1]), getCornerPositions("br")[0] - getCornerPositions("bl")[0] - getCornerDims("bl")[0], (sim_w/PEDESTRIAN_SCALE_FACTOR)
                 )
         };
+        PEDESTRIAN_CROSSING_WIDTH = verticalcrossings[0].getWidth();
         for (Rectangle verticalrectangle: verticalcrossings){
             for (int i = 1; i < stripecount; i+= 2){
                 crossings.add(new Rectangle(verticalrectangle.getX(), verticalrectangle.getY() + i * verticalrectangle.getHeight()/stripecount, verticalrectangle.getWidth(), verticalrectangle.getHeight()/stripecount));

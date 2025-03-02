@@ -12,7 +12,7 @@ public class Lane {
     private int lane_capacity;
     private boolean is_bus;
     private boolean is_left;
-    private boolean has_pedestrian;
+    private int has_pedestrian;
     public static final double lane_w = 30;
     private double spawn_position_x;
     private double spawn_position_y;
@@ -24,7 +24,7 @@ public class Lane {
         cars = new ArrayList<>();
         this.direction = direction;
         this.lane_capacity = lane_capacity;
-        this.has_pedestrian = has_pedestrian;
+        this.has_pedestrian = has_pedestrian ? 1 : 0;
         this.lane_number = lane_number; // the lane number in the particular road
         switch (direction){
             case TOP:
@@ -121,16 +121,16 @@ public class Lane {
         switch (this.direction) {
             case TOP:
 //                    System.out.println("Car Y:"+ y + " Front of road Y:"+ front_of_road_y);
-                if (y >= front_of_road_y) { return true; }
+                if (y >= front_of_road_y - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) { return true; }
                 break;
             case RIGHT:
-                if (x <= front_of_road_x) { return true; }
+                if (x <= front_of_road_x + SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) { return true; }
                 break;
             case BOTTOM:
-                if (y <= front_of_road_y) { return true; }
+                if (y <= front_of_road_y + SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()) { return true; }
                 break;
             case LEFT:
-                if (x >= front_of_road_x) { return true; }
+                if (x >= front_of_road_x - Car.CAR_HEIGHT-SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) { return true; }
                 break;
         }
         return false;
