@@ -7,7 +7,7 @@ import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 
-public class SimulationCellFactory extends ListCell<SimListItem> {
+public class SimulationCellFactory extends ListCell<Simulation> {
     private final SimulationManager simulationManager;
     private final PrimaryController controller;
 
@@ -17,7 +17,7 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
     }
 
     @Override
-    protected void updateItem(SimListItem item, boolean empty) {
+    protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
@@ -51,7 +51,7 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         return hbox;
     }
 
-    private HBox createRegularSimulationCell(SimListItem item) {
+    private HBox createRegularSimulationCell(Simulation item) {
         HBox hbox = new HBox(10);
         hbox.setPrefHeight(75);
         hbox.setPrefHeight(75);
@@ -104,7 +104,7 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         }
     }
 
-    private void handleRename(SimListItem item, HBox box) {
+    private void handleRename(Simulation item, HBox box) {
         TextField renameField = new TextField();
         renameField.setOnAction(e -> validateAndApplyRename(renameField, item, box));
         renameField.focusedProperty().addListener((obs, oldVal, newVal) -> {
@@ -115,7 +115,7 @@ public class SimulationCellFactory extends ListCell<SimListItem> {
         renameField.requestFocus();
     }
 
-    private void validateAndApplyRename(TextField renameField, SimListItem item, HBox box) {
+    private void validateAndApplyRename(TextField renameField, Simulation item, HBox box) {
         String newName = renameField.getText().trim();
         if (!newName.isEmpty()) {
             item.setSimName(newName);

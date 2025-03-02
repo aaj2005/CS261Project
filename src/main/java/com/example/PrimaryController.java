@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class PrimaryController {
-    @FXML private ListView<SimListItem> simList;
+    @FXML private ListView<Simulation> simList;
     @FXML private AnchorPane graphContainer;
     @FXML private Tab metricsTab;
     @FXML private Button run_button;
@@ -38,14 +38,14 @@ public class PrimaryController {
 
 
     private SimulationManager simulationManager;
-    private ListCell<SimListItem> selectedCell;
+    private ListCell<Simulation> selectedCell;
 
     @FXML
     public void initialize() {
         simulationManager = new SimulationManager(simList.getItems());
 
-        simList.getItems().add(new SimListItem("Simulation 1"));
-        simList.getItems().add(new SimListItem("New Simulation"));
+        simList.getItems().add(new Simulation("Simulation 1"));
+        simList.getItems().add(new Simulation("New Simulation"));
 
         simList.setCellFactory(param -> new SimulationCellFactory(simulationManager, this));
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -90,7 +90,7 @@ public class PrimaryController {
         run_button.setDisable(true);
     }
 
-    public void setSelectedCell(ListCell<SimListItem> cell) {
+    public void setSelectedCell(ListCell<Simulation> cell) {
         if (selectedCell != null) {
             selectedCell.setStyle("");
         }
@@ -100,7 +100,7 @@ public class PrimaryController {
         }
     }
 
-    public ListCell<SimListItem> getSelectedCell() {
+    public ListCell<Simulation> getSelectedCell() {
         return selectedCell;
     }
 
