@@ -50,7 +50,9 @@ public class Road extends JunctionElement{
             int dir, // direction used for calculating number of cars that can fit in one lane
             boolean has_pedestrian,
             Direction direction,
-            float[] vph
+            float[] vph,
+            int max_lane_out,
+            Animations animations
     ){
         light_status = false;
 
@@ -62,7 +64,7 @@ public class Road extends JunctionElement{
 
         // instantiate lane object for each lane
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(lane_capacity,has_pedestrian,0,0,direction,i,corner1,corner2));
+            lanes.add(new Lane(lane_capacity,max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations));
         }
         this.lane_capacity = lane_capacity;
         this.direction = direction;
@@ -85,9 +87,11 @@ public class Road extends JunctionElement{
             int dir,
             boolean has_pedestrian,
             Direction direction,
-            float[] vph
-    ){
-        this(lane_count, corner1, corner2, dir, has_pedestrian, direction, vph);
+            float[] vph,
+            int max_lane_out,
+            Animations animations
+            ){
+        this(lane_count, corner1, corner2, dir, has_pedestrian, direction, vph,max_lane_out,animations);
         this.priority = priority;
     }
 
@@ -101,11 +105,19 @@ public class Road extends JunctionElement{
             Direction direction,
             float[] vph,
             boolean has_left_turn,
-            boolean has_right_turn
+            boolean has_right_turn,
+            int max_lane_out,
+            Animations animations
     ){
-        this(lane_count, priority, corner1, corner2, dir, has_pedestrian, direction, vph);
+        this(lane_count, priority, corner1, corner2, dir, has_pedestrian, direction, vph, max_lane_out,animations);
         this.has_left_turn = has_left_turn;
         this.has_right_turn = has_right_turn;
+        if (has_left_turn){
+            lanes.get(0).set_left_turn();
+        }
+        if (has_right_turn){
+            lanes.get(lanes.size()-1).set_right_turn();
+        }
     }
 
     public void setCardinalPos(Direction d) {
@@ -189,6 +201,7 @@ public class Road extends JunctionElement{
             // if there exists a left-turn lane, that's where the car will spawn
             // assumes that the left-turn lane is 0
             if (this.has_left_turn) {
+
                 return this.spawn_car_in_lane(0, dir);
             }
 

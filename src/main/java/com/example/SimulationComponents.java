@@ -13,8 +13,8 @@ public class SimulationComponents {
 
 
     // center of the simulation
-    private double center_x;
-    private double center_y;
+    private final double center_x;
+    private final double center_y;
 
     // the corners of the simulation
     private Rectangle[] corners;
@@ -39,7 +39,7 @@ public class SimulationComponents {
     private static double PEDESTRIAN_CROSSING_WIDTH;
     // maximum number of lanes set
     private final int max_out;
-
+    private Animations animations;
     private float time = 0;
 
     public static double GET_PEDESTRIAN_CROSSING_WIDTH(){
@@ -80,7 +80,7 @@ public class SimulationComponents {
         center_x = corners[0].getWidth() + Lane.lane_w *max_out;
         center_y = corners[1].getHeight() + Lane.lane_w *max_out;
 
-
+        animations = new Animations(center_x, center_y);
         // line dividing incoming/outgoing lanes for each junction arm
         lane_separation = new Rectangle[]{
                 new Rectangle( // top junction arm
@@ -113,12 +113,17 @@ public class SimulationComponents {
         // create a road instance for TOP junction arm, this road is specifically for cars entering the junction
         junction_arms_in[0] = new Road(
                 lanes_arm1, // number of lanes
+                1, // priority
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 Car.VER_DIR, // this is for calculating the number of cars which each lane can hold
                 crossings_enabled, // pedestrian crossings
                 Direction.TOP, // the junction arm direction
-                vph_1 // VPH for each outbound direction
+                vph_1, // VPH for each outbound direction,
+                true, // left turn
+                true, // right turn
+                max_out, // maximum number of lanes in one road
+                animations
         );
 
         // set the spawn position for the TOP junction arm
@@ -130,13 +135,18 @@ public class SimulationComponents {
 
         // create a road instance for RIGHT junction arm, this road is specifically for cars entering the junction
         junction_arms_in[1] = new Road(
-                lanes_arm2, // number of lanes
+                lanes_arm2, // number of lanes,
+                1, // priority
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 Car.HOR_DIR, // this is for calculating the number of cars which each lane can hold
                 crossings_enabled,  // pedestrian crossings
                 Direction.RIGHT, // the junction arm direction
-                vph_2 // VPH for each outbound direction
+                vph_2, // VPH for each outbound direction
+                true, // left turn
+                true, // right turn
+                max_out, // maximum number of lanes in one road
+                animations
         );
 
         // set the spawn position for the RIGHT junction arm
@@ -148,13 +158,18 @@ public class SimulationComponents {
 
         // create a road instance for BOTTOM junction arm, this road is specifically for cars entering the junction
         junction_arms_in[2] = new Road(
-                lanes_arm3, // number of lanes
+                lanes_arm3, // number of lanes,
+                1, // priority
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 Car.VER_DIR, // this is for calculating the number of cars which each lane can hold
                 crossings_enabled,  // pedestrian crossings
                 Direction.BOTTOM, // the junction arm direction
-                vph_3 // VPH for each outbound direction
+                vph_3, // VPH for each outbound direction
+                true, // left turn
+                true, // right turn
+                max_out, // maximum number of lanes in one road
+                animations
         );
 
         // set the spawn position for the BOTTOM junction arm
@@ -167,12 +182,17 @@ public class SimulationComponents {
         // create a road instance for LEFT junction arm, this road is specifically for cars entering the junction
         junction_arms_in[3] = new Road(
                 lanes_arm4, // number of lanes
+                1, // priority
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 Car.HOR_DIR, // this is for calculating the number of cars which each lane can hold
                 crossings_enabled,  // pedestrian crossings
                 Direction.LEFT, // the junction arm direction
-                vph_4 // VPH for each outbound direction
+                vph_4, // VPH for each outbound direction
+                true, // left turn
+                true, // right turn
+                max_out, // maximum number of lanes in one road
+                animations
         );
 
         // set the spawn position for the LEFT junction arm
@@ -183,10 +203,10 @@ public class SimulationComponents {
         );
 
 
-        junction_arms_out[0] = new Road(lanes_arm1,getCornerDims("tl"),getCornerDims("tr"),Car.VER_DIR, false, Direction.TOP,vph_1);
-        junction_arms_out[1] = new Road(lanes_arm2,getCornerDims("tr"),getCornerDims("br"),Car.HOR_DIR, false, Direction.RIGHT,vph_2);
-        junction_arms_out[2] = new Road(lanes_arm3,getCornerDims("br"),getCornerDims("bl"),Car.VER_DIR, false, Direction.BOTTOM,vph_3);
-        junction_arms_out[3] = new Road(lanes_arm4,getCornerDims("bl"),getCornerDims("tl"),Car.HOR_DIR, false, Direction.LEFT,vph_4);
+        junction_arms_out[0] = new Road(lanes_arm1,1,getCornerDims("tl"),getCornerDims("tr"),Car.VER_DIR, false, Direction.TOP,vph_1,true,true,max_out,animations);
+        junction_arms_out[1] = new Road(lanes_arm2,1,getCornerDims("tr"),getCornerDims("br"),Car.HOR_DIR, false, Direction.RIGHT,vph_2,true,true,max_out,animations);
+        junction_arms_out[2] = new Road(lanes_arm3,1,getCornerDims("br"),getCornerDims("bl"),Car.VER_DIR, false, Direction.BOTTOM,vph_3,true,true,max_out,animations);
+        junction_arms_out[3] = new Road(lanes_arm4,1,getCornerDims("bl"),getCornerDims("tl"),Car.HOR_DIR, false, Direction.LEFT,vph_4,true,true,max_out,animations);
 
         traffic_system = new TrafficLights(10,10,10,10,60,2,junction_arms_out);
         traffic_system.run_lights();
@@ -363,20 +383,46 @@ public class SimulationComponents {
         }
     }
 
+    public int get_road_after_left(Direction direction){
+        switch (direction){
+            case TOP: return 3;
+            case BOTTOM: return 1;
+            case RIGHT: return 0;
+            case LEFT: return 2;
+            default: return -1;
+        }
+    }
+    public int get_road_after_right(Direction direction){
+        switch (direction){
+            case TOP: return 1;
+            case BOTTOM: return 3;
+            case RIGHT: return 2;
+            case LEFT: return 0;
+            default: return -1;
+        }
+    }
+
     private void moveCars() {
         for (int i=0; i< 4; i++) {
 
             // move cars if the light is green and the junction is clear
             if (traffic_system.getLight_status()[i] && !traffic_system.isCar_in_junction()){
-
-
                 this.junction_arms_in[i].moveCars();
 
-                for (int j=0; j< junction_arms_in[i].getLanes().size(); j++ ){
+
+                int num_of_lanes =junction_arms_in[i].getLanes().size();
+                for (int j=0; j< num_of_lanes; j++ ){
                     Lane lane = junction_arms_in[i].getLanes().get(j);
                     if (!lane.getCars().isEmpty()){
                         if(lane.car_in_junction(lane.get_first_car())){
-                            junction_arms_out[i].getLanes().get(j).add_car(lane.remove_first_car());
+                            if (j==0 && lane.is_left()){
+                                junction_arms_out[get_road_after_left(lane.getDirection())].getLanes().get(j).add_car(lane.remove_first_car());
+                            }else if (j==num_of_lanes-1 && lane.is_right()){
+                                junction_arms_out[get_road_after_right(lane.getDirection())].getLanes().get(j).add_car(lane.remove_first_car());
+                            }else{
+                                junction_arms_out[i].getLanes().get(j).add_car(lane.remove_first_car());
+                            }
+
                         }
                     }
                 }

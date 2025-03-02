@@ -5,8 +5,6 @@ import javafx.animation.PathTransition;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.QuadCurveTo;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class Animations {
@@ -117,7 +115,7 @@ public class Animations {
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
-
+        car.set_turning();
         // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
             double startTime = 0;
@@ -168,6 +166,7 @@ public class Animations {
                 pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
+                    car.set_made_turn();
                     stop();
                 }
             }
@@ -250,7 +249,7 @@ public class Animations {
         quad.setControlX(pivot_point_x);
         quad.setControlY(pivot_point_y);
 
-        double totalDuration = 3.5; // animation seconds
+        double totalDuration = 0.033; // animation seconds
 
         // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
@@ -262,7 +261,7 @@ public class Animations {
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
-
+        car.set_turning();
         // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
             double startTime = 0;
@@ -317,6 +316,7 @@ public class Animations {
 
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
+                    car.set_made_turn();
                     stop();
                 }
             }

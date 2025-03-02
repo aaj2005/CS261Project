@@ -11,7 +11,8 @@ public class Lane {
     private ArrayList<Car> cars;
     private int lane_capacity;
     private boolean is_bus;
-    private boolean is_left;
+    private boolean is_left =false;
+    private boolean is_right=false;
     private int has_pedestrian;
     public static final double lane_w = 30;
     private double spawn_position_x;
@@ -19,13 +20,33 @@ public class Lane {
     private int lane_number;
     private double front_of_road_x=0;
     private double front_of_road_y=0;
+    private double[] corner1_dims;
+    private double[] corner2_dims;
 
-    public Lane(int lane_capacity, boolean has_pedestrian, double start_x, double start_y, Direction direction, int lane_number, double[] corner1_dims,double[] corner2_dims) {
+    private int max_lane_out;
+    private int lanes_in_road;
+    private Animations animations;
+
+    public Lane(
+        int lane_capacity,
+        int max_lane_out,
+        boolean has_pedestrian,
+        Direction direction,
+        int lane_number,
+        int lanes_in_road,
+        double[] corner1_dims,
+        double[] corner2_dims,
+        Animations animations
+    ) {
+
         cars = new ArrayList<>();
         this.direction = direction;
         this.lane_capacity = lane_capacity;
         this.has_pedestrian = has_pedestrian ? 1 : 0;
         this.lane_number = lane_number; // the lane number in the particular road
+        this.lanes_in_road = lanes_in_road;
+        this.max_lane_out = max_lane_out;
+        this.animations =animations;
         switch (direction){
             case TOP:
                 front_of_road_y = Math.min(corner1_dims[1],corner2_dims[1]) - Car.CAR_HEIGHT;
@@ -41,11 +62,18 @@ public class Lane {
                 front_of_road_x = Math.min(corner1_dims[0],corner2_dims[0]);
                 break;
         }
+        this.corner1_dims = corner1_dims;
+        this.corner2_dims = corner1_dims;
 
         spawn_position_x = 0;
         spawn_position_y = 0;
     }
-
+    public void set_left_turn(){
+        is_left = true;
+    }
+    public void set_right_turn(){
+        is_right = true;
+    }
     // set the Y spawn position for the lane
     public void setSpawn_position_x(double spawn_position_x) {
         this.spawn_position_x = spawn_position_x + direction.getLane_switch_x() * (lane_w * lane_number) ;
@@ -82,21 +110,6 @@ public class Lane {
         for (Car car : this.cars) {
             Rectangle carRect = car.getShape();
             double x = carRect.getX(), y = carRect.getY();
-            // switch (this.direction) {
-            //     case TOP:
-            //         if (y < -Car.CAR_HEIGHT/2 + Car.CAR_GAP) { return true; }
-            //         break;
-            //     case RIGHT:
-            //         if (x > SimulationComponents.sim_w - Car.CAR_WIDTH/2 - Car.CAR_GAP) { return true; }
-            //         break;
-            //     case BOTTOM:
-            //         if (y > SimulationComponents.sim_h - Car.CAR_HEIGHT/2 - Car.CAR_GAP) { return true; }
-            //         break;
-            //     case LEFT:
-            //         if (x < -Car.CAR_WIDTH + Car.CAR_GAP) { return true; }
-            //         break;
-            // }
-
             switch (this.direction) {
                 case TOP:
                     if (y < -Car.CAR_HEIGHT/2 + Car.CAR_GAP) { return true; }
@@ -159,47 +172,69 @@ public class Lane {
      */
     public void moveCars() {
         ArrayList<Rectangle> cars_to_remove=new ArrayList<>();
-        ArrayList<Car> cars_to_remove2 = new ArrayList<>();
+        ArrayList<Car> car_shape_remove = new ArrayList<>();
         for (Car c : this.cars) {
             // get x and y pos of car currently
             Rectangle carRect = c.getShape();
             double x = carRect.getX(), y = carRect.getY();
 
-            // System.out.println("car at x: " + x + ", y: " + y);
-
             // move the car
             double[] dirMod = this.getDirectionModifier(this.direction);
-            carRect.setX(x + dirMod[0]*Car.CAR_SPEED);
-            carRect.setY(y + dirMod[1]*Car.CAR_SPEED);
+
+            // wait till car reaches very front of lane (so it can turn)
+            boolean car_ready_to_turn = false;
             switch (this.direction){
                 case TOP:
-                    if (carRect.getY() >= SimulationComponents.sim_h){
+                    car_ready_to_turn = Math.min(corner2_dims[1],corner1_dims[1])-Car.CAR_HEIGHT-Car.CAR_GAP <=y && (is_left || is_right) && !c.has_made_turn();
+                    break;
+                case RIGHT:
+                    car_ready_to_turn =( SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0]) >= x && (is_left || is_right) && !c.has_made_turn());
+//                    System.out.println(car_ready_to_turn);
+                    break;
+                case BOTTOM:
+                    car_ready_to_turn = SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y && (is_left || is_right) && !c.has_made_turn();
+                    break;
+                case LEFT:
+                    car_ready_to_turn = Math.min(corner1_dims[0],corner2_dims[0])- Car.CAR_HEIGHT <= x && (is_left || is_right) && !c.has_made_turn();
+                    break;
+            }
+            if (!car_ready_to_turn && !c.is_turning()){
+                carRect.setX(x + dirMod[0]*Car.CAR_SPEED);
+                carRect.setY(y + dirMod[1]*Car.CAR_SPEED);
+            }else if (is_left && !c.is_turning() && !c.has_made_turn()){
+                animations.turn_left(c, c.getDirection(), x+c.getDirection().getRight_turn_pos_x(), y+c.getDirection().getRight_turn_pos_y(), lanes_in_road, max_lane_out);
+            }else if (is_right && !c.is_turning() && !c.has_made_turn()){
+                animations.turn_right(c, c.getDirection(), x+c.getDirection().getRight_turn_pos_x(),y+c.getDirection().getRight_turn_pos_y());
+            }
+            switch (this.direction){
+                case TOP:
+                    if (carRect.getY() >= SimulationComponents.sim_h || carRect.getX() >= SimulationComponents.sim_w || carRect.getX()+Car.CAR_HEIGHT <= 0){
                         cars_to_remove.add(c.getShape());
-                        cars_to_remove2.add(c);
+                        car_shape_remove.add(c);
                     }
                     break;
                 case BOTTOM:
-                    if (carRect.getY()+Car.CAR_HEIGHT <= 0){
+                    if (carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getX() >= SimulationComponents.sim_w || carRect.getX()+Car.CAR_HEIGHT <= 0){
                         cars_to_remove.add(c.getShape());
-                        cars_to_remove2.add(c);
+                        car_shape_remove.add(c);
                     }
                     break;
                 case LEFT:
-                    if (carRect.getX() >= SimulationComponents.sim_w){
+                    if (carRect.getX() >= SimulationComponents.sim_w || carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getY() >= SimulationComponents.sim_h){
                         cars_to_remove.add(c.getShape());
-                        cars_to_remove2.add(c);
+                        car_shape_remove.add(c);
                     }
                     break;
                 case RIGHT:
-                    if (carRect.getX()+Car.CAR_HEIGHT <= 0){
+                    if (carRect.getX()+Car.CAR_HEIGHT <= 0 || carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getY() >= SimulationComponents.sim_h){
                         cars_to_remove.add(c.getShape());
-                        cars_to_remove2.add(c);
+                        car_shape_remove.add(c);
                     }
                     break;
             }
         }
         // remove car from car array
-        for (Car car : cars_to_remove2){
+        for (Car car : car_shape_remove){
             cars.remove(car);
         }
         // remove car from simulation display
@@ -228,5 +263,15 @@ public class Lane {
 
     public ArrayList<Car> getCars() {
         return cars;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+    public boolean is_right(){
+        return this.is_right;
+    }
+    public boolean is_left(){
+        return this.is_left;
     }
 }

@@ -152,15 +152,15 @@ public class TrafficLights {
                 }
 
             }
-            if (time_traffic - Math.floor(time_traffic) >= 0.8){
-                System.out.println("Current Time: " + (time_traffic));
-                System.out.println("Light 1: "+ light_status[0] + " Light 2: "+ light_status[1] + " Light 3: "+ light_status[2] + " Light 4: "+ light_status[3]);
-                System.out.println("Time traffic1: " + time_traffic1 + " Time traffic2: " + time_traffic2 + " Time traffic3: " + time_traffic3 + " Time traffic4: " + time_traffic4);
-                System.out.println("Pedestrian Crossing:" + pedestrian_crossing);
-                System.out.println("Run crossing: " + run_crossing);
-                System.out.println("Next light: " + nextlight);
-                System.out.println("----------------------------------------------------");
-            }
+//            if (time_traffic - Math.floor(time_traffic) >= 0.8){
+//                System.out.println("Current Time: " + (time_traffic));
+//                System.out.println("Light 1: "+ light_status[0] + " Light 2: "+ light_status[1] + " Light 3: "+ light_status[2] + " Light 4: "+ light_status[3]);
+//                System.out.println("Time traffic1: " + time_traffic1 + " Time traffic2: " + time_traffic2 + " Time traffic3: " + time_traffic3 + " Time traffic4: " + time_traffic4);
+//                System.out.println("Pedestrian Crossing:" + pedestrian_crossing);
+//                System.out.println("Run crossing: " + run_crossing);
+//                System.out.println("Next light: " + nextlight);
+//                System.out.println("----------------------------------------------------");
+//            }
             
 
         }));
