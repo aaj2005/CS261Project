@@ -9,11 +9,32 @@ public class PrimaryController {
     @FXML private ListView<SimListItem> simList;
     @FXML private AnchorPane graphContainer;
     @FXML private Tab metricsTab;
-    @FXML private CheckBox pc_enabled;
-    @FXML private TextField crossing_duration, crossing_requests;
-    @FXML private Label lbl_duration, lbl_requests;
     @FXML private Button run_button;
 
+    // Northbound controls
+    @FXML private ChoiceBox<Integer> nb_lanes;
+    @FXML private CheckBox n_buslane, n_leftturn;
+    @FXML private TextField txt_nn, txt_ne, txt_nw;
+
+    // Eastbound controls
+    @FXML private ChoiceBox<Integer> eb_lanes;
+    @FXML private CheckBox e_buslane, e_leftturn;
+    @FXML private TextField txt_en, txt_ee, txt_es;
+
+    // Southbound controls
+    @FXML private ChoiceBox<Integer> sb_lanes;
+    @FXML private CheckBox s_buslane, s_leftturn;
+    @FXML private TextField txt_se, txt_ss, txt_sw;
+
+    // Westbound controls
+    @FXML private ChoiceBox<Integer> wb_lanes;
+    @FXML private CheckBox w_buslane, w_leftturn;
+    @FXML private TextField txt_wn, txt_ws, txt_ww;
+
+    // Pedestrian crossing controls
+    @FXML private CheckBox pc_enabled;
+    @FXML private Label lbl_duration, lbl_requests;
+    @FXML private TextField crossing_duration, crossing_requests;
 
 
     private SimulationManager simulationManager;
