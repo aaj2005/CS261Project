@@ -17,13 +17,30 @@ public class Lane {
     private double spawn_position_x;
     private double spawn_position_y;
     private int lane_number;
+    private double front_of_road_x=0;
+    private double front_of_road_y=0;
 
-    public Lane(int lane_capacity, boolean has_pedestrian, double start_x, double start_y, Direction direction, int lane_number) {
+    public Lane(int lane_capacity, boolean has_pedestrian, double start_x, double start_y, Direction direction, int lane_number, double[] corner1_dims,double[] corner2_dims) {
         cars = new ArrayList<>();
         this.direction = direction;
         this.lane_capacity = lane_capacity;
         this.has_pedestrian = has_pedestrian;
         this.lane_number = lane_number; // the lane number in the particular road
+        switch (direction){
+            case TOP:
+                front_of_road_y = Math.min(corner1_dims[1],corner2_dims[1]) - Car.CAR_HEIGHT;
+                break;
+            case BOTTOM:
+                front_of_road_y = Math.min(SimulationComponents.sim_h-corner1_dims[1],SimulationComponents.sim_h-corner2_dims[1]);
+
+                break;
+            case RIGHT:
+                front_of_road_x = Math.max(SimulationComponents.sim_w-corner1_dims[0],SimulationComponents.sim_w-corner2_dims[0]);
+                break;
+            case LEFT:
+                front_of_road_x = Math.min(corner1_dims[0],corner2_dims[0]);
+                break;
+        }
 
         spawn_position_x = 0;
         spawn_position_y = 0;
@@ -98,6 +115,28 @@ public class Lane {
         return false;
     }
 
+    public boolean car_in_junction(Car car){
+        Rectangle carRect = car.getShape();
+        double x = carRect.getX(), y = carRect.getY();
+        switch (this.direction) {
+            case TOP:
+//                    System.out.println("Car Y:"+ y + " Front of road Y:"+ front_of_road_y);
+                if (y >= front_of_road_y) { return true; }
+                break;
+            case RIGHT:
+                if (x <= front_of_road_x) { return true; }
+                break;
+            case BOTTOM:
+                if (y <= front_of_road_y) { return true; }
+                break;
+            case LEFT:
+                if (x >= front_of_road_x) { return true; }
+                break;
+        }
+        return false;
+
+    }
+
     public Car get_first_car(){
         if (!cars.isEmpty()){
             return cars.get(0);
@@ -105,10 +144,22 @@ public class Lane {
         throw new IndexOutOfBoundsException("No car in specified lane");
     }
 
+    public void add_car(Car car){
+        cars.add(car);
+    }
+
+    public Car remove_first_car(){
+        Car temp = cars.get(0);
+        cars.remove(0);
+        return temp;
+    }
+
     /*
      * moves all cars in the lane towards the junction
      */
     public void moveCars() {
+        ArrayList<Rectangle> cars_to_remove=new ArrayList<>();
+        ArrayList<Car> cars_to_remove2 = new ArrayList<>();
         for (Car c : this.cars) {
             // get x and y pos of car currently
             Rectangle carRect = c.getShape();
@@ -120,6 +171,40 @@ public class Lane {
             double[] dirMod = this.getDirectionModifier(this.direction);
             carRect.setX(x + dirMod[0]*Car.CAR_SPEED);
             carRect.setY(y + dirMod[1]*Car.CAR_SPEED);
+            switch (this.direction){
+                case TOP:
+                    if (carRect.getY() >= SimulationComponents.sim_h){
+                        cars_to_remove.add(c.getShape());
+                        cars_to_remove2.add(c);
+                    }
+                    break;
+                case BOTTOM:
+                    if (carRect.getY()+Car.CAR_HEIGHT <= 0){
+                        cars_to_remove.add(c.getShape());
+                        cars_to_remove2.add(c);
+                    }
+                    break;
+                case LEFT:
+                    if (carRect.getX() >= SimulationComponents.sim_w){
+                        cars_to_remove.add(c.getShape());
+                        cars_to_remove2.add(c);
+                    }
+                    break;
+                case RIGHT:
+                    if (carRect.getX()+Car.CAR_HEIGHT <= 0){
+                        cars_to_remove.add(c.getShape());
+                        cars_to_remove2.add(c);
+                    }
+                    break;
+            }
+        }
+        // remove car from car array
+        for (Car car : cars_to_remove2){
+            cars.remove(car);
+        }
+        // remove car from simulation display
+        for(Rectangle car: cars_to_remove){
+            App.root.getChildren().remove(car);
         }
     }
 
@@ -139,5 +224,9 @@ public class Lane {
             case RIGHT:  return new double[] { -1, 0 };
             default: return null; // hopefully this state should never be reached
         }
+    }
+
+    public ArrayList<Car> getCars() {
+        return cars;
     }
 }

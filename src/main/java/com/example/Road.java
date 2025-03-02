@@ -25,7 +25,7 @@ public class Road extends JunctionElement{
 
     // the position of the car 
     private Cardinal cardinal_pos;
-    
+
     // how frequently cars spawn for each outbound direction
     // spawnRate[Direction.Up] = how frequently a car spawns on this road and is headed north
     // if cars never spawn, spawnRate[x] will be -1
@@ -44,13 +44,13 @@ public class Road extends JunctionElement{
      * @param vph The vph outbound in every direction
      */
     public Road(
-        int lane_count,
-        double[] corner1, // two adjacent corners to the road
-        double[] corner2, // two adjacent corners to the road
-        int dir, // direction used for calculating number of cars that can fit in one lane
-        boolean has_pedestrian,
-        Direction direction,
-        float[] vph
+            int lane_count,
+            double[] corner1, // two adjacent corners to the road
+            double[] corner2, // two adjacent corners to the road
+            int dir, // direction used for calculating number of cars that can fit in one lane
+            boolean has_pedestrian,
+            Direction direction,
+            float[] vph
     ){
         light_status = false;
 
@@ -62,11 +62,11 @@ public class Road extends JunctionElement{
 
         // instantiate lane object for each lane
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(lane_capacity,has_pedestrian,0,0,direction,i));
+            lanes.add(new Lane(lane_capacity,has_pedestrian,0,0,direction,i,corner1,corner2));
         }
         this.lane_capacity = lane_capacity;
         this.direction = direction;
-        
+
         // calculates how long it takes for a car to spawn
         for (int i=0; i<4; i++) {
             this.spawnFreq[i] = (vph[i] == 0) ? -1 : 3600/vph[i];
@@ -78,30 +78,30 @@ public class Road extends JunctionElement{
     }
 
     public Road(
-        int lane_count,
-        int priority,
-        double[] corner1,
-        double[] corner2,
-        int dir,
-        boolean has_pedestrian,
-        Direction direction,
-        float[] vph
+            int lane_count,
+            int priority,
+            double[] corner1,
+            double[] corner2,
+            int dir,
+            boolean has_pedestrian,
+            Direction direction,
+            float[] vph
     ){
         this(lane_count, corner1, corner2, dir, has_pedestrian, direction, vph);
         this.priority = priority;
     }
 
     public Road(
-        int lane_count,
-        int priority,
-        double[] corner1,
-        double[] corner2,
-        int dir,
-        boolean has_pedestrian,
-        Direction direction,
-        float[] vph,
-        boolean has_left_turn,
-        boolean has_right_turn
+            int lane_count,
+            int priority,
+            double[] corner1,
+            double[] corner2,
+            int dir,
+            boolean has_pedestrian,
+            Direction direction,
+            float[] vph,
+            boolean has_left_turn,
+            boolean has_right_turn
     ){
         this(lane_count, priority, corner1, corner2, dir, has_pedestrian, direction, vph);
         this.has_left_turn = has_left_turn;
@@ -191,13 +191,13 @@ public class Road extends JunctionElement{
             if (this.has_left_turn) {
                 return this.spawn_car_in_lane(0, dir);
             }
-            
+
             // iterate over lanes from left to right
             // spawn a car in the lane which has the least amount of cars in it
             int lane = 0;
             while (
-                lane+1<this.lanes.size() // check that you haven't reached the last lane
-             && this.numSpawned[lane] > this.numSpawned[lane+1] // check that there are more cars here than in the next lane
+                    lane+1<this.lanes.size() // check that you haven't reached the last lane
+                            && this.numSpawned[lane] > this.numSpawned[lane+1] // check that there are more cars here than in the next lane
             ) { lane++; }
 
             return this.spawn_car_in_lane(lane, dir);
@@ -262,7 +262,7 @@ public class Road extends JunctionElement{
         for (int i=0; i<4; i++) {
             if (a == validA[i] && b == validB[i]) {
                 return true;
-            }    
+            }
         }
         return false;
     }
@@ -277,7 +277,7 @@ public class Road extends JunctionElement{
         for (int i=0; i<4; i++) {
             if (a == validA[i] && b == validB[i]) {
                 return true;
-            }    
+            }
         }
         return false;
     }
@@ -295,7 +295,7 @@ public class Road extends JunctionElement{
                 total_spawn_rate += 1/this.spawnFreq[i];
             }
         }
-        
+
         // prevents division by zero errors later
         if (total_spawn_rate == 0) { return new Integer[this.lanes.size()]; }
 
@@ -351,6 +351,10 @@ public class Road extends JunctionElement{
         for (Lane lane : this.lanes) {
             lane.moveCars();
         }
+    }
+
+    public ArrayList<Lane> getLanes() {
+        return lanes;
     }
 }
 

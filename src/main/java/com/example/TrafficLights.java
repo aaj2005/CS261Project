@@ -12,16 +12,18 @@ public class TrafficLights {
     private double time4; // time for left junction lights to be on
     private double s_per_request; // seconds per request for pedestrian crossings
     private double crossing_dur; // pedestrian crossing duration
+    private Road[] out_junc;
 
     // time1 = top junction
     // time2 = right junction
     // time3 = bottom junction
     // time4 = left junction
-    public TrafficLights(double time1, double time2, double time3, double time4, double requests_ph, double crossing_dur) {
+    public TrafficLights(double time1, double time2, double time3, double time4, double requests_ph, double crossing_dur,Road[] out_junc ) {
         this.time1 = time1;
         this.time2 = time2;
         this.time3 = time3;
         this.time4 = time4;
+        this.out_junc = out_junc;
         this.s_per_request = 1/(requests_ph/3600); // convert from requests per hour to seconds per request
         this.crossing_dur = crossing_dur;
         if (time1+time2+time3+time4 == 0){
@@ -45,12 +47,15 @@ public class TrafficLights {
 
     private boolean run_crossing =false;    // disable all lights and allow pedestrians to move
 
+    private boolean car_in_junction = false;
+
 
     public void run_lights(){
         Timeline traffic_timeline = new Timeline(new KeyFrame(Duration.millis(100), event ->{
             time_traffic +=0.1;
             time_crossing +=0.1;
-            if (run_crossing){
+
+            if (run_crossing && !car_in_junction){
                 
                 duration_crossing += 0.1;
                 if (duration_crossing >= crossing_dur){
@@ -64,80 +69,93 @@ public class TrafficLights {
                     time_traffic4 = 0;
                 }
 
-            }
-            else if (light_status[0]){
-                time_traffic1 +=0.1;
-                if (time_traffic1 >= time1 -0.05){
-                    if (time_crossing >= s_per_request){
-                        light_status[0] = false;
-                        run_crossing = true;
-                    }
-                    else{
-                        light_status[0] = false;
-                        light_status[1] = true;
-                        time_traffic1 = 0;
-                        time_traffic2 = 0;
-                        nextlight = 2;
-                    }
-                    
-                }
-            }
-            else if (light_status[1]){
-                time_traffic2 +=0.1;
-                if (time_traffic2 >= time2 -0.05){
-                    if (time_crossing >= s_per_request){
-                        light_status[1] = false;
-                        run_crossing = true;
+            }else{
 
+                if (car_in_junction){
+                    check_car_in_junction(); // repeatedly check to see if a car is still in junction
+                }else{
+                    if (light_status[0]){
+                        time_traffic1 +=0.1;
+                        if (time_traffic1 >= time1 -0.05){
+                            check_car_in_junction();
+                            if (time_crossing >= s_per_request){
+                                light_status[0] = false;
+                                run_crossing = true;
+                            }
+                            else{
+
+                                light_status[0] = false;
+                                light_status[1] = true;
+                                time_traffic1 = 0;
+                                time_traffic2 = 0;
+                                nextlight = 2;
+                            }
+
+                        }
                     }
-                    else{
-                        light_status[1] = false;
-                        light_status[2] = true;
-                        time_traffic2 = 0;
-                        time_traffic3 = 0;
-                        nextlight = 3;
+                    else if (light_status[1]){
+                        time_traffic2 +=0.1;
+                        if (time_traffic2 >= time2 -0.05){
+                            check_car_in_junction();
+                            if (time_crossing >= s_per_request){
+                                light_status[1] = false;
+                                run_crossing = true;
+
+                            }
+                            else{
+                                light_status[1] = false;
+                                light_status[2] = true;
+                                time_traffic2 = 0;
+                                time_traffic3 = 0;
+                                nextlight = 3;
+                            }
+
+                        }
                     }
-                    
+                    else if (light_status[2]){
+                        time_traffic3 +=0.1;
+                        if (time_traffic3 >= time3 -0.05){
+                            check_car_in_junction();
+                            if (time_crossing >= s_per_request){
+                                light_status[2] = false;
+                                run_crossing = true;
+                            }
+                            else{
+                                light_status[2] = false;
+                                light_status[3] = true;
+                                time_traffic3 = 0;
+                                time_traffic4 = 0;
+                                nextlight = 0;
+                            }
+
+                        }
+                    }
+                    else if (light_status[3]){
+                        time_traffic4 +=0.1;
+                        if (time_traffic4 >= time4 -0.05){
+                            check_car_in_junction();
+                            if (time_crossing >= s_per_request){
+                                light_status[3] = false;
+                                run_crossing = true;
+                            }
+                            else{
+                                light_status[3] = false;
+                                light_status[0] = true;
+                                time_traffic4 = 0;
+                                time_traffic1 = 0;
+                                nextlight = 1;
+                            }
+
+                        }
+                    }
+
                 }
-            }
-            else if (light_status[2]){
-                time_traffic3 +=0.1;
-                if (time_traffic3 >= time3 -0.05){
-                    if (time_crossing >= s_per_request){
-                        light_status[2] = false;
-                        run_crossing = true;
-                    }
-                    else{
-                        light_status[2] = false;
-                        light_status[3] = true;
-                        time_traffic3 = 0;
-                        time_traffic4 = 0;
-                        nextlight = 0;
-                    }
-                    
-                }
-            }
-            else if (light_status[3]){
-                time_traffic4 +=0.1;
-                if (time_traffic4 >= time4 -0.05){
-                    if (time_crossing >= s_per_request){
-                        light_status[3] = false;
-                        run_crossing = true;
-                    }
-                    else{
-                        light_status[3] = false;
-                        light_status[0] = true;
-                        time_traffic4 = 0;
-                        time_traffic1 = 0;
-                        nextlight = 1;
-                    }
-                    
-                }
+
             }
             if (time_traffic - Math.floor(time_traffic) >= 0.8){
-                System.out.println("Time traffic1: " + time_traffic1 + " Time traffic2: " + time_traffic2 + " Time traffic3: " + time_traffic3 + " Time traffic4: " + time_traffic4);
                 System.out.println("Current Time: " + (time_traffic));
                 System.out.println("Light 1: "+ light_status[0] + " Light 2: "+ light_status[1] + " Light 3: "+ light_status[2] + " Light 4: "+ light_status[3]);
+                System.out.println("Time traffic1: " + time_traffic1 + " Time traffic2: " + time_traffic2 + " Time traffic3: " + time_traffic3 + " Time traffic4: " + time_traffic4);
                 System.out.println("Pedestrian Crossing:" + pedestrian_crossing);
                 System.out.println("Run crossing: " + run_crossing);
                 System.out.println("Next light: " + nextlight);
@@ -153,7 +171,23 @@ public class TrafficLights {
 
     }
 
+    private void check_car_in_junction(){
+        car_in_junction = false;
+        for (Road road: out_junc){
+            for (Lane lane: road.getLanes()){
+                if (!lane.getCars().isEmpty()) {
+                    car_in_junction = true;
+                    break;
+                }
+            }
+        }
+    }
+
     public boolean[] getLight_status() {
         return light_status;
+    }
+
+    public boolean isCar_in_junction() {
+        return car_in_junction;
     }
 }
