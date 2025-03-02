@@ -1,65 +1,58 @@
 package com.example;
 
 public enum Direction {
-    // next in lane: offset factor to determine position of the next car in the lane
     // rotation: determine angle to rotate car so that it faces in the correct direction
     // lane switch: factor to determine direction of offsetting a car left/right or top/bottom when choosing a lane
+   // right/left_turn_offset: to adjust the car's position on the lane after making a turn
     // right_trans/left_trans: to determine factor for mathematical equation when performing reflections/transformations for turning right/left
     // right/left _turn_pos: offset to the car's initial position before turning (javafx weirdness)
-    // straight_trans(straight + transgender): to determine factor for mathematical equation when performing reflections/transformations
-    //                                         for going straight, exists because javafx is horrible
-    
+    // road_after_left/right: get the junction_arm index for the road that you end up in after turning left/right
+
     TOP(
-            0, -Car.CAR_HEIGHT-Car.CAR_GAP,
             180,
             -1, 0,
             1, -1,
             -1, 1,
             0,0,
-            0,Car.CAR_HEIGHT,
+            0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            -1,-1
+            3,1
     ),
     BOTTOM(
-            0,Car.CAR_HEIGHT+ Car.CAR_GAP,
             0,
             1, 0,
             1, -1,
             -1,1,
             0,0,
-            0,Car.CAR_HEIGHT,
+            0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            -1,-1
+            1,3
     ),
     RIGHT(
-            Car.CAR_HEIGHT+Car.CAR_GAP, 0,
             0,
             0, -1,
             -1, 1,
             1,-1,
             0,0,
-            0,0,
+            -Car.CAR_WIDTH/2,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            1,-1
+            0,2
     ),
     LEFT(
-            -Car.CAR_HEIGHT- Car.CAR_GAP, 0,
             180,
             0, 1,
             -1, 1,
             1,-1,
             0,0,
-            0,0,
+            -Car.CAR_WIDTH/2,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            1,-1
+            2,0
     );
 
-    private final double next_in_lane_x;
-    private final double next_in_lane_y;
     private final double lane_switch_x;
     private final double lane_switch_y;
     private final double rotation;
@@ -67,8 +60,6 @@ public enum Direction {
     private final double right_trans_y;
     private final double left_trans_x;
     private final double left_trans_y;
-    private final double straight_trans_x;
-    private final double straight_trans_y;
     private final double right_turn_offset_x;
     private final double right_turn_offset_y;
     private final double left_turn_offset_x;
@@ -77,11 +68,12 @@ public enum Direction {
     private final double right_turn_pos_y;
     private final double left_turn_pos_x;
     private final double left_turn_pos_y;
+    private final int road_after_left;
+    private final int road_after_right;
 
 
 
     Direction(
-            double next_in_lane_x, double next_in_lane_y,
             double rotation,
             double lane_switch_x, double lane_switch_y,
             double right_trans_x, double right_trans_y,
@@ -90,10 +82,8 @@ public enum Direction {
             double left_turn_offset_x, double left_turn_offset_y,
             double right_turn_pos_x, double right_turn_pos_y,
             double left_turn_pos_x, double left_turn_pos_y,
-            double straight_trans_x, double straight_trans_y
+            int road_after_left, int road_after_right
     ){
-        this.next_in_lane_x = next_in_lane_x;
-        this.next_in_lane_y = next_in_lane_y;
         this.rotation = rotation;
         this.lane_switch_x = lane_switch_x;
         this.lane_switch_y = lane_switch_y;
@@ -109,17 +99,10 @@ public enum Direction {
         this.right_turn_pos_y = right_turn_pos_y;
         this.left_turn_pos_x = left_turn_pos_x;
         this.left_turn_pos_y = left_turn_pos_y;
-        this.straight_trans_x = straight_trans_x;
-        this.straight_trans_y = straight_trans_y;
+        this.road_after_right = road_after_right;
+        this.road_after_left = road_after_left;
     }
 
-    public double get_next_in_lane_posX() {
-        return next_in_lane_x;
-    }
-
-    public double get_next_in_lane_posY() {
-        return next_in_lane_y;
-    }
 
     public double getRotation() {
         return rotation;
@@ -129,9 +112,7 @@ public enum Direction {
         return lane_switch_x;
     }
 
-    public double getLane_switch_y() {
-        return lane_switch_y;
-    }
+    public double getLane_switch_y() {return lane_switch_y;}
 
 
 
@@ -183,12 +164,12 @@ public enum Direction {
         return right_turn_pos_y;
     }
 
-    public double getStraight_trans_x() {
-        return straight_trans_x;
+    public int getRoad_after_left() {
+        return road_after_left;
     }
 
-    public double getStraight_trans_y() {
-        return straight_trans_y;
+    public int getRoad_after_right() {
+        return road_after_right;
     }
 }
 

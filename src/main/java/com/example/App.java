@@ -25,14 +25,20 @@ public class App extends Application {
 
     private static Scene scene;
 
-    public static AnchorPane root;
+
 
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
-        SimulationComponents simComponent = new SimulationComponents(5,5,5,5, false);
-        root = new AnchorPane();
+        SimulationComponents simComponent = new SimulationComponents(
+                5,5,5,5, false,
+                true, true,
+                true, true,
+                true, true,
+                true, true
+        );
+        AnchorPane root = simComponent.getRoot();
         root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
         stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
         stage.show();

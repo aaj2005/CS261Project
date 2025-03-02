@@ -15,9 +15,6 @@ public class Road extends JunctionElement{
 
     public static int default_light_duration = 30;
 
-    // number of cars that can fit in the lane
-    private int lane_capacity;
-
     // direction of the road (TOP, RIGHT, BOTTOM, LEFT)
     private Direction direction;
     private boolean has_left_turn;
@@ -39,6 +36,13 @@ public class Road extends JunctionElement{
     // used to determine in which lane to spawn cars
     // prevents one particular lane from having too many cars on it
     private int[] numSpawned;
+    private ArrayList<Rectangle> cars_to_remove;
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     /*
      * @param vph The vph outbound in every direction
@@ -47,26 +51,23 @@ public class Road extends JunctionElement{
             int lane_count,
             double[] corner1, // two adjacent corners to the road
             double[] corner2, // two adjacent corners to the road
-            int dir, // direction used for calculating number of cars that can fit in one lane
             boolean has_pedestrian,
             Direction direction,
             float[] vph,
             int max_lane_out,
-            Animations animations
+            Animations animations,
+            boolean road_going_into_junction,
+            ArrayList<Rectangle> cars_to_remove
     ){
         light_status = false;
 
-        // number of cars that can fit in one lane
-        int lane_capacity = (int) (Math.floor(Math.min(corner1[dir], corner2[dir])/(Car.CAR_HEIGHT+Car.CAR_GAP)));
-
         // lane object
         lanes = new ArrayList<>(5);
-
+        this.cars_to_remove = cars_to_remove;
         // instantiate lane object for each lane
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(lane_capacity,max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations));
+            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction));
         }
-        this.lane_capacity = lane_capacity;
         this.direction = direction;
 
         // calculates how long it takes for a car to spawn
@@ -79,37 +80,50 @@ public class Road extends JunctionElement{
         this.numSpawned = new int[lane_count];
     }
 
-    public Road(
-            int lane_count,
-            int priority,
-            double[] corner1,
-            double[] corner2,
-            int dir,
-            boolean has_pedestrian,
-            Direction direction,
-            float[] vph,
-            int max_lane_out,
-            Animations animations
-            ){
-        this(lane_count, corner1, corner2, dir, has_pedestrian, direction, vph,max_lane_out,animations);
-        this.priority = priority;
-    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     public Road(
             int lane_count,
             int priority,
             double[] corner1,
             double[] corner2,
-            int dir,
+            boolean has_pedestrian,
+            Direction direction,
+            float[] vph,
+            int max_lane_out,
+            Animations animations,
+            boolean road_going_into_junction,
+            ArrayList<Rectangle> cars_to_remove
+            ){
+        this(lane_count, corner1, corner2, has_pedestrian, direction, vph,max_lane_out,animations, road_going_into_junction,cars_to_remove);
+        this.priority = priority;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    public Road(
+            int lane_count,
+            int priority,
+            double[] corner1,
+            double[] corner2,
             boolean has_pedestrian,
             Direction direction,
             float[] vph,
             boolean has_left_turn,
             boolean has_right_turn,
             int max_lane_out,
-            Animations animations
+            Animations animations,
+            boolean road_going_into_junction,
+            ArrayList<Rectangle> cars_to_remove
     ){
-        this(lane_count, priority, corner1, corner2, dir, has_pedestrian, direction, vph, max_lane_out,animations);
+        this(lane_count, priority, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,animations,road_going_into_junction,cars_to_remove);
         this.has_left_turn = has_left_turn;
         this.has_right_turn = has_right_turn;
         if (has_left_turn){
@@ -119,6 +133,11 @@ public class Road extends JunctionElement{
             lanes.get(lanes.size()-1).set_right_turn();
         }
     }
+
+
+
+
+
 
     public void setCardinalPos(Direction d) {
         switch (d) {
@@ -145,10 +164,6 @@ public class Road extends JunctionElement{
         }
     }
 
-    public int getLane_capacity() {
-        return lane_capacity;
-    }
-
     public Rectangle spawn_car_in_lane(int i, Cardinal dir){
         if (i < lanes.size()){
             this.lastSpawn[dir.ordinal()] += this.spawnFreq[dir.ordinal()]; // update the last time a car spawned because a car is spawning like right now
@@ -160,24 +175,13 @@ public class Road extends JunctionElement{
 
     }
 
-    public Car get_car_from_lane(int lane_number){
-        return lanes.get(lane_number).get_first_car();
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public int get_lane_size(){
-        return lanes.size();
-    }
-
     /*
      * Checks if a car is due to spawn on a lane.
      * Recommended to run repeatedly until returns null in order to get every car which is due to spawn
      * @param the time right now
      * @return {@code null} if no cars are due to spawn, a cardinal direction if a car headed in that direction is about to spawn
      */
+
     public Cardinal dueSpawn(float time) {
         for (Cardinal d : Cardinal.values()) {
             int i = d.ordinal();
@@ -189,11 +193,11 @@ public class Road extends JunctionElement{
 
         return null;
     }
-
     /*
      * Spawns a car in a lane
      * @param dir the direction in which the car will be headed
      */
+
     public Rectangle spawnCar(Cardinal dir) {
         // checks if the car will be turning left
         if (isLeftOf(this.cardinal_pos, dir)) {
@@ -264,11 +268,11 @@ public class Road extends JunctionElement{
             }
         }
     }
-
     /*
      * Checks if b is left of a
      * For a car coming in from the north, east is to the left, so isLeftOf(N, E) === true
      */
+
     private boolean isLeftOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.E, Cardinal.S, Cardinal.W, Cardinal.N };
@@ -279,11 +283,11 @@ public class Road extends JunctionElement{
         }
         return false;
     }
-
     /*
      * Checks if b is right of a
      * For a car coming in from the south, east is to the left, so isRightOf(S, E) === true
      */
+
     private boolean isRightOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.W, Cardinal.N, Cardinal.E, Cardinal.S };
@@ -294,12 +298,12 @@ public class Road extends JunctionElement{
         }
         return false;
     }
-
     /*
      * Cars entering a junction have a preference for a particular lane depending on
      * which direction they are headed. This function creates the list of lane numbers
      * in order of descending preference for cars that are heading straight ahead
      */
+
     private Integer[] straightAheadLaneOrderer() {
         // get total spawn rate
         float total_spawn_rate = 0;
@@ -359,15 +363,32 @@ public class Road extends JunctionElement{
 
         return lanes.toArray(new Integer[lanes.size()]);
     }
-
     public void moveCars() {
         for (Lane lane : this.lanes) {
-            lane.moveCars();
+            this.cars_to_remove.addAll(lane.moveCars());
         }
     }
 
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////// GETTERS + SETTERS ////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
     public ArrayList<Lane> getLanes() {
         return lanes;
+    }
+
+    public Car get_car_from_lane(int lane_number){
+        return lanes.get(lane_number).get_first_car();
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public int get_lane_size(){
+        return lanes.size();
     }
 }
 

@@ -103,8 +103,8 @@ public class Animations {
         quad.setControlX(pivot_point_x); // set X pivot point
         quad.setControlY(pivot_point_y); // set Y pivot point
 
-        double totalDuration = 2.5; // animation seconds
-
+        double bezier_arc_length = integrateSimpsons(1000,carX, carY, pivot_point_x, pivot_point_y, endX, endY);
+        double totalDuration =  bezier_arc_length/(0.033*1000*Car.CAR_SPEED*1.5); // animation seconds
         // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
@@ -115,6 +115,7 @@ public class Animations {
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
+
         car.set_turning();
         // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
@@ -163,7 +164,7 @@ public class Animations {
                 car.getShape().setRotate(newAngle);
 
                 // make the path transition run alongside the rotation
-                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
+//                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     car.set_made_turn();
@@ -249,13 +250,13 @@ public class Animations {
         quad.setControlX(pivot_point_x);
         quad.setControlY(pivot_point_y);
 
-        double totalDuration = 0.033; // animation seconds
+        double bezier_arc_length = integrateSimpsons(1000,carX, carY, pivot_point_x, pivot_point_y, endX, endY);
+        double totalDuration =  bezier_arc_length/(0.033*1000*Car.CAR_SPEED); // animation seconds
 
         // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
         path.getElements().add (quad);
-
         // create the path transition animation object
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(totalDuration*1000));
@@ -325,105 +326,30 @@ public class Animations {
         timer.start();
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////                                                            //////////////////////////////////////////
-    ////////////////////                     Go Straight                             ///////////////////////////////////////////
-    ////////////////////                                                             //////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static double[] bezierDerivative(double t, double carX, double carY, double pivotX, double pivotY, double endX, double endY ) {
+        double x = (-2 * (1 - t) * carX + 2 * pivotX * (-2 * t + 1) + 2 * t * endX);
+        double y = (-2 * (1 - t) * carY + 2 * pivotY * (-2 * t + 1) + 2 * t * endY);
+        return new double[]{x, y};
+    }
 
-    // special function converting back to javafx coordinate system (only when going straight)
-    // i hate javafx
-    private double[] from_00_coordinates_straight(double x, double y, Direction direction){
+    private static double speed(double t, double carX, double carY, double pivotX, double pivotY, double endX, double endY) {
+        double[] deriv = bezierDerivative(t, carX, carY, pivotX, pivotY, endX, endY);
+        return Math.sqrt(deriv[0] * deriv[0] + deriv[1] * deriv[1]);
+    }
 
-        switch(direction){
-            case TOP:
-            case BOTTOM:
-                return new double[]{x +center_x, y+center_y};
-            case RIGHT:
-            case LEFT:
-                return new double[]{center_x-x, y+center_y};
-            default: return new double[]{0,0};
+    private static double integrateSimpsons( int N, double carX, double carY, double pivotX, double pivotY, double endX, double endY) {
+        double h = 1.0 / N; // Step size
+        double sum = speed(0,carX, carY, pivotX, pivotY, endX, endY) + speed(1,carX, carY, pivotX, pivotY, endX, endY);
+
+        for (int i = 1; i < N; i++) {
+            double t = i * h;
+            sum += (i % 2 == 0 ? 2 : 4) * speed(t,carX, carY, pivotX, pivotY, endX, endY);
         }
 
+        return (h / 3) * sum;
     }
 
 
-    public void go_straight(Car car, Direction direction, double carX, double carY,int lane_number, int max_lane_out){
-        // covert to quadrant-based system
-        double startX_trans = to_00_coordinate(carX, carY,direction)[0];
-        double startY_trans = to_00_coordinate(carX, carY,direction)[1];
 
-        // perform reflections/translations
-        double end_x_pre_transition = startX_trans * direction.getStraight_trans_x();
-        double end_y_pre_transition = startY_trans * direction.getStraight_trans_y();
-
-        // offsets because javafx is funny
-        double[] offset = {0,0};
-        switch(direction){
-            case TOP:
-            case BOTTOM:
-                offset[0] = 0;
-                break;
-            case RIGHT:
-                offset[1] = Lane.lane_w*((lane_number-Math.ceil((double) max_lane_out /2)) *-2)+Car.CAR_GAP;
-                break;
-            case LEFT:
-                offset[1] = -(Lane.lane_w*((lane_number+1-Math.ceil((double) max_lane_out /2)) *2));
-                break;
-        }
-
-        // convert back to default coordinate system
-        double endX = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[0] ;//+offset[0];
-        double endY = from_00_coordinates_straight(end_x_pre_transition, end_y_pre_transition,direction)[1] ;//+offset[1];
-
-        // set the start position of the transition
-        MoveTo moveTo = new MoveTo();
-        moveTo.setX(carX);
-        moveTo.setY(carY);
-
-        // pivot point for the curve
-        double pivot_point_x;
-        double pivot_point_y;
-
-        // determine pivot point based on which junction arm the car is in
-        switch (direction){
-            case TOP:
-            case BOTTOM:
-                pivot_point_x = carX;
-                pivot_point_y = endY;
-                break;
-            case RIGHT:
-            case LEFT:
-                pivot_point_x = endX;
-                pivot_point_y = carY;
-                break;
-            default:
-                pivot_point_x = 0;
-                pivot_point_y = 0;
-        }
-
-        // Quadratic Bezier Curve
-        QuadCurveTo quad = new QuadCurveTo();
-        quad.setX(endX);
-        quad.setY(endY);
-        quad.setControlX(pivot_point_x);
-        quad.setControlY(pivot_point_y);
-
-        double totalDuration = 3.5; // animation seconds
-
-        // create path object with the quadratic Bézier curve and start position
-        Path path = new Path();
-        path.getElements().add(moveTo);
-        path.getElements().add (quad);
-
-        // create the path transition animation object
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(totalDuration*1000));
-        pathTransition.setNode(car.getShape());
-        pathTransition.setPath(path);
-
-        pathTransition.play();
-    }
 
 }
