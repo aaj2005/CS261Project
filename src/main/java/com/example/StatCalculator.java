@@ -42,7 +42,9 @@ public class StatCalculator {
 
     private double cycle_length; // gets the length of a traffic light cycle in seconds
 
-    private double max_queue_length = 0;
+    private double max_queue_length = 0; // the maximum length of the queue in metres
+
+    private double max_wait_time = 0;  // the maximum wait time in seconds
     
     /*
      * Constructor for StatCalculator
@@ -114,6 +116,10 @@ public class StatCalculator {
             // update max queue length
             this.max_queue_length = Math.max(this.max_queue_length, this.jam_length);
 
+            // compute the wait time for this cycle and update max wait time
+            double wait_time = this.getWaitTime(this.jam_length, this.t - tRedStart);
+            this.max_wait_time = Math.max(this.max_wait_time, wait_time);
+
             // calculate when the green light will end
             double t_green_end = this.t + getRoadLightLength(this.road);
 
@@ -160,8 +166,8 @@ public class StatCalculator {
         }
 
         return new Stats(
-            0,
-            this.max_queue_length/ (Car.length + Car.distance),
+            this.max_queue_length/(Car.length + Car.distance),
+            this.max_wait_time,
             this.total_wait_time/(this.cycle_length*this.getArrivalRate())
         );
     }
