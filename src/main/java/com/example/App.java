@@ -32,7 +32,7 @@ public class App extends Application {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
-                5,5,5,5, false,
+                5,5,5,5, true,
                 true, true,
                 true, true,
                 true, true,
@@ -50,6 +50,9 @@ public class App extends Application {
             root.getChildren().add(rect);
         }
         for (Rectangle rect : simComponent.getCrossings()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect: simComponent.getLights()){
             root.getChildren().add(rect);
         }
 //        root.getChildren().addAll(simComponent.carsToAdd);

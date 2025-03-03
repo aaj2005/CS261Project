@@ -16,6 +16,7 @@ public class SimulationComponents {
 
     // the corners of the simulation
     private Rectangle[] corners;
+    private Rectangle[] lights;
 
     private ArrayList<Rectangle> crossings;
     private Rectangle[] lane_separation;
@@ -235,6 +236,7 @@ public class SimulationComponents {
         junction_arms_out[3] = new Road(lanes_arm4,1,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4,max_out,animations,false, cars_to_remove);
 
         traffic_system = new TrafficLights(10,10,10,10,60,2,junction_arms_out);
+        lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters());
         traffic_system.run_lights();
 
         corners[0].setFill(Color.GREEN);
@@ -407,6 +409,12 @@ public class SimulationComponents {
 
     public Rectangle[] getCorners() {
         return corners;
+    }
+    public Rectangle[] getLights(){
+        return lights;
+    }
+    public double[] getCenters(){
+        return new double[]{center_x, center_y};
     }
 
 }
