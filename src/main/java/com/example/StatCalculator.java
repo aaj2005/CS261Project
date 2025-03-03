@@ -1,5 +1,8 @@
 package com.example;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 /*
  * TODO:
  * actually calculate stats - Rayan (?)
@@ -42,15 +45,26 @@ public class StatCalculator {
 
     private double cycle_length; // gets the length of a traffic light cycle in seconds
 
-    private double max_queue_length = 0; // the maximum length of the queue in metres
+    private double max_jam_length = 0; // the maximum length of the queue in metres
 
     private double max_wait_time = 0;  // the maximum wait time in seconds
+
+    // a mathematical variable used in several places
+    // represents how many cars enter a traffic jam each second
+    private double r_prime;
+
+    // another variable, used to represent the amount of space a car takes up
+    private double cs;
     
+    // keeps track of where cars are and how long they have been waiting
+    // used to help calculate max wait time
+    private ArrayList<StatCar> cars = new ArrayList<>();
+
     /*
      * Constructor for StatCalculator
      * @param road The road to run the calculations for
      */
-    public StatCalculator(int road) {
+    public StatCalculator(int road) throws InvalidParametersException {
         this.road = road;
         this.calculateJamLengtheningRate();
     }
@@ -59,16 +73,20 @@ public class StatCalculator {
      * Calculates how quickly the jam lengthens in metres per second
      * Saves the calculated variable in this.jamLengtheningRate
      */
-    private void calculateJamLengtheningRate() {
+    private void calculateJamLengtheningRate() throws InvalidParametersException {
         double r = this.getArrivalRate();
         
         if (DoubleCompare.approximatelyEqual(r, 0)) { // avoids a divisionby0 error
             this.jam_lengthening_rate = 0;
         } else {
             int num_lanes = ((Road)DynamicComponents.junction_elements.get(this.road)).lanes;
-            double cs = (Car.length + Car.distance)/num_lanes;
-            double r_prime = 1/(1/r - cs*Car.max_speed);
-            this.jam_lengthening_rate = r_prime * cs;
+            this.cs = (Car.length + Car.distance)/num_lanes;
+            this.r_prime = 1/(1/r - cs/Car.max_speed);
+            this.jam_lengthening_rate = this.r_prime * cs;
+
+            if (DoubleCompare.geq(0, this.jam_lengthening_rate)) {
+                throw new InvalidParametersException("Cars are too close together! Either the inbound rate of vehicles is too high or the speed of the vehicles is too low");
+            }
         }
     }
 
@@ -76,7 +94,7 @@ public class StatCalculator {
      * Calculates how may seconds it takes for the jam to deplete
      */
     private double getJamDepletionTime() {
-        return this.jam_length * Car.max_speed;
+        return this.jam_length / Car.max_speed;
     }
 
     /*
@@ -101,27 +119,33 @@ public class StatCalculator {
         // keeps track of when the light turned red
         // used to see how long the light was red for
         // which in turn is used to calculate the length of the traffic jam that builds up
-        double tRedStart = this.t;
+        double t_red_start = this.t;
+
 
         while (!this.endOfCycleReached()) {
             // red light from road 0 to road n
             this.tickRedLight(0, this.road);
-            
+
+            // calculate how long individual cars have to wait during the red light
+            this.processWaitingCars(this.t-t_red_start);
+
             // lengthen the traffic jam due to the fact that the light was red
-            this.jam_length += (this.t-tRedStart)*this.jam_lengthening_rate;
+            this.jam_length += (this.t-t_red_start)*this.jam_lengthening_rate;
 
             // increase the total wait time
-            this.total_wait_time += this.getWaitTime(this.jam_length, this.t-tRedStart);
+            this.total_wait_time += this.getWaitTime(this.jam_length, this.t-t_red_start);
             
             // update max queue length
-            this.max_queue_length = Math.max(this.max_queue_length, this.jam_length);
+            this.max_jam_length = Math.max(this.max_jam_length, this.jam_length);
 
-            // compute the wait time for this cycle and update max wait time
-            double wait_time = this.getWaitTime(this.jam_length, this.t - tRedStart);
-            this.max_wait_time = Math.max(this.max_wait_time, wait_time);
+            // compute the cumulative wait time for this cycle
+            this.total_wait_time += this.getWaitTime(this.jam_length, this.t - t_red_start);
 
             // calculate when the green light will end
             double t_green_end = this.t + getRoadLightLength(this.road);
+
+            // calculate which cars manage to escape the jam this green light
+            this.moveWaitingCars(getRoadLightLength(this.road));
 
             // the traffic jam take n seconds to deplete
             // the green light is on for g seconds
@@ -129,7 +153,7 @@ public class StatCalculator {
             double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
 
             // jump to the end of the green light
-            t = t_green_end;
+            this.t = t_green_end;
 
             // decrease the size of the jam
             this.jam_length -= jam_depletion_time*Car.max_speed;
@@ -143,7 +167,7 @@ public class StatCalculator {
             // calculate the length of the red light from when the light turns red for road n
             // to when the light turns green for road 0
             // this allows us to check if the end of the cycle has been reached
-            tRedStart = this.t;
+            t_red_start = this.t;
             tickRedLight(this.road+1, 0);
         }
 
@@ -154,20 +178,32 @@ public class StatCalculator {
         // this allows us to compare the queue length at this point in cycle 2 to
         // the queue length at this point in cycle 1 (this.initialqueuelength)
         tickRedLight(0, this.road);
-        this.jam_length += (this.t-tRedStart)*this.jam_lengthening_rate;
-        this.total_wait_time += this.getWaitTime(this.jam_length, this.t-tRedStart);
+        this.processWaitingCars(this.t-t_red_start);
+        this.jam_length += (this.t-t_red_start)*this.jam_lengthening_rate;
+        this.total_wait_time += this.getWaitTime(this.jam_length, this.t-t_red_start);
+        this.moveWaitingCars(this.getRoadLightLength(this.road));
+        this.max_jam_length = Math.max(this.max_jam_length, this.jam_length); // final check for max queue length
         double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
         this.t += jam_depletion_time;
         this.jam_length -= jam_depletion_time*Car.max_speed;
-        this.max_queue_length = Math.max(this.max_queue_length, this.jam_length); // final check for max queue length
 
+        // check if jam length grows to infinity
+        // if so, throw exception
         if (DoubleCompare.greaterThan(this.jam_length, this.initial_jam_length)) {
             throw new InvalidParametersException("Traffic length grows to infinity!");
         }
 
+        // deplete the cars in the queue to potentially update max wait time
+        while(!this.cars.isEmpty()) {
+            t_red_start = this.t;
+            tickRedLight(this.road+1, this.road);
+            this.addWaitTime(this.t-t_red_start);
+            this.moveWaitingCars(this.getRoadLightLength(road));
+        }
+
         return new Stats(
-            this.max_queue_length/(Car.length + Car.distance),
             this.max_wait_time,
+            this.max_jam_length/this.cs,
             this.total_wait_time/(this.cycle_length*this.getArrivalRate())
         );
     }
@@ -250,7 +286,7 @@ public class StatCalculator {
      * @param queueLen length of the initial queue (at the start of the red light) in metres
      * @param t length of the red light in seconds
      */
-    private double getWaitTime(double queueLen, double t) {
+    private double getWaitTime(double queue_len, double t) {
         // okay so scrap whatever calculation we were doing
         // this calculation is much simpler and achieves the same result
         // r cars arrive per second where r = jam_lengthening_rate/car.length
@@ -258,7 +294,7 @@ public class StatCalculator {
         // arriving cars wait on average t/2 seconds
 
         double r = this.getArrivalRate();
-        return t*r*(queueLen/Car.length) // how long the cars in the initial queue have to wait
+        return t*r*(queue_len/this.cs) // how long the cars in the initial queue have to wait
              + t*r*t/2;                  // how long the arriving cars have to wait
     }
 
@@ -267,5 +303,65 @@ public class StatCalculator {
      */
     private double getArrivalRate() {
         return ((Road)DynamicComponents.junction_elements.get(this.road)).inbound_vph/3600;
+    }
+
+    /*
+     * Given the duration of a red light, updates how long cars have been waiting
+     * @param t_red the length of the red light in seconds
+     */
+    private void processWaitingCars(double t_red) {
+        this.addWaitTime(t_red);
+        this.addWaitingCars(t_red);
+    }
+
+    /*
+     * updates the wait time of cars in a jam with the length of the red light
+     * @param t_red the length of the red light in seconds
+     */
+    private void addWaitTime(double t_red) {
+        // the cars already waiting in the queue now wait an additional t_red seconds
+        for (StatCar car : this.cars) {
+            car.t += t_red;
+        }
+    }
+
+    /*
+     * Given the duration of a red light, updates the list of waiting cars with
+     * the cars that have joined the jam during the red light
+     * @param t_red the length of the red light in seconds
+     */
+    private void addWaitingCars(double t_red) {
+        for (int i=0; i<t_red*this.r_prime; i++) {
+            this.cars.add(new StatCar(t_red-i/r_prime, this.cars.size()*this.cs));
+        }
+    }
+
+    /*
+     * Given the duration of a green light,
+     * this method moves all the cars in the traffic jam,
+     * removes those that have entered the junction and
+     * potentially updates the max wait time with one of the removed stats
+     * @param t_green length of a green light in seconds
+     */
+    private void moveWaitingCars(double t_green) {
+        ArrayList<StatCar> temp = new ArrayList<>();
+        
+        for (StatCar car : this.cars) {
+            // move cars
+            car.d -= Car.max_speed*t_green;
+            
+            // check if any of the cars exiting the jam have waited the longest
+            // and update max_wait_time accordingly
+            if (car.d < 0) {
+                this.max_wait_time = Math.max(this.max_wait_time, car.t);
+            }
+            
+            // if they have not left the junction, add them back into the list
+            else {
+                temp.add(car);
+            }
+        }
+
+        this.cars = temp;
     }
 }
