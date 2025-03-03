@@ -54,6 +54,9 @@ public class App extends Application {
         for (Rectangle rect : simComponent.getCrossings()){
             root.getChildren().add(rect);
         }
+        for (Rectangle rect: simComponent.getLights()){
+            root.getChildren().add(rect);
+        }
 //        root.getChildren().addAll(simComponent.carsToAdd);
 
         // simComponent.turn_right(3, 0);
