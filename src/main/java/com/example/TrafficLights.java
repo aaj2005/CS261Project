@@ -69,34 +69,34 @@ public class TrafficLights {
     public Rectangle[] create_rectangles(Rectangle[] lanes, double scale_factor, double[] center){
         lights = new Rectangle[]{
             new Rectangle(
-                lanes[0].getX() + lanes[0].getWidth()/2 - (300/scale_factor)/2,
+                lanes[0].getX() + lanes[0].getWidth()/2 - (((center[0]+center[1])/2)/scale_factor)/2,
                 lanes[0].getY() + lanes[0].getHeight() ,
-                300/scale_factor,
-                600/scale_factor
+                ((center[0] + center[1])/2)/scale_factor,
+                (center[0]+center[1])/scale_factor
             ),
             new Rectangle(
-                lanes[1].getX(),
-                lanes[1].getY() + lanes[1].getHeight()/2 - (600/scale_factor)/2,
-                300/scale_factor,
-                600/scale_factor
+                lanes[1].getX() - ((center[0] + center[1])/2)/scale_factor,
+                lanes[1].getY() + lanes[1].getHeight()/2 - ((center[0] + center[1])/scale_factor)/2,
+                ((center[0] + center[1])/2)/scale_factor,
+                (center[0] + center[1])/scale_factor
             ),
             new Rectangle(
-                lanes[2].getX() + lanes[2].getWidth()/2 - (300/scale_factor)/2,
-                lanes[2].getY() ,
-                300/scale_factor,
-                600/scale_factor
+                lanes[2].getX() + lanes[2].getWidth()/2 - (((center[0] + center[1])/2)/scale_factor)/2,
+                lanes[2].getY() - (center[0] + center[1])/scale_factor ,
+                ((center[0] + center[1])/2)/scale_factor,
+                (center[0] + center[1])/scale_factor
             ),
             new Rectangle(
                 lanes[3].getX() + lanes[3].getWidth(),
-                lanes[3].getY() + lanes[3].getHeight()/2 - (600/scale_factor)/2,
-                300/scale_factor,
-                600/scale_factor
+                lanes[3].getY() + lanes[3].getHeight()/2 - ((center[0] + center[1])/scale_factor)/2,
+                ((center[0] + center[1])/2)/scale_factor,
+                (center[0] + center[1])/scale_factor
             ),
             new Rectangle(
-                center[0] - (800/scale_factor)/2,
-                center[1] - (1400/scale_factor)/2,
-                800/scale_factor,
-                1400/scale_factor
+                center[0] - ((center[0] + center[1])/scale_factor)/2,
+                center[1] - ((2*(center[0] + center[1]))/scale_factor)/2,
+                (center[0] + center[1])/scale_factor,
+                (2*(center[0] + center[1]))/scale_factor
             )
 
         };
@@ -120,11 +120,10 @@ public class TrafficLights {
             time_crossing +=0.1;
 
             if (run_crossing && !car_in_junction){
-                lights[0].setFill(red_light);
-                lights[1].setFill(red_light);
-                lights[2].setFill(red_light);
-                lights[3].setFill(red_light);
                 lights[4].setFill(green_pedestrian);
+                if (duration_crossing >= crossing_dur * 0.7){
+                    lights[nextlight].setFill(intermediate_light);
+                }
                 
                 duration_crossing += 0.1;
                 if (duration_crossing >= crossing_dur){
@@ -143,18 +142,21 @@ public class TrafficLights {
             }else{
 
                 if (car_in_junction){
-                    if(run_crossing){
-                        duration_crossing -= 0.1;
-                    }
                     check_car_in_junction(); // repeatedly check to see if a car is still in junction
                 }else{
                     if (light_status[0]){
-                        lights[0].setFill(green_light);
+                        if (time_traffic1 >= time1 * 0.7){
+                            lights[0].setFill(yellow_light);
+                        }
+                        else{
+                            lights[0].setFill(green_light);
+                        }
                         time_traffic1 +=0.1;
                         if (time_traffic1 >= time1 -0.05){
                             check_car_in_junction();
                             if (time_crossing >= s_per_request){
                                 light_status[0] = false;
+                                lights[0].setFill(red_light);
                                 run_crossing = true;
                             }
                             else{
@@ -176,12 +178,18 @@ public class TrafficLights {
                         }
                     }
                     else if (light_status[1]){
-                        lights[1].setFill(green_light);
+                        if (time_traffic2 >= time1 * 0.7){
+                            lights[1].setFill(yellow_light);
+                        }
+                        else{
+                            lights[1].setFill(green_light);
+                        }
                         time_traffic2 +=0.1;
                         if (time_traffic2 >= time2 -0.05){
                             check_car_in_junction();
                             if (time_crossing >= s_per_request){
                                 light_status[1] = false;
+                                lights[1].setFill(red_light);
                                 run_crossing = true;
 
                             }
@@ -203,12 +211,18 @@ public class TrafficLights {
                         }
                     }
                     else if (light_status[2]){
-                        lights[2].setFill(green_light);
+                        if (time_traffic3 >= time1 * 0.7){
+                            lights[2].setFill(yellow_light);
+                        }
+                        else{
+                            lights[2].setFill(green_light);
+                        }
                         time_traffic3 +=0.1;
                         if (time_traffic3 >= time3 -0.05){
                             check_car_in_junction();
                             if (time_crossing >= s_per_request){
                                 light_status[2] = false;
+                                lights[2].setFill(red_light);
                                 run_crossing = true;
                             }
                             else{
@@ -229,12 +243,18 @@ public class TrafficLights {
                         }
                     }
                     else if (light_status[3]){
-                        lights[3].setFill(green_light);
+                        if (time_traffic4 >= time1 * 0.7){
+                            lights[3].setFill(yellow_light);
+                        }
+                        else{
+                            lights[3].setFill(green_light);
+                        }
                         time_traffic4 +=0.1;
                         if (time_traffic4 >= time4 -0.05){
                             check_car_in_junction();
                             if (time_crossing >= s_per_request){
                                 light_status[3] = false;
+                                lights[3].setFill(red_light);
                                 run_crossing = true;
                             }
                             else{
