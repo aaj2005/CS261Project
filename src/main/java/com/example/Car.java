@@ -4,23 +4,21 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
-public class Car {
+public class Car extends Vehicle{
 
     private final Rectangle shape;
 
     // car static properties
-    public static final ImagePattern car_texture = new ImagePattern(new Image("car2dtopviewver.png"));
+    public static final ImagePattern car_texture_ver = new ImagePattern(new Image("car2dtopviewver.png"));
     public static final ImagePattern car_texture_hor = new ImagePattern(new Image("car2dtopviewhor.png"));
     public static final double CAR_WIDTH = 18;
     public static final double CAR_HEIGHT = 43.6;
-    public static final double CAR_GAP = 15;
-    public static final double CAR_SPEED = 2;
 
 
 
+    private final Direction direction; // origin direction of car
     private boolean made_turn = false; // if the car successfully made the turn
     private boolean turning = false; // if the car is currently turning
-    private final Direction direction; // origin direction of car
     private final boolean is_going_right; // if the car will turn right
     private final boolean is_going_left; // if the car will turn left
 
@@ -31,7 +29,7 @@ public class Car {
         // choose appropriate texture based on junction arm
         if (direction == Direction.TOP || direction == Direction.BOTTOM){
             shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
-            shape.setFill(car_texture);
+            shape.setFill(car_texture_ver);
         }else{
             shape = new Rectangle(CAR_HEIGHT, CAR_WIDTH);
             shape.setFill(car_texture_hor);
@@ -86,5 +84,9 @@ public class Car {
     public boolean has_made_turn() {
         return made_turn;
 
+    }
+
+    public double getHeight(){
+        return CAR_HEIGHT;
     }
 }
