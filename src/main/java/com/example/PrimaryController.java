@@ -37,7 +37,6 @@ public class PrimaryController {
     @FXML private Label lbl_duration, lbl_requests;
     @FXML private TextField crossing_duration, crossing_requests;
 
-
     private SimulationManager simulationManager;
     private ListCell<Simulation> selectedCell;
 
@@ -45,13 +44,13 @@ public class PrimaryController {
     public void initialize() {
         simulationManager = new SimulationManager(simList.getItems());
 
-
         simList.getItems().add(new Simulation("Simulation 1"));
         simList.getItems().add(new Simulation("New Simulation"));
 
         simList.setCellFactory(param -> new SimulationCellFactory(simulationManager, this));
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
+        // Select the first listcell after it has been created (after the initialize function finishes)
         Platform.runLater(() -> {
             if (!simList.getItems().isEmpty()) {
                 simList.getSelectionModel().select(0);
@@ -59,18 +58,13 @@ public class PrimaryController {
             }
         });
 
-        // Update `selectedCell` when a new selection is made
-        simList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedCell = (ListCell<Simulation>) simList.lookup(".list-cell");
-        });
-
+        // Trigger the metrics tab to load the simulation data
         metricsTab.setOnSelectionChanged(event -> {
             if (metricsTab.isSelected()) loadSimulationData();
         });
 
-        setListeners();
-
-        pc_enabled.selectedProperty().addListener((obs, oldVal, newVal) -> togglePedestrianInputs(newVal));
+        // Set listens for inputs that change UI configuration (i.e. number of lanes)
+        setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
     }
 
@@ -99,16 +93,32 @@ public class PrimaryController {
 
 
     private void runSimulation() {
+
         run_button.setDisable(true);
     }
 
     public void setSelectedCell(ListCell<Simulation> cell) {
         if (selectedCell != null) {
             selectedCell.setStyle("");
+            selectedCell.getItem().setNumberParameters(
+                    Integer.valueOf(txt_nn.getText()),
+                    Integer.valueOf(txt_ne.getText()),
+                    Integer.valueOf(txt_nw.getText()),
+                    Integer.valueOf(txt_en.getText()),
+                    Integer.valueOf(txt_ee.getText()),
+                    Integer.valueOf(txt_es.getText()),
+                    Integer.valueOf(txt_se.getText()),
+                    Integer.valueOf(txt_ss.getText()),
+                    Integer.valueOf(txt_sw.getText()),
+                    Integer.valueOf(txt_wn.getText()),
+                    Integer.valueOf(txt_ws.getText()),
+                    Integer.valueOf(txt_ww.getText())
+            );
         }
         selectedCell = cell;
         if (selectedCell != null) {
             selectedCell.setStyle("-fx-background-color: lightblue;");
+            loadParameterValues(selectedCell.getItem());
         }
     }
 
@@ -116,8 +126,8 @@ public class PrimaryController {
         return selectedCell;
     }
 
-    public void setListeners() {
-
+    public void setDynamicListeners() {
+        // Sets up listeners for input parameters that change the UI configuration (i.e. number of lanes)
         nb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setNorthNumLanes(newVal);
@@ -126,7 +136,7 @@ public class PrimaryController {
         n_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setNorthBusLane(newValue);
-            System.out.print("SET value to " + newValue);
+            System.out.print("SET value to " + newValue + " for " + selectedSim.getSimName());
             lbl_duration.setText(newValue.toString());
         });
         n_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -169,8 +179,47 @@ public class PrimaryController {
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setWestLeftTurn(newValue);
         });
-
+        pc_enabled.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setPedestrianCrossings(newValue);
+            togglePedestrianInputs(newValue);
+        });
     }
 
+    public void loadParameterValues(Simulation selectedSim) {
+        nb_lanes.setValue(selectedSim.getNorth_num_lanes());
+        n_buslane.setSelected(selectedSim.getNorth_bus_lane());
+        n_leftturn.setSelected(selectedSim.getNorth_left_turn());
+        txt_nn.setText(selectedSim.getNorth_north_vph().toString());
+        txt_ne.setText(selectedSim.getNorth_east_vph().toString());
+        txt_nw.setText(selectedSim.getNorth_west_vph().toString());
 
+        eb_lanes.setValue(selectedSim.getEast_num_lanes());
+        e_buslane.setSelected(selectedSim.getEast_bus_lane());
+        e_leftturn.setSelected(selectedSim.getEast_left_turn());
+        txt_ee.setText(selectedSim.getEast_east_vph().toString());
+        txt_en.setText(selectedSim.getEast_north_vph().toString());
+        txt_es.setText(selectedSim.getEast_south_vph().toString());
+
+
+        sb_lanes.setValue(selectedSim.getSouth_num_lanes());
+        s_buslane.setSelected(selectedSim.getSouth_bus_lane());
+        s_leftturn.setSelected(selectedSim.getSouth_left_turn());
+        txt_se.setText(selectedSim.getSouth_east_vph().toString());
+        txt_ss.setText(selectedSim.getSouth_south_vph().toString());
+        txt_sw.setText(selectedSim.getSouth_west_vph().toString());
+
+        wb_lanes.setValue(selectedSim.getWest_num_lanes());
+        w_buslane.setSelected(selectedSim.getWest_bus_lane());
+        w_leftturn.setSelected(selectedSim.getWest_left_turn());
+        txt_wn.setText(selectedSim.getWest_north_vph().toString());
+        txt_ws.setText(selectedSim.getWest_south_vph().toString());
+        txt_ww.setText(selectedSim.getWest_west_vph().toString());
+
+        pc_enabled.setSelected(selectedSim.getPedestrian_crossings());
+        togglePedestrianInputs(pc_enabled.isSelected());
+
+        crossing_duration.setText(selectedSim.getDuration_of_crossings().toString());
+        crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
+    }
 }

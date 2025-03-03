@@ -308,9 +308,9 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="crossing_duration" disable="true" layoutX="266.0" layoutY="636.0" prefHeight="26.0" prefWidth="37.0" />
+                                          <TextField fx:id="crossing_duration" disable="true" layoutX="266.0" layoutY="636.0" prefHeight="26.0" prefWidth="37.0" text="0" />
                                           <CheckBox fx:id="pc_enabled" layoutX="283.0" layoutY="610.0" mnemonicParsing="false" />
-                                          <TextField fx:id="crossing_requests" disable="true" layoutX="266.0" layoutY="666.0" prefHeight="26.0" prefWidth="37.0" />
+                                          <TextField fx:id="crossing_requests" disable="true" layoutX="266.0" layoutY="666.0" prefHeight="26.0" prefWidth="37.0" text="0" />
                                           <Label layoutX="887.0" layoutY="679.0" styleClass="subtitle-label" text="RESULTS">
                                              <font>
                                                 <Font name="Istok Web Bold" size="23.0" />

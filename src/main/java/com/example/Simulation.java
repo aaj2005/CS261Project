@@ -20,7 +20,7 @@ public class Simulation {
 
     private Boolean pedestrian_crossings = false;
     private Integer duration_of_crossings = 0;
-    private Integer requests_per_house = 0;
+    private Integer requests_per_hour = 0;
 
 
     public Simulation(String simName) {
@@ -111,5 +111,113 @@ public class Simulation {
     @Override
     public String toString() {
         return simName;
+    }
+
+    public Integer getNorth_num_lanes() {
+        return north_num_lanes;
+    }
+
+    public Boolean getNorth_bus_lane() {
+        return north_bus_lane;
+    }
+
+    public Boolean getNorth_left_turn() {
+        return north_left_turn;
+    }
+
+    public Integer getNorth_north_vph() {
+        return north_north_vph;
+    }
+
+    public Integer getNorth_east_vph() {
+        return north_east_vph;
+    }
+
+    public Integer getNorth_west_vph() {
+        return north_west_vph;
+    }
+
+    public Integer getEast_num_lanes() {
+        return east_num_lanes;
+    }
+
+    public Boolean getEast_bus_lane() {
+        return east_bus_lane;
+    }
+
+    public Boolean getEast_left_turn() {
+        return east_left_turn;
+    }
+
+    public Integer getEast_north_vph() {
+        return east_north_vph;
+    }
+
+    public Integer getEast_east_vph() {
+        return east_east_vph;
+    }
+
+    public Integer getEast_south_vph() {
+        return east_south_vph;
+    }
+
+    public Integer getSouth_num_lanes() {
+        return south_num_lanes;
+    }
+
+    public Boolean getSouth_bus_lane() {
+        return south_bus_lane;
+    }
+
+    public Boolean getSouth_left_turn() {
+        return south_left_turn;
+    }
+
+    public Integer getSouth_east_vph() {
+        return south_east_vph;
+    }
+
+    public Integer getSouth_south_vph() {
+        return south_south_vph;
+    }
+
+    public Integer getSouth_west_vph() {
+        return south_west_vph;
+    }
+
+    public Integer getWest_num_lanes() {
+        return west_num_lanes;
+    }
+
+    public Boolean getWest_bus_lane() {
+        return west_bus_lane;
+    }
+
+    public Boolean getWest_left_turn() {
+        return west_left_turn;
+    }
+
+    public Integer getWest_north_vph() {
+        return west_north_vph;
+    }
+
+    public Integer getWest_south_vph() {
+        return west_south_vph;
+    }
+
+    public Integer getWest_west_vph() {
+        return west_west_vph;
+    }
+
+    public Boolean getPedestrian_crossings() {
+        return pedestrian_crossings;
+    }
+
+    public Integer getDuration_of_crossings() {
+        return duration_of_crossings;
+    }
+
+    public Integer getRequests_per_hour() {
+        return requests_per_hour;
     }
 }
