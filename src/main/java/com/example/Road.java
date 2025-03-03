@@ -3,7 +3,6 @@ package com.example;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 public class Road extends JunctionElement{
 
@@ -118,6 +117,7 @@ public class Road extends JunctionElement{
             float[] vph,
             boolean has_left_turn,
             boolean has_right_turn,
+            boolean has_bus_lane,
             int max_lane_out,
             Animations animations,
             boolean road_going_into_junction,
@@ -131,6 +131,9 @@ public class Road extends JunctionElement{
         }
         if (has_right_turn){
             lanes.get(lanes.size()-1).set_right_turn();
+        }
+        if (has_bus_lane){
+            lanes.get(0).set_bus_lane();
         }
     }
 
@@ -379,7 +382,7 @@ public class Road extends JunctionElement{
         return lanes;
     }
 
-    public Car get_car_from_lane(int lane_number){
+    public Vehicle get_car_from_lane(int lane_number){
         return lanes.get(lane_number).get_first_car();
     }
 

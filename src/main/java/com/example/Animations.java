@@ -104,7 +104,7 @@ public class Animations {
         quad.setControlY(pivot_point_y); // set Y pivot point
 
         double bezier_arc_length = integrateSimpsons(1000,carX, carY, pivot_point_x, pivot_point_y, endX, endY);
-        double totalDuration =  bezier_arc_length/(0.033*1000*Car.CAR_SPEED*1.5); // animation seconds
+        double totalDuration =  bezier_arc_length/(0.033*1000*Car.VEHICLE_SPEED*1.5); // animation seconds
         // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
         path.getElements().add(moveTo);
@@ -200,16 +200,16 @@ public class Animations {
         double[] offset = {0,0};
         switch(direction){
             case TOP:
-                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out-2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.CAR_GAP);
+                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out-2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.VEHICLE_GAP);
                 break;
             case BOTTOM:
-                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out+2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.CAR_GAP);
+                offset[1] =direction.getLane_switch_x()*(lane_number-max_lane_out+2)*Lane.lane_w+(-Car.CAR_WIDTH+Car.VEHICLE_GAP);
                 break;
             case RIGHT:
-                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number+1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.CAR_GAP);
+                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number+1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.VEHICLE_GAP);
                 break;
             case LEFT:
-                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number-1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.CAR_GAP);
+                offset[0] =direction.getLane_switch_y()*(max_lane_out-lane_number-1)*Lane.lane_w+(Car.CAR_WIDTH+Car.CAR_WIDTH/2+Car.VEHICLE_GAP);
                 break;
         }
 
@@ -251,7 +251,7 @@ public class Animations {
         quad.setControlY(pivot_point_y);
 
         double bezier_arc_length = integrateSimpsons(1000,carX, carY, pivot_point_x, pivot_point_y, endX, endY);
-        double totalDuration =  bezier_arc_length/(0.033*1000*Car.CAR_SPEED); // animation seconds
+        double totalDuration =  bezier_arc_length/(0.033*1000*Car.VEHICLE_SPEED); // animation seconds
 
         // create path object with the quadratic Bézier curve and start position
         Path path = new Path();
@@ -313,7 +313,7 @@ public class Animations {
                 // rotate the car
                 car.getShape().setRotate(newAngle);
                 // make the path transition run alongside the rotation
-                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
+//                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
 
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
@@ -332,11 +332,13 @@ public class Animations {
         return new double[]{x, y};
     }
 
+    
     private static double speed(double t, double carX, double carY, double pivotX, double pivotY, double endX, double endY) {
         double[] deriv = bezierDerivative(t, carX, carY, pivotX, pivotY, endX, endY);
         return Math.sqrt(deriv[0] * deriv[0] + deriv[1] * deriv[1]);
     }
 
+    // approximate integral calculation for arc length
     private static double integrateSimpsons( int N, double carX, double carY, double pivotX, double pivotY, double endX, double endY) {
         double h = 1.0 / N; // Step size
         double sum = speed(0,carX, carY, pivotX, pivotY, endX, endY) + speed(1,carX, carY, pivotX, pivotY, endX, endY);

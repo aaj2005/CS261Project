@@ -66,9 +66,11 @@ public class SimulationComponents {
                                 boolean left_turn1,boolean right_turn1,
                                 boolean left_turn2,boolean right_turn2,
                                 boolean left_turn3,boolean right_turn3,
-                                boolean left_turn4,boolean right_turn4
+                                boolean left_turn4,boolean right_turn4,
+                                boolean is_bus_lane1, boolean is_bus_lane2,
+                                boolean is_bus_lane3, boolean is_bus_lane4
 
-    ){
+                                ){
 
         root = new AnchorPane();
         // number of lanes exiting junction for each arm
@@ -144,6 +146,7 @@ public class SimulationComponents {
                 vph_1, // VPH for each outbound direction,
                 left_turn1, // left turn
                 right_turn1, // right turn
+                is_bus_lane1,
                 max_out, // maximum number of lanes in one road
                 animations,
                 true,
@@ -168,6 +171,7 @@ public class SimulationComponents {
                 vph_2, // VPH for each outbound direction
                 left_turn2, // left turn
                 right_turn2, // right turn
+                is_bus_lane2,
                 max_out, // maximum number of lanes in one road
                 animations,
                 true,
@@ -192,6 +196,7 @@ public class SimulationComponents {
                 vph_3, // VPH for each outbound direction
                 left_turn3, // left turn
                 right_turn3, // right turn
+                is_bus_lane3,
                 max_out, // maximum number of lanes in one road
                 animations,
                 true,
@@ -216,6 +221,7 @@ public class SimulationComponents {
                 vph_4, // VPH for each outbound direction
                 left_turn4, // left turn
                 right_turn4, // right turn
+                is_bus_lane4,
                 max_out, // maximum number of lanes in one road
                 animations,
                 true,
@@ -229,10 +235,10 @@ public class SimulationComponents {
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
-        junction_arms_out[0] = new Road(lanes_arm1,1,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1,max_out,animations,false, cars_to_remove);
-        junction_arms_out[1] = new Road(lanes_arm2,1,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2,max_out,animations,false, cars_to_remove);
-        junction_arms_out[2] = new Road(lanes_arm3,1,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3,max_out,animations,false, cars_to_remove);
-        junction_arms_out[3] = new Road(lanes_arm4,1,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4,max_out,animations,false, cars_to_remove);
+        junction_arms_out[0] = new Road(lanes_arm1,1,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1, is_bus_lane1, max_out,animations,false, cars_to_remove);
+        junction_arms_out[1] = new Road(lanes_arm2,1,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2, is_bus_lane2, max_out,animations,false, cars_to_remove);
+        junction_arms_out[2] = new Road(lanes_arm3,1,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,animations,false, cars_to_remove);
+        junction_arms_out[3] = new Road(lanes_arm4,1,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
 
         traffic_system = new TrafficLights(10,10,10,10,60,2,junction_arms_out);
         traffic_system.run_lights();

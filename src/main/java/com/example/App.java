@@ -33,10 +33,12 @@ public class App extends Application {
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
                 5,5,5,5, false,
+                false, true,
                 true, true,
                 true, true,
                 true, true,
-                true, true
+                true,false,
+                false, false
         );
         AnchorPane root = simComponent.getRoot();
         root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
