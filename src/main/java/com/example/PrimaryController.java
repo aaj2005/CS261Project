@@ -102,6 +102,7 @@ public class PrimaryController {
 
     public void setSelectedCell(ListCell<Simulation> cell) {
         if (selectedCell != null && selectedCell.getItem() != null) {
+            System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
             selectedCell.setStyle("");
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setNumberParameters(
@@ -121,11 +122,16 @@ public class PrimaryController {
                     Integer.valueOf(crossing_requests.getText())
             );
         }
+
         selectedCell = cell;
+
         if (selectedCell != null) {
+            System.out.println("Setting to bloo");
             selectedCell.setStyle("-fx-background-color: lightblue;");
             loadParameterValues(selectedCell.getItem());
         }
+
+        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
     }
 
     public ListCell<Simulation> getSelectedCell() {
