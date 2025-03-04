@@ -35,8 +35,8 @@ public class App extends Application {
 
     public static void main(String[] args) {
         DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(3, 350, 2),
-            new Road(2, 50, 2),
+            new Road(10, 300, 1),
+            new Road(10, 300, 1),
             new Road(0, 50, 2),
             new Road(0, 50, 2),
             new PedestrianCrossing(0, 1)

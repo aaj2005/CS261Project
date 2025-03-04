@@ -22,6 +22,6 @@ public class Stats {
     }
 
     public String toString() {
-        return "Max wait time: " + max_wait_time + "\nMax queue length: " + max_queue_length + "\nAverage wait time: " + average_wait_time;
+        return "Max wait time: " + max_wait_time + "s\nMax queue length: " + max_queue_length + "cars\nAverage wait time: " + average_wait_time + "s\nOverall score: " + overall_score;
     }
 }
