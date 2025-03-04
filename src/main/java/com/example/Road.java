@@ -1,8 +1,10 @@
 package com.example;
 
-import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
+
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 
 public class Road extends JunctionElement{
 
@@ -38,6 +40,17 @@ public class Road extends JunctionElement{
     private ArrayList<Rectangle> cars_to_remove;
 
 
+    private ArrayList<Rectangle> lane_arrows;
+    public static final ImagePattern left_arrow = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/leftarrow.png").toExternalForm()));
+    public static final ImagePattern right_arrow = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/rightarrow.png").toExternalForm()));
+    public static final ImagePattern forward_arrow = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/forwardarrow.png").toExternalForm()));
+    private int lane_count;
+    private double[] corner1;
+    private double[] corner2;
+    private boolean has_pedestrian;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -77,6 +90,11 @@ public class Road extends JunctionElement{
         this.setCardinalPos(direction);
 
         this.numSpawned = new int[lane_count];
+
+        this.lane_count=lane_count;
+        this.corner1=corner1;
+        this.corner2=corner2;
+        this.has_pedestrian = has_pedestrian;
     }
 
 
@@ -392,6 +410,54 @@ public class Road extends JunctionElement{
 
     public int get_lane_size(){
         return lanes.size();
+    }
+
+    public ArrayList<Rectangle> getArrows(double PEDESTRIAN_CROSSING_WIDTH){
+        double pedestrian_value = 0;
+        if (this.has_pedestrian){
+            pedestrian_value = 1;
+        }
+        lane_arrows = new ArrayList<Rectangle>();
+        double arrow_x = 0;
+        double arrow_y = 0;
+        double rotate = 0;
+        for (int i=0; i<this.lane_count; i++){
+            switch (this.direction){
+                case TOP:
+                    arrow_y = Math.min(this.corner2[1],this.corner1[1])-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    System.out.println("Position = "+arrow_y);
+                    arrow_x = SimulationComponents.sim_h-this.corner2[0]-(i*30)-Car.CAR_HEIGHT+Car.CAR_WIDTH;
+                    rotate = 180;
+                    break;
+                case RIGHT:
+                    arrow_x = SimulationComponents.sim_w-Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-6+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    System.out.println("Position = "+arrow_x);
+                    arrow_y = SimulationComponents.sim_w-this.corner2[1]-(i*30)+Car.CAR_WIDTH-Car.CAR_HEIGHT-10;
+                    rotate = 270;
+                    break;
+                case BOTTOM:
+                    arrow_y = SimulationComponents.sim_h-Math.min(this.corner1[1],this.corner2[1])+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    System.out.println("Position = "+arrow_y);
+                    arrow_x = corner2[0]+(i*30)+6;
+                    rotate = 0;
+                    break;
+                case LEFT:
+                    arrow_x = Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    System.out.println("Position = "+arrow_x);
+                    arrow_y = this.corner2[1]+(i*30)-6;
+                    rotate = 90;
+                    break;
+            }
+            lane_arrows.add(new Rectangle(arrow_x, arrow_y, 18, 43.6));
+            lane_arrows.get(i).setFill(forward_arrow);
+            lane_arrows.get(i).setRotate(rotate);
+        }
+        if (this.has_left_turn){
+            lane_arrows.get(0).setFill(left_arrow);
+        }if (this.has_right_turn){
+            lane_arrows.get(lane_count-1).setFill(right_arrow);
+        }
+        return lane_arrows;
     }
 }
 
