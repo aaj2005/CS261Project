@@ -14,6 +14,7 @@ public class Car extends Vehicle{
     public static final double CAR_WIDTH = 18;
     public static final double CAR_HEIGHT = 43.6;
 
+    // used for determining the direction the car will travel to
     private Cardinal dir;
 
     private final Direction direction; // origin direction of car

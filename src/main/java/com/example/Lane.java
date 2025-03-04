@@ -39,7 +39,9 @@ public class Lane {
     // if the road object storing this lane is responsible for cars that haven't yet entered the junction
     private boolean road_going_into_junction;
 
+    // the cardinal direction of the road
     private Cardinal dir;
+
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -140,10 +142,7 @@ public class Lane {
         switch (this.direction) {
             case TOP:
 
-                if (y >= front_of_road_y - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) {
-
-                    return true;
-                }
+                if (y >= front_of_road_y - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) {return true;}
                 break;
             case RIGHT:
                 if (x <= front_of_road_x + SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) { return true; }

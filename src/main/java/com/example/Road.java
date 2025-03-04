@@ -19,7 +19,7 @@ public class Road extends JunctionElement{
     private boolean has_left_turn;
     private boolean has_right_turn;
 
-    // the position of the car 
+    // the cardinal direction of the road
     private Cardinal cardinal_pos;
 
     // how frequently cars spawn for each outbound direction

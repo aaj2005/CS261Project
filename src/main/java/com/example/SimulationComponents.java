@@ -353,6 +353,7 @@ public class SimulationComponents {
                     if (!lane.getCars().isEmpty()){
                         // check if the car has entered the junction
                         Vehicle v = lane.get_first_car();
+                        // if the vehicle is currently turning, move it to the junction_arms_out array
                         if (v instanceof Car && v.is_turning()){
                             Car c = (Car) v;
                             if (j==0 && Road.isLeftOf(c.getDir(),lane.getDir())){
@@ -364,6 +365,7 @@ public class SimulationComponents {
                             // move the car from the junction_arms_in array to the correct junction_arms_out array depending on the direction the car will go to
                             Vehicle to_move = lane.remove_first_car();
 
+                            // buses always go straight
                             if (to_move instanceof Bus){
                                 junction_arms_out[i].getLanes().get(j).add_car(to_move);
                             }else if (to_move instanceof Car){
