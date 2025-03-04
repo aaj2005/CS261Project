@@ -8,6 +8,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * JavaFX App
@@ -38,7 +40,21 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
+            new Road(10, 300, 1),
+            new Road(10, 300, 1),
+            new Road(0, 50, 2),
+            new Road(0, 50, 2),
+            new PedestrianCrossing(0, 1)
+        }));
+
+        try {
+            StatCalculator sc = new StatCalculator(0);
+            System.out.println(sc.run().toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        System.out.println("done");
     }
 
 }

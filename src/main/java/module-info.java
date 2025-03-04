@@ -1,6 +1,7 @@
 module com.example {
     requires javafx.controls;
     requires javafx.fxml;
+    // requires java.;
 
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
