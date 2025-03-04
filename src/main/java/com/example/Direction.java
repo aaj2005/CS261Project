@@ -16,7 +16,6 @@ public enum Direction {
             0,0,
             0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
             3,1
     ),
     BOTTOM(
@@ -26,7 +25,6 @@ public enum Direction {
             -1,1,
             0,0,
             0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
             Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
             1,3
     ),
@@ -38,7 +36,6 @@ public enum Direction {
             0,0,
             -Car.CAR_WIDTH/2,0,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             0,2
     ),
     LEFT(
@@ -48,7 +45,6 @@ public enum Direction {
             1,-1,
             0,0,
             -Car.CAR_WIDTH/2,0,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
             2,0
     );
@@ -66,8 +62,6 @@ public enum Direction {
     private final double left_turn_offset_y;
     private final double right_turn_pos_x;
     private final double right_turn_pos_y;
-    private final double left_turn_pos_x;
-    private final double left_turn_pos_y;
     private final int road_after_left;
     private final int road_after_right;
 
@@ -81,7 +75,6 @@ public enum Direction {
             double right_turn_offset_x, double right_turn_offset_y,
             double left_turn_offset_x, double left_turn_offset_y,
             double right_turn_pos_x, double right_turn_pos_y,
-            double left_turn_pos_x, double left_turn_pos_y,
             int road_after_left, int road_after_right
     ){
         this.rotation = rotation;
@@ -97,8 +90,6 @@ public enum Direction {
         this.left_turn_offset_y = left_turn_offset_y;
         this.right_turn_pos_x = right_turn_pos_x;
         this.right_turn_pos_y = right_turn_pos_y;
-        this.left_turn_pos_x = left_turn_pos_x;
-        this.left_turn_pos_y = left_turn_pos_y;
         this.road_after_right = road_after_right;
         this.road_after_left = road_after_left;
     }
@@ -148,13 +139,6 @@ public enum Direction {
         return left_turn_offset_y;
     }
 
-    public double getLeft_turn_pos_x() {
-        return left_turn_pos_x;
-    }
-
-    public double getLeft_turn_pos_y() {
-        return left_turn_pos_y;
-    }
 
     public double getRight_turn_pos_x() {
         return right_turn_pos_x;
