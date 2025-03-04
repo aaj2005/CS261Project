@@ -23,7 +23,7 @@ public class StatRoad {
     
     public StatRoad(Road road) {
         this.actual_light_duration = road.actual_light_duration;
-        this.inbound_vph = road.inbound_vph;
+        this.inbound_vph = road.inbound_vph.clone();
         this.lanes = road.lanes;
         this.has_left_turn_lane = road.has_left_turn_lane;
         this.has_right_turn_lane = road.has_right_turn_lane;
@@ -32,7 +32,7 @@ public class StatRoad {
     
     public StatRoad(StatRoad road) {
         this.actual_light_duration = road.actual_light_duration;
-        this.inbound_vph = road.inbound_vph;
+        this.inbound_vph = road.inbound_vph.clone();
         this.lanes = road.lanes;
         this.has_left_turn_lane = road.has_left_turn_lane;
         this.has_right_turn_lane = road.has_right_turn_lane;
