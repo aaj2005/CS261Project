@@ -382,7 +382,7 @@
                                  <top>
                                     <AnchorPane prefHeight="84.0" prefWidth="1921.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <Label layoutX="397.0" layoutY="37.0" styleClass="title-label" text="SIMULATION 1">
+                                          <Label fx:id="sim_title" layoutX="397.0" layoutY="37.0" styleClass="title-label" text="SIMULATION 1">
                                              <font>
                                                 <Font name="Istok Web Bold" size="31.0" />
                                              </font>

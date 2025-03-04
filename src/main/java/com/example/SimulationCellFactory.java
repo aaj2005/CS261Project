@@ -19,7 +19,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
     @Override
     protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
-
+        System.out.println("updateItem called with: " + (item == null ? "NULL" : item.getSimName()) + ", empty: " + empty);
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
@@ -121,6 +121,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
             item.setSimName(newName);
         }
         Text updatedText = new Text(item.getSimName());
+        controller.getSim_title().setText(item.getSimName().toUpperCase());
         box.getChildren().set(0, updatedText);
 
         // Force update to refresh UI

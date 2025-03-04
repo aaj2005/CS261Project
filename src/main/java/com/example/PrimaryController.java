@@ -11,6 +11,7 @@ public class PrimaryController {
     @FXML private AnchorPane graphContainer;
     @FXML private Tab metricsTab;
     @FXML private Button run_button;
+    @FXML private Label sim_title;
 
     // Northbound controls
     @FXML private ChoiceBox<Integer> nb_lanes;
@@ -63,6 +64,8 @@ public class PrimaryController {
             if (metricsTab.isSelected()) loadSimulationData();
         });
 
+        initialise_choiceboxes();
+
         // Set listens for inputs that change UI configuration (i.e. number of lanes)
         setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
@@ -98,9 +101,10 @@ public class PrimaryController {
     }
 
     public void setSelectedCell(ListCell<Simulation> cell) {
-        if (selectedCell != null) {
+        if (selectedCell != null && selectedCell.getItem() != null) {
             selectedCell.setStyle("");
-            selectedCell.getItem().setNumberParameters(
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setNumberParameters(
                     Integer.valueOf(txt_nn.getText()),
                     Integer.valueOf(txt_ne.getText()),
                     Integer.valueOf(txt_nw.getText()),
@@ -112,7 +116,9 @@ public class PrimaryController {
                     Integer.valueOf(txt_sw.getText()),
                     Integer.valueOf(txt_wn.getText()),
                     Integer.valueOf(txt_ws.getText()),
-                    Integer.valueOf(txt_ww.getText())
+                    Integer.valueOf(txt_ww.getText()),
+                    Integer.valueOf(crossing_duration.getText()),
+                    Integer.valueOf(crossing_requests.getText())
             );
         }
         selectedCell = cell;
@@ -187,6 +193,9 @@ public class PrimaryController {
     }
 
     public void loadParameterValues(Simulation selectedSim) {
+        System.out.println("North num lanes for " + selectedSim.getSimName() + " is " + selectedSim.getNorth_num_lanes());
+        sim_title.setText(selectedSim.getSimName().toUpperCase());
+
         nb_lanes.setValue(selectedSim.getNorth_num_lanes());
         n_buslane.setSelected(selectedSim.getNorth_bus_lane());
         n_leftturn.setSelected(selectedSim.getNorth_left_turn());
@@ -200,7 +209,6 @@ public class PrimaryController {
         txt_ee.setText(selectedSim.getEast_east_vph().toString());
         txt_en.setText(selectedSim.getEast_north_vph().toString());
         txt_es.setText(selectedSim.getEast_south_vph().toString());
-
 
         sb_lanes.setValue(selectedSim.getSouth_num_lanes());
         s_buslane.setSelected(selectedSim.getSouth_bus_lane());
@@ -219,7 +227,25 @@ public class PrimaryController {
         pc_enabled.setSelected(selectedSim.getPedestrian_crossings());
         togglePedestrianInputs(pc_enabled.isSelected());
 
+        System.out.println(selectedSim.getPedestrian_crossings());
         crossing_duration.setText(selectedSim.getDuration_of_crossings().toString());
+        System.out.println(selectedSim.getDuration_of_crossings());
         crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
+        System.out.println(selectedSim.getRequests_per_hour());
+    }
+
+    public void initialise_choiceboxes() {
+        nb_lanes.getItems().addAll(1,2,3,4,5);
+        nb_lanes.setValue(1);
+        eb_lanes.getItems().addAll(1,2,3,4,5);
+        eb_lanes.setValue(1);
+        sb_lanes.getItems().addAll(1,2,3,4,5);
+        sb_lanes.setValue(1);
+        wb_lanes.getItems().addAll(1,2,3,4,5);
+        wb_lanes.setValue(1);
+    }
+
+    public Label getSim_title() {
+        return sim_title;
     }
 }

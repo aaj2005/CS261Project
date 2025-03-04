@@ -2,21 +2,21 @@ package com.example;
 
 public class Simulation {
     private String simName;
-    private Integer north_num_lanes = 0;
-    private Boolean north_bus_lane, north_left_turn = false;
-    private Integer north_north_vph, north_east_vph, north_west_vph = 0;
+    private Integer north_num_lanes = 1;
+    private Boolean north_bus_lane = false, north_left_turn = false;
+    private Integer north_north_vph = 0, north_east_vph = 0, north_west_vph = 0;
 
-    private Integer east_num_lanes = 0;
-    private Boolean east_bus_lane, east_left_turn = false;
-    private Integer east_north_vph, east_east_vph, east_south_vph = 0;
+    private Integer east_num_lanes = 1;
+    private Boolean east_bus_lane = false, east_left_turn = false;
+    private Integer east_north_vph = 0, east_east_vph = 0, east_south_vph = 0;
 
-    private Integer south_num_lanes = 0;
-    private Boolean south_bus_lane, south_left_turn = false;
-    private Integer south_east_vph, south_south_vph, south_west_vph = 0;
+    private Integer south_num_lanes =1;
+    private Boolean south_bus_lane = false, south_left_turn = false;
+    private Integer south_east_vph = 0, south_south_vph = 0, south_west_vph = 0;
 
-    private Integer west_num_lanes = 0;
-    private Boolean west_bus_lane, west_left_turn = false;
-    private Integer west_north_vph, west_south_vph, west_west_vph = 0;
+    private Integer west_num_lanes = 1;
+    private Boolean west_bus_lane = false, west_left_turn = false;
+    private Integer west_north_vph = 0, west_south_vph = 0, west_west_vph = 0;
 
     private Boolean pedestrian_crossings = false;
     private Integer duration_of_crossings = 0;
@@ -39,7 +39,9 @@ public class Simulation {
             Integer south_west_vph,
             Integer west_north_vph,
             Integer west_south_vph,
-            Integer west_west_vph)
+            Integer west_west_vph,
+            Integer duration_of_crossings,
+            Integer requests_per_hour)
     {
         this.north_north_vph = north_north_vph;
         this.north_east_vph = north_east_vph;
@@ -53,6 +55,10 @@ public class Simulation {
         this.west_north_vph = west_north_vph;
         this.west_south_vph = west_south_vph;
         this.west_west_vph = west_west_vph;
+        System.out.println("NEW DURATION OF " + duration_of_crossings);
+        System.out.println("NEW REQUEST OF " + duration_of_crossings);
+        this.duration_of_crossings = duration_of_crossings;
+        this.requests_per_hour = requests_per_hour;
 
     }
 
