@@ -34,16 +34,17 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(10, 300, 1),
-            new Road(10, 300, 1),
-            new Road(0, 50, 2),
-            new Road(0, 50, 2),
-            new PedestrianCrossing(0, 1)
-        }));
+        DynamicComponents.roads = new Road[] {
+            new Road(10, new double[] {3,0,0,0}, 4, Cardinal.N, true, true),
+            new Road(10, new double[] {13.2,0,0,0}, 2, Cardinal.E, true, true),
+            new Road(4, new double[] {1,0,0,0}, 1, Cardinal.S, true, false),
+            new Road(8.9, new double[] {0,0,10,0}, 2, Cardinal.W)
+        };
+
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(0, 1);
 
         try {
-            StatCalculator sc = new StatCalculator(0);
+            StatWrapper sc = new StatWrapper(DynamicComponents.roads);
             System.out.println(sc.run().toString());
         } catch (Exception e) {
             System.out.println(e.toString());
