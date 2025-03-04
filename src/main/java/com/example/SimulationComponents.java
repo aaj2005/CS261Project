@@ -83,10 +83,10 @@ public class SimulationComponents {
         // cars in the junction or that have left the junction
         junction_arms_out = new Road[4];
         // NORTH - WEST - SOUTH - EAST
-        float[] vph_1 = new float[] {0, 9999, 10000, 10000};
-        float[] vph_2 = new float[] {10000, 0, 0, 0};
-        float[] vph_3 = new float[] {0, 10000, 10000, 10000};
-        float[] vph_4 = new float[] {90000, 0, 0, 0};
+        float[] vph_1 = new float[] {0, 3600, 3600, 3600};
+        float[] vph_2 = new float[] {3600, 0, 0, 0};
+        float[] vph_3 = new float[] {0, 3600, 3600, 3600};
+        float[] vph_4 = new float[] {0, 0, 0, 3600};
 
 
         // generate the rectangles for each corner based on the input lanes

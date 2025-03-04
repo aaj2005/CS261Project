@@ -3,6 +3,7 @@ package com.example;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Road extends JunctionElement{
 
@@ -249,12 +250,11 @@ public class Road extends JunctionElement{
                 while (i+1 < lane_nums.length) {
                     int left_lane_index  = lane_nums[i+1];
                     boolean left_smaller = this.numSpawned[left_lane_index] < this.numSpawned[lane_nums[i]];
-
                     int right_lane_index = -1;
                     boolean right_smaller = false;
                     if (i+2 < lane_nums.length) {
                         right_lane_index = lane_nums[i+2];
-                        right_smaller = this.numSpawned[lane_nums[i]] < this.numSpawned[lane_nums[i]];
+                        right_smaller = this.numSpawned[right_lane_index] < this.numSpawned[lane_nums[i]];
                     }
 
                     if (left_smaller && right_smaller) {

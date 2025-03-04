@@ -173,8 +173,8 @@ public class Lane {
      * moves all cars in the lane towards the junction
      */
     public ArrayList<Rectangle> moveCars() {
-        ArrayList<Rectangle> cars_to_remove=new ArrayList<>();
-        ArrayList<Vehicle> car_shape_remove = new ArrayList<>();
+        ArrayList<Vehicle> cars_to_remove=new ArrayList<>();
+        ArrayList<Rectangle> car_shape_remove = new ArrayList<>();
         for (Vehicle c : this.cars) {
             // get x and y pos of car currently
             Rectangle carRect = c.getShape();
@@ -228,37 +228,37 @@ public class Lane {
             switch (this.direction){
                 case TOP:
                     if (carRect.getY() >= SimulationComponents.sim_h || carRect.getX() >= SimulationComponents.sim_w || carRect.getX()+Car.CAR_HEIGHT <= 0){
-                        cars_to_remove.add(c.getShape());
-                        car_shape_remove.add(c);
+                        cars_to_remove.add(c);
+                        car_shape_remove.add(c.getShape());
                     }
                     break;
                 case BOTTOM:
                     if (carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getX() >= SimulationComponents.sim_w || carRect.getX()+Car.CAR_HEIGHT <= 0){
-                        cars_to_remove.add(c.getShape());
-                        car_shape_remove.add(c);
+                        cars_to_remove.add(c);
+                        car_shape_remove.add(c.getShape());
                     }
                     break;
                 case LEFT:
                     if (carRect.getX() >= SimulationComponents.sim_w || carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getY() >= SimulationComponents.sim_h){
-                        cars_to_remove.add(c.getShape());
-                        car_shape_remove.add(c);
+                        cars_to_remove.add(c);
+                        car_shape_remove.add(c.getShape());
                     }
                     break;
                 case RIGHT:
                     if (carRect.getX()+Car.CAR_HEIGHT <= 0 || carRect.getY()+Car.CAR_HEIGHT <= 0 || carRect.getY() >= SimulationComponents.sim_h){
-                        cars_to_remove.add(c.getShape());
-                        car_shape_remove.add(c);
+                        cars_to_remove.add(c);
+                        car_shape_remove.add(c.getShape());
                     }
                     break;
             }
         }
 
         // remove cars that are out of the simulation view from car array
-        for (Vehicle car : car_shape_remove){
+        for (Vehicle car : cars_to_remove){
             cars.remove(car);
         }
         // cars outside simulation view to be removed from anchor pane
-        return cars_to_remove;
+        return car_shape_remove;
     }
 
 
