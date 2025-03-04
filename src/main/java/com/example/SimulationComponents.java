@@ -1,10 +1,10 @@
 package com.example;
 
+import java.util.ArrayList;
+
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import java.util.ArrayList;
 
 public class SimulationComponents {
 
@@ -423,4 +423,11 @@ public class SimulationComponents {
         return new double[]{center_x, center_y};
     }
 
+    public ArrayList<Rectangle> getArrows(){
+        ArrayList<Rectangle> all_arrows = new ArrayList<Rectangle>();
+        for (int i=0; i<4; i++){
+            all_arrows.addAll(junction_arms_in[i].getArrows(GET_PEDESTRIAN_CROSSING_WIDTH()));
+        }
+        return all_arrows;
+    }
 }

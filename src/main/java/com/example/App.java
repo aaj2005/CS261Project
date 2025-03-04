@@ -1,6 +1,9 @@
 package com.example;
 
-import javafx.animation.*;
+import java.io.IOException;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -11,12 +14,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * JavaFX App
@@ -32,10 +32,10 @@ public class App extends Application {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
-                5,3,1,5, false,
+                3,4,3,3, false,
                 false, true,
                 true, true,
-                true, true,
+                true, false,
                 true, true,
                 true,false,
                 false, false
@@ -52,6 +52,9 @@ public class App extends Application {
             root.getChildren().add(rect);
         }
         for (Rectangle rect : simComponent.getCrossings()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect: simComponent.getArrows()){
             root.getChildren().add(rect);
         }
         for (Rectangle rect: simComponent.getLights()){
