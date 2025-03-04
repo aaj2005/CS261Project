@@ -3,12 +3,20 @@ package com.example;
 public class StatWrapper {
     private StatRoad[] roads = new StatRoad[4];
 
+    /*
+     * Constructor.
+     * @param Road[] the roads of the junction
+     */
     public StatWrapper(Road[] roads) {
         for (int i=0; i<4; i++) {
             this.roads[i] = new StatRoad(roads[i]);
         }
     }
 
+    /*
+     * Iterates over every road, calculates statistics for each one individually, and combines the stats into one object
+     * @return the stats for the entire junction
+     */
     public Stats run() throws InvalidParametersException, InvalidMethodCallException {
         Stats stats = new Stats(0, 0, 0, 0);
         for (int i=0; i<4; i++) {

@@ -89,27 +89,31 @@ public class StatRoad {
      * @returns {@code null} if the road doesn't only has left and right-turn lanes, or a road that simulates a road without left and right-turn lanes otherwise
      */
     public StatRoad simulateRegularRoad() {
-        if (this.has_left_turn_lane && this.has_right_turn_lane && this.lanes <= 2
-         || this.has_left_turn_lane && !this.has_right_turn_lane && this.lanes <= 1
-         || !this.has_left_turn_lane && this.has_right_turn_lane && this.lanes <= 1) {
-            return null;
-        }
-
         StatRoad new_road = new StatRoad(this);
         
+        // ignore any left-turn lanes from the simulation
         if (new_road.has_left_turn_lane) {
-            new_road.lanes = Math.max(1, new_road.lanes-1);
+            new_road.lanes = new_road.lanes-1;
             new_road.has_left_turn_lane = false;
         }
         
+        // same for right-turn lanes
         if (new_road.has_right_turn_lane) {
-            new_road.lanes = Math.max(1, new_road.lanes-1);
+            new_road.lanes = new_road.lanes-1;
             new_road.has_right_turn_lane = false;
         }
 
+        // return null if there are no lanes left. No point simulating a road without its left and right-turn lanes
+        // if it doesn't have any other ones
+        if (new_road.lanes < 1) { return null; }
         return new_road;
     }
 
+    /*
+     * gets the total vph that the road is delivering to the junction
+     * vph is stored separately for each direction that it could head in
+     * ie: this.inbound_vph[0] is the vph headed north
+     */
     public double getTotalVph() {
         double sum = 0;
         for (int i=0; i<4; i++) {
