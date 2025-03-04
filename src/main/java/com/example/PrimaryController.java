@@ -6,6 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class PrimaryController {
     @FXML private ListView<Simulation> simList;
     @FXML private AnchorPane graphContainer;
@@ -98,6 +101,40 @@ public class PrimaryController {
     private void runSimulation() {
 
         run_button.setDisable(true);
+
+        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
+                new Road(10, 300, 1),
+                new Road(10, 300, 1),
+                new Road(0, 50, 2),
+                new Road(0, 50, 2),
+                new PedestrianCrossing(0, 1)
+        }));
+
+        try {
+            // North
+            StatCalculator sc1 = new StatCalculator(0);
+            Stats northResult = sc1.run();
+
+            // East
+            StatCalculator sc2 = new StatCalculator(1);
+            Stats eastResult = sc2.run();
+
+            // South
+            StatCalculator sc3 = new StatCalculator(2);
+            Stats southResult = sc3.run();
+
+            // West
+            StatCalculator sc4 = new StatCalculator(3);
+            Stats westResult = sc4.run();
+
+            // Store results in Simulation object
+
+
+            // Display result on UI
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
     }
 
     public void setSelectedCell(ListCell<Simulation> cell) {

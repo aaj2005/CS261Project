@@ -40,21 +40,8 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-            new Road(10, 300, 1),
-            new Road(10, 300, 1),
-            new Road(0, 50, 2),
-            new Road(0, 50, 2),
-            new PedestrianCrossing(0, 1)
-        }));
 
-        try {
-            StatCalculator sc = new StatCalculator(0);
-            System.out.println(sc.run().toString());
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        System.out.println("done");
+        launch();
     }
 
 }
