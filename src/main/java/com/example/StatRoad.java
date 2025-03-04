@@ -95,12 +95,25 @@ public class StatRoad {
         if (new_road.has_left_turn_lane) {
             new_road.lanes = new_road.lanes-1;
             new_road.has_left_turn_lane = false;
+
+            for (Cardinal dir : Cardinal.values()) {
+                if (Cardinal.isLeftOf(new_road.pos, dir)) {
+                    new_road.inbound_vph[dir.ordinal()] = 0;
+                }
+            }
         }
         
         // same for right-turn lanes
         if (new_road.has_right_turn_lane) {
             new_road.lanes = new_road.lanes-1;
             new_road.has_right_turn_lane = false;
+
+
+            for (Cardinal dir : Cardinal.values()) {
+                if (Cardinal.isRightOf(new_road.pos, dir)) {
+                    new_road.inbound_vph[dir.ordinal()] = 0;
+                }
+            }
         }
 
         // return null if there are no lanes left. No point simulating a road without its left and right-turn lanes

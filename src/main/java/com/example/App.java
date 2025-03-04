@@ -41,7 +41,7 @@ public class App extends Application {
             new Road(8.9, new double[] {0,0,10,0}, 2, Cardinal.W)
         };
 
-        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(0, 1);
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
 
         try {
             StatWrapper sc = new StatWrapper(DynamicComponents.roads);
