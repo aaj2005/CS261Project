@@ -32,13 +32,13 @@ public class App extends Application {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
-                5,3,1,5, false,
-                false, true,
+                5,1,1,5, false,
                 true, true,
                 true, true,
                 true, true,
-                true,false,
-                false, false
+                true, true,
+                false,false,
+                false, true
         );
         AnchorPane root = simComponent.getRoot();
         root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));

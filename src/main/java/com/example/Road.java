@@ -64,8 +64,9 @@ public class Road extends JunctionElement{
         lanes = new ArrayList<>(5);
         this.cars_to_remove = cars_to_remove;
         // instantiate lane object for each lane
+        this.setCardinalPos(direction);
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction));
+            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction,cardinal_pos));
         }
         this.direction = direction;
 
@@ -74,7 +75,6 @@ public class Road extends JunctionElement{
             this.spawnFreq[i] = (vph[i] == 0) ? -1 : 3600/vph[i];
         }
 
-        this.setCardinalPos(direction);
 
         this.numSpawned = new int[lane_count];
     }
@@ -209,7 +209,7 @@ public class Road extends JunctionElement{
             // assumes that the left-turn lane is 0
             if (this.has_left_turn) {
 
-                return this.spawn_car_in_lane(0, dir);
+                return this.spawn_car_in_lane(this.lanes.size()-1, dir);
             }
 
             // iterate over lanes from left to right
@@ -226,7 +226,7 @@ public class Road extends JunctionElement{
         // same drill but now right to left
         else if (isRightOf(this.cardinal_pos, dir)) {
             if (this.has_right_turn) {
-                return this.spawn_car_in_lane(this.lanes.size()-1, dir);
+                return this.spawn_car_in_lane(0, dir);
             }
 
             int lane = this.lanes.size()-1;
@@ -276,7 +276,7 @@ public class Road extends JunctionElement{
      * For a car coming in from the north, east is to the left, so isLeftOf(N, E) === true
      */
 
-    private boolean isLeftOf(Cardinal a, Cardinal b) {
+    public static boolean isLeftOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.E, Cardinal.S, Cardinal.W, Cardinal.N };
         for (int i=0; i<4; i++) {
@@ -291,7 +291,7 @@ public class Road extends JunctionElement{
      * For a car coming in from the south, east is to the left, so isRightOf(S, E) === true
      */
 
-    private boolean isRightOf(Cardinal a, Cardinal b) {
+    public static boolean isRightOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.W, Cardinal.N, Cardinal.E, Cardinal.S };
         for (int i=0; i<4; i++) {
@@ -382,17 +382,6 @@ public class Road extends JunctionElement{
         return lanes;
     }
 
-    public Vehicle get_car_from_lane(int lane_number){
-        return lanes.get(lane_number).get_first_car();
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public int get_lane_size(){
-        return lanes.size();
-    }
 }
 
 
