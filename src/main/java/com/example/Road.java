@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -21,7 +22,7 @@ public class Road extends JunctionElement{
     private boolean has_left_turn;
     private boolean has_right_turn;
 
-    // the position of the car 
+    // the cardinal direction of the road
     private Cardinal cardinal_pos;
 
     // how frequently cars spawn for each outbound direction
@@ -80,8 +81,9 @@ public class Road extends JunctionElement{
         lanes = new ArrayList<>(5);
         this.cars_to_remove = cars_to_remove;
         // instantiate lane object for each lane
+        this.setCardinalPos(direction);
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction));
+            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction,cardinal_pos));
         }
         this.direction = direction;
 
@@ -90,7 +92,6 @@ public class Road extends JunctionElement{
             this.spawnFreq[i] = (vph[i] == 0) ? -1 : 3600/vph[i];
         }
 
-        this.setCardinalPos(direction);
 
         this.numSpawned = new int[lane_count];
 
@@ -226,11 +227,9 @@ public class Road extends JunctionElement{
     public Rectangle spawnCar(Cardinal dir) {
         // checks if the car will be turning left
         if (isLeftOf(this.cardinal_pos, dir)) {
-
             // if there exists a left-turn lane, that's where the car will spawn
             // assumes that the left-turn lane is 0
             if (this.has_left_turn) {
-
                 return this.spawn_car_in_lane(0, dir);
             }
 
@@ -271,12 +270,11 @@ public class Road extends JunctionElement{
                 while (i+1 < lane_nums.length) {
                     int left_lane_index  = lane_nums[i+1];
                     boolean left_smaller = this.numSpawned[left_lane_index] < this.numSpawned[lane_nums[i]];
-
                     int right_lane_index = -1;
                     boolean right_smaller = false;
                     if (i+2 < lane_nums.length) {
                         right_lane_index = lane_nums[i+2];
-                        right_smaller = this.numSpawned[lane_nums[i]] < this.numSpawned[lane_nums[i]];
+                        right_smaller = this.numSpawned[right_lane_index] < this.numSpawned[lane_nums[i]];
                     }
 
                     if (left_smaller && right_smaller) {
@@ -298,7 +296,7 @@ public class Road extends JunctionElement{
      * For a car coming in from the north, east is to the left, so isLeftOf(N, E) === true
      */
 
-    private boolean isLeftOf(Cardinal a, Cardinal b) {
+    public static boolean isLeftOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.E, Cardinal.S, Cardinal.W, Cardinal.N };
         for (int i=0; i<4; i++) {
@@ -313,7 +311,7 @@ public class Road extends JunctionElement{
      * For a car coming in from the south, east is to the left, so isRightOf(S, E) === true
      */
 
-    private boolean isRightOf(Cardinal a, Cardinal b) {
+    public static boolean isRightOf(Cardinal a, Cardinal b) {
         Cardinal[] validA = { Cardinal.N, Cardinal.E, Cardinal.S, Cardinal.W };
         Cardinal[] validB = { Cardinal.W, Cardinal.N, Cardinal.E, Cardinal.S };
         for (int i=0; i<4; i++) {
@@ -404,6 +402,7 @@ public class Road extends JunctionElement{
         return lanes;
     }
 
+
     public Vehicle get_car_from_lane(int lane_number){
         return lanes.get(lane_number).get_first_car();
     }
@@ -436,6 +435,7 @@ public class Road extends JunctionElement{
                 case RIGHT:
                     arrow_x = SimulationComponents.sim_w-Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-6+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
                     //System.out.println("Position = "+arrow_x);
+
                     arrow_y = SimulationComponents.sim_w-this.corner2[1]-(i*30)+Car.CAR_WIDTH-Car.CAR_HEIGHT-10;
                     rotate = 270;
                     break;

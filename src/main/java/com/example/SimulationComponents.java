@@ -82,12 +82,11 @@ public class SimulationComponents {
 
         // cars in the junction or that have left the junction
         junction_arms_out = new Road[4];
-
-        // vph for each junction arm starting from top junction clockwise
-        float[] vph_1 = new float[] {0, 360000, 1800, 900};
-        float[] vph_2 = new float[] {0, 0, 3000, 50000000};
-        float[] vph_3 = new float[] {0, 10000, 0, 1800};
-        float[] vph_4 = new float[] {90000, 0, 0, 0};
+        // NORTH - EAST - SOUTH - WEST
+        float[] vph_1 = new float[] {0, 0, 3600, 3600};
+        float[] vph_2 = new float[] {3600, 0, 0, 0};
+        float[] vph_3 = new float[] {0, 3600, 3600, 3600};
+        float[] vph_4 = new float[] {0, 0, 0, 3600};
 
 
         // generate the rectangles for each corner based on the input lanes
@@ -353,14 +352,31 @@ public class SimulationComponents {
                     Lane lane = junction_arms_in[i].getLanes().get(j);
                     if (!lane.getCars().isEmpty()){
                         // check if the car has entered the junction
-                        if(lane.car_in_junction(lane.get_first_car())){
-                            // move the car from the junction_arms_in array to the correct junction_arms_out array depending on the direction the car will go to
-                            if (j==0 && lane.is_left()){
+                        Vehicle v = lane.get_first_car();
+                        // if the vehicle is currently turning, move it to the junction_arms_out array
+                        if (v instanceof Car && v.is_turning()){
+                            Car c = (Car) v;
+                            if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
                                 junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(lane.remove_first_car());
-                            }else if (j==num_of_lanes-1 && lane.is_right()){
+                            }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir())&& lane.is_right()){
                                 junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(lane.remove_first_car());
-                            }else{
-                                junction_arms_out[i].getLanes().get(j).add_car(lane.remove_first_car());
+                            }
+                        }else if(lane.car_in_junction(lane.get_first_car())){
+                            // move the car from the junction_arms_in array to the correct junction_arms_out array depending on the direction the car will go to
+                            Vehicle to_move = lane.remove_first_car();
+                            // buses always go straight
+                            if (to_move instanceof Bus){
+                                junction_arms_out[i].getLanes().get(j).add_car(to_move);
+                            }else if (to_move instanceof Car){
+                                Car c = (Car) to_move;
+
+                                if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
+                                    junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(to_move);
+                                }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir()) && lane.is_right()){
+                                    junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(to_move);
+                                }else{
+                                    junction_arms_out[i].getLanes().get(j).add_car(to_move);
+                                }
                             }
 
                         }
@@ -403,10 +419,6 @@ public class SimulationComponents {
             return new ArrayList<>();
         }
         return crossings;
-    }
-
-    public void setColour(int i, Color colour){
-        corners[i].setFill(colour);
     }
 
     public Rectangle[] getLane_separation() {

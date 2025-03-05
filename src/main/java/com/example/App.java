@@ -33,11 +33,11 @@ public class App extends Application {
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
                 3,4,3,3, false,
-                false, true,
                 true, true,
-                true, false,
                 true, true,
-                true,false,
+                true, true,
+                true, true,
+                false,false,
                 false, false
         );
         AnchorPane root = simComponent.getRoot();
