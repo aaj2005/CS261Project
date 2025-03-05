@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+
 
 public class PrimaryController {
     @FXML private ListView<Simulation> simList;
@@ -55,6 +57,9 @@ public class PrimaryController {
     @FXML private Label max_queue_west;
 
 
+    @FXML private AnchorPane sim_anchor;
+
+
     private SimulationManager simulationManager;
     private ListCell<Simulation> selectedCell;
 
@@ -86,6 +91,27 @@ public class PrimaryController {
         // Set listens for inputs that change UI configuration (i.e. number of lanes)
         setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
+
+        SimulationComponents simComponent = new SimulationComponents(
+                3,4,3,3, true,
+                true, true,
+                true, true,
+                true, true,
+                true, true,
+                true,false,
+                false, false
+        );
+
+        AnchorPane childPane = simComponent.getRoot();
+        sim_anchor.getChildren().add(childPane);
+
+        // Clip the anchor pane
+        Rectangle clip = new Rectangle();
+        clip.setWidth(600);
+        clip.setHeight(600);
+        childPane.setClip(clip);
+
+
     }
 
     private void togglePedestrianInputs(boolean enabled) {
