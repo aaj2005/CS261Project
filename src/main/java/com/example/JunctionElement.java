@@ -1,4 +1,9 @@
 package com.example;
 
-public interface JunctionElement {
+public abstract class JunctionElement {
+
+    boolean light_status;
+
+
+
 }

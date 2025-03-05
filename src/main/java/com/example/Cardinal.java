@@ -13,7 +13,7 @@ public enum Cardinal {
         for (int i=0; i<4; i++) {
             if (a == validA[i] && b == validB[i]) {
                 return true;
-            }    
+            }
         }
         return false;
     }
@@ -28,7 +28,7 @@ public enum Cardinal {
         for (int i=0; i<4; i++) {
             if (a == validA[i] && b == validB[i]) {
                 return true;
-            }    
+            }
         }
         return false;
     }
