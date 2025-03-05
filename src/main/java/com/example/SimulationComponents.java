@@ -63,6 +63,7 @@ public class SimulationComponents {
     private int has_pedestrian;
 
     private Timeline timeline;
+    private Boolean running = false;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -288,16 +289,21 @@ public class SimulationComponents {
     }
 
     public void start_simulation(){
-        timeline.play();
-        traffic_system.lights_start();
-        animations.resume_turns();
-
+        if (running) {
+            timeline.play();
+            traffic_system.lights_start();
+            animations.resume_turns();
+        }
+        running = true;
     }
 
     public void stop_simulation(){
-        timeline.stop();
-        animations.pause_turns();
-        traffic_system.lights_stop();
+        if (!running) {
+            timeline.stop();
+            animations.pause_turns();
+            traffic_system.lights_stop();
+        }
+        running = false;
     }
 
 
