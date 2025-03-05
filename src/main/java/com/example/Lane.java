@@ -189,7 +189,7 @@ public class Lane {
                 // wait till car reaches very front of lane (so it can turn)
                 // check if car is in the front of the lane (about to enter the junction)
                 boolean car_ready_to_turn = false;
-                boolean turning_cond = ((Road.isLeftOf(car.getDir(),this.dir) && is_left)  || (Road.isRightOf(car.getDir(),this.dir) && is_right));
+                boolean turning_cond = ((Road.isLeftOf(this.dir,car.getDir()) && is_left)  || (Road.isRightOf(this.dir,car.getDir()) && is_right));
                 switch (this.direction){
                     case TOP:
                         car_ready_to_turn = Math.min(corner2_dims[1],corner1_dims[1]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <=y && turning_cond && !car.has_made_turn();
@@ -214,9 +214,9 @@ public class Lane {
                     if (!car_ready_to_turn && !car.is_turning()){
                         carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
                         carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
-                    }else if (Road.isLeftOf(car.getDir(),this.dir) && !car.is_turning() && !car.has_made_turn()){ // make the car turn left
+                    }else if (Road.isLeftOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn left
                         animations.turn_left(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(), y+car.getDirection().getRight_turn_pos_y(), lanes_in_road, max_lane_out);
-                    }else if ( Road.isRightOf(car.getDir(),this.dir) && !car.is_turning() && !car.has_made_turn()){ // make the car turn right
+                    }else if ( Road.isRightOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn right
                         animations.turn_right(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(),y+car.getDirection().getRight_turn_pos_y());
                     }
                 }
@@ -327,4 +327,5 @@ public class Lane {
     public Cardinal getDir() {
         return dir;
     }
+    
 }

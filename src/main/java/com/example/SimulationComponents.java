@@ -82,8 +82,8 @@ public class SimulationComponents {
 
         // cars in the junction or that have left the junction
         junction_arms_out = new Road[4];
-        // NORTH - WEST - SOUTH - EAST
-        float[] vph_1 = new float[] {0, 3600, 3600, 3600};
+        // NORTH - EAST - SOUTH - WEST
+        float[] vph_1 = new float[] {0, 0, 3600, 3600};
         float[] vph_2 = new float[] {3600, 0, 0, 0};
         float[] vph_3 = new float[] {0, 3600, 3600, 3600};
         float[] vph_4 = new float[] {0, 0, 0, 3600};
@@ -356,24 +356,23 @@ public class SimulationComponents {
                         // if the vehicle is currently turning, move it to the junction_arms_out array
                         if (v instanceof Car && v.is_turning()){
                             Car c = (Car) v;
-                            if (j==0 && Road.isLeftOf(c.getDir(),lane.getDir())){
+                            if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
                                 junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(lane.remove_first_car());
-                            }else if ( j== num_of_lanes-1 && Road.isRightOf(c.getDir(),lane.getDir())){
+                            }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir())&& lane.is_right()){
                                 junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(lane.remove_first_car());
                             }
                         }else if(lane.car_in_junction(lane.get_first_car())){
                             // move the car from the junction_arms_in array to the correct junction_arms_out array depending on the direction the car will go to
                             Vehicle to_move = lane.remove_first_car();
-
                             // buses always go straight
                             if (to_move instanceof Bus){
                                 junction_arms_out[i].getLanes().get(j).add_car(to_move);
                             }else if (to_move instanceof Car){
                                 Car c = (Car) to_move;
 
-                                if (j==0 && Road.isLeftOf(c.getDir(),lane.getDir())){
+                                if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
                                     junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(to_move);
-                                }else if ( j== num_of_lanes-1 && Road.isRightOf(c.getDir(),lane.getDir())){
+                                }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir()) && lane.is_right()){
                                     junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(to_move);
                                 }else{
                                     junction_arms_out[i].getLanes().get(j).add_car(to_move);

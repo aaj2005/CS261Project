@@ -263,6 +263,7 @@ public class Animations {
         pathTransition.setNode(car.getShape());
         pathTransition.setPath(path);
         car.set_turning();
+
         // rotate the car as it moves
         AnimationTimer timer = new AnimationTimer() {
             double startTime = 0;
@@ -278,11 +279,6 @@ public class Animations {
                     elapsedTime = (now - startTime);
                 }
 
-                // determine if end time is reached
-                if (elapsedTime/1_000_000_000.0 >= totalDuration) {
-                    startTime = 0;
-                    elapsedTime = totalDuration* 1_000_000_000.0 ; // Clamp at total_duration
-                }
 
                 // percentage into the animation
                 double progress = (elapsedTime/1_000_000_000.0) / totalDuration; // Normalize [0,1]
@@ -322,6 +318,7 @@ public class Animations {
                 }
             }
         };
+
         pathTransition.play();
         timer.start();
     }

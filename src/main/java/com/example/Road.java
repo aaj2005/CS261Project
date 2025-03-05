@@ -223,12 +223,10 @@ public class Road extends JunctionElement{
     public Rectangle spawnCar(Cardinal dir) {
         // checks if the car will be turning left
         if (isLeftOf(this.cardinal_pos, dir)) {
-
             // if there exists a left-turn lane, that's where the car will spawn
             // assumes that the left-turn lane is 0
             if (this.has_left_turn) {
-
-                return this.spawn_car_in_lane(this.lanes.size()-1, dir);
+                return this.spawn_car_in_lane(0, dir);
             }
 
             // iterate over lanes from left to right
@@ -245,7 +243,7 @@ public class Road extends JunctionElement{
         // same drill but now right to left
         else if (isRightOf(this.cardinal_pos, dir)) {
             if (this.has_right_turn) {
-                return this.spawn_car_in_lane(0, dir);
+                return this.spawn_car_in_lane(this.lanes.size()-1, dir);
             }
 
             int lane = this.lanes.size()-1;
@@ -426,25 +424,21 @@ public class Road extends JunctionElement{
             switch (this.direction){
                 case TOP:
                     arrow_y = Math.min(this.corner2[1],this.corner1[1])-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    System.out.println("Position = "+arrow_y);
                     arrow_x = SimulationComponents.sim_h-this.corner2[0]-(i*30)-Car.CAR_HEIGHT+Car.CAR_WIDTH;
                     rotate = 180;
                     break;
                 case RIGHT:
                     arrow_x = SimulationComponents.sim_w-Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-6+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    System.out.println("Position = "+arrow_x);
                     arrow_y = SimulationComponents.sim_w-this.corner2[1]-(i*30)+Car.CAR_WIDTH-Car.CAR_HEIGHT-10;
                     rotate = 270;
                     break;
                 case BOTTOM:
                     arrow_y = SimulationComponents.sim_h-Math.min(this.corner1[1],this.corner2[1])+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    System.out.println("Position = "+arrow_y);
                     arrow_x = corner2[0]+(i*30)+6;
                     rotate = 0;
                     break;
                 case LEFT:
                     arrow_x = Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    System.out.println("Position = "+arrow_x);
                     arrow_y = this.corner2[1]+(i*30)-6;
                     rotate = 90;
                     break;
