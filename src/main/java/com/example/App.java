@@ -41,37 +41,10 @@ public class App extends Application {
                 false, false
         );
         AnchorPane root = simComponent.getRoot();
-        root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
+
         stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
         stage.show();
-
-        for (Rectangle rect : simComponent.getCorners()){
-            root.getChildren().add(rect);
-        }
-        for (Rectangle rect : simComponent.getLane_separation()){
-            root.getChildren().add(rect);
-        }
-        for (Rectangle rect : simComponent.getCrossings()){
-            root.getChildren().add(rect);
-        }
-        for (Rectangle rect: simComponent.getArrows()){
-            root.getChildren().add(rect);
-        }
-        for (Rectangle rect: simComponent.getLights()){
-            root.getChildren().add(rect);
-        }
-//        root.getChildren().addAll(simComponent.carsToAdd);
-
-        // simComponent.turn_right(3, 0);
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(33), e -> animation(root, simComponent))
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-
-        timeline.play();
-
-        // Rectangle car1 = simComponent.get_first_car("right",1).getShape();
+        
 
     }
 
@@ -81,11 +54,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    private void animation(AnchorPane root, SimulationComponents simComponent){
-        // Rectangle car1 = simComponent.get_first_car("right",1).getShape();
-        // car1.setY(car1.getY()-1);
-        simComponent.update(root);
-    }
+
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));

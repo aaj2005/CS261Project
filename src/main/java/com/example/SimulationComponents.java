@@ -2,9 +2,16 @@ package com.example;
 
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class SimulationComponents {
 
@@ -75,6 +82,8 @@ public class SimulationComponents {
                                 ){
 
         root = new AnchorPane();
+        root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
+
         // number of lanes exiting junction for each arm
         max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
         this.has_pedestrian = crossings_enabled ? 1 : 0;
@@ -252,6 +261,33 @@ public class SimulationComponents {
             addCrossings(NUMBER_OF_LINES);
         }
         addLaneSeparators(lanes_arm1,lanes_arm2,lanes_arm3,lanes_arm4);
+
+        for (Rectangle rect : getCorners()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect : getLane_separation()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect : getCrossings()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect: getArrows()){
+            root.getChildren().add(rect);
+        }
+        for (Rectangle rect: getLights()){
+            root.getChildren().add(rect);
+        }
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(33), e -> animation(root))
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        timeline.play();
+    }
+
+    private void animation(AnchorPane root){
+        this.update(root);
     }
 
 
