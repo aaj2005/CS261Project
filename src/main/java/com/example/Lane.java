@@ -198,7 +198,7 @@ public class Lane {
                         car_ready_to_turn =( SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT >= x && turning_cond && !car.has_made_turn());
                         break;
                     case BOTTOM:
-                        car_ready_to_turn = SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) + Car.VEHICLE_GAP/2 >= y && turning_cond && !car.has_made_turn();
+                        car_ready_to_turn = SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y && turning_cond && !car.has_made_turn();
                         break;
                     case LEFT:
                         car_ready_to_turn = Math.min(corner1_dims[0],corner2_dims[0]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <= x && turning_cond && !car.has_made_turn();

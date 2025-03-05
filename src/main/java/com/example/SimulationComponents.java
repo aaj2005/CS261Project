@@ -460,6 +460,7 @@ public class SimulationComponents {
                             }
                         }else if(lane.car_in_junction(lane.get_first_car())){
                             // move the car from the junction_arms_in array to the correct junction_arms_out array depending on the direction the car will go to
+
                             Vehicle to_move = lane.remove_first_car();
                             // buses always go straight
                             if (to_move instanceof Bus){
@@ -468,8 +469,10 @@ public class SimulationComponents {
                                 Car c = (Car) to_move;
 
                                 if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
+                                    animations.turn_left(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y(), num_of_lanes, max_out);
                                     junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(to_move);
                                 }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir()) && lane.is_right()){
+                                    animations.turn_right(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y());
                                     junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(to_move);
                                 }else{
                                     junction_arms_out[i].getLanes().get(j).add_car(to_move);

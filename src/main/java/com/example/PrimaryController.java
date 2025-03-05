@@ -109,7 +109,8 @@ public class PrimaryController {
         Rectangle clip = new Rectangle();
         clip.setWidth(600);
         clip.setHeight(600);
-        childPane.setClip(clip);
+        sim_anchor.setClip(clip);
+
 
 
     }

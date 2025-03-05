@@ -53,7 +53,7 @@ public class TrafficLights {
 
     }
 
-    private boolean[] light_status = {true,false,false,false};
+    private boolean[] light_status = {false,false,true,false};
 
     private boolean pedestrian_crossing = false; // run pedestrian crossings after current traffic lights finish
 
