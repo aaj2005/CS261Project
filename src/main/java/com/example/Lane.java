@@ -327,5 +327,12 @@ public class Lane {
     public Cardinal getDir() {
         return dir;
     }
-    
+
+    public boolean is_right() {
+        return is_right;
+    }
+
+    public boolean is_left() {
+        return is_left;
+    }
 }

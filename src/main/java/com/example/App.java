@@ -37,7 +37,7 @@ public class App extends Application {
                 true, true,
                 true, true,
                 true, true,
-                false,false,
+                true,false,
                 false, false
         );
         AnchorPane root = simComponent.getRoot();
