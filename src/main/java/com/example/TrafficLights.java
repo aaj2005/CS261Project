@@ -297,8 +297,8 @@ public class TrafficLights {
             
 
         }));
-        traffic_timeline.play();
         traffic_timeline.setCycleCount(Timeline.INDEFINITE);
+        traffic_timeline.play();
 
     }
     public void lights_start(){
