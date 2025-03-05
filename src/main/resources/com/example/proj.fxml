@@ -113,7 +113,7 @@
                                        <children>
                                           <Region layoutX="39.0" layoutY="35.0" prefHeight="851.0" prefWidth="732.0" style="-fx-border-color: #000000;" />
                                           <Region layoutX="865.0" layoutY="659.0" prefHeight="227.0" prefWidth="604.0" style="-fx-border-color: #000000;" />
-                                          <AnchorPane layoutX="865.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #bbbbbb;" />
+                                          <AnchorPane fx:id="sim_anchor" layoutX="865.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #bbbbbb;" />
                                           <Label fx:id="configuration_label" layoutX="77.0" layoutY="60.0" styleClass="subtitle-label" text="CONFIGURATION">
                                              <font>
                                                 <Font name="Istok Web Bold" size="23.0" />
