@@ -32,7 +32,7 @@ public class App extends Application {
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
         SimulationComponents simComponent = new SimulationComponents(
-                3,4,3,3, false,
+                3,4,3,3, true,
                 true, true,
                 true, true,
                 true, true,

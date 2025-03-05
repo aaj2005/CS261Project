@@ -53,6 +53,7 @@ public class SimulationComponents {
     // traffic light logic instance
     private TrafficLights traffic_system;
 
+    private int has_pedestrian;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -76,7 +77,7 @@ public class SimulationComponents {
         root = new AnchorPane();
         // number of lanes exiting junction for each arm
         max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
-
+        this.has_pedestrian = crossings_enabled ? 1 : 0;
         // cars not yet in the junction
         junction_arms_in = new Road[4];
 
@@ -87,6 +88,7 @@ public class SimulationComponents {
         float[] vph_2 = new float[] {3600, 0, 0, 0};
         float[] vph_3 = new float[] {0, 3600, 3600, 3600};
         float[] vph_4 = new float[] {0, 0, 0, 3600};
+
 
 
         // generate the rectangles for each corner based on the input lanes
@@ -249,11 +251,74 @@ public class SimulationComponents {
         if (crossings_enabled){
             addCrossings(NUMBER_OF_LINES);
         }
+        addLaneSeparators(lanes_arm1,lanes_arm2,lanes_arm3,lanes_arm4);
     }
 
 
 
+    public void addLaneSeparators(int lanes_arm1,int lanes_arm2,int lanes_arm3,int lanes_arm4){
+        Rectangle[] rectangles;
+        for (int i=1;i<max_out;++i) {
+            rectangles = new Rectangle[]{
+                    new Rectangle( // top junction arm
+                            corners[0].getWidth() + Lane.lane_w * i, 0, // X and Y
+                            1, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                    ),
+                    new Rectangle( // right junction arm
+                            sim_w - Math.min(corners[1].getWidth(), corners[3].getWidth()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, corners[1].getHeight() + Lane.lane_w * i, // X and Y
+                            Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1  // Width and Height
+                    ),
+                    new Rectangle( // bottom junction arm
+                            sim_w - (corners[3].getWidth() + Lane.lane_w * i), sim_h - Math.min(corners[2].getHeight(), // X and Y
+                            corners[3].getHeight()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian,
+                            1, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                    ),
+                    new Rectangle( // left junction arm
+                            0, sim_h - (corners[2].getHeight() + Lane.lane_w * i), // X and Y
+                            Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1 // Width and Height
+                    ),
 
+            };
+            for (Rectangle r : rectangles) {
+                r.setFill(Color.WHITE);
+            }
+            root.getChildren().addAll(rectangles);
+        }
+        for (int i =0;i<lanes_arm1;++i) {
+            Rectangle rect = new Rectangle( // top junction arm
+                    sim_w - corners[1].getWidth() - Lane.lane_w * i, 0, // X and Y
+                    1, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+            );
+//            if ()
+            rect.setFill(Color.WHITE);
+            root.getChildren().addAll(rect);
+        }
+        for (int i =0;i<lanes_arm2;++i) {
+            Rectangle rect = new Rectangle( // right junction arm
+                    sim_w - Math.min(corners[1].getWidth(), corners[3].getWidth()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, sim_h - corners[2].getHeight() - Lane.lane_w * i, // X and Y
+                    Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1  // Width and Height
+            );
+            rect.setFill(Color.WHITE);
+            root.getChildren().addAll(rect);
+        }
+        for (int i =0;i<lanes_arm3;++i) {
+            Rectangle rect = new Rectangle( // bottom junction arm
+                    (corners[3].getWidth() + Lane.lane_w * i), sim_h - Math.min(corners[2].getHeight(), // X and Y
+                    corners[3].getHeight()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian,
+                    1, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+            );
+            rect.setFill(Color.WHITE);
+            root.getChildren().addAll(rect);
+        }
+        for (int i =0;i<lanes_arm4;++i) {
+            Rectangle rect = new Rectangle( // left junction arm
+                    0, (corners[0].getHeight() + Lane.lane_w * i), // X and Y
+                    Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1 // Width and Height
+            );
+            rect.setFill(Color.WHITE);
+            root.getChildren().addAll(rect);
+        }
+    }
 
 
     public void addCrossings(int stripecount){
