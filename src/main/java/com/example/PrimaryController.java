@@ -116,11 +116,11 @@ public class PrimaryController {
 
         run_button.setDisable(true);
 
-        DynamicComponents.roads = new Road[] {
-                new Road(10, new double[] {0,3,5,2}, 4, Cardinal.N, true, false),
-                new Road(10, new double[] {0,0,0,0}, 2, Cardinal.E, true, true),
-                new Road(10, new double[] {0,0,0,0}, 1, Cardinal.S, true, false),
-                new Road(10, new double[] {0,0,0,0}, 2, Cardinal.W)
+        DynamicComponents.roads = new BaseRoad[] {
+                new BaseRoad(10, new double[] {0,3,5,2}, 4, Cardinal.N, true, false),
+                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.E, true, true),
+                new BaseRoad(10, new double[] {0,0,0,0}, 1, Cardinal.S, true, false),
+                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.W)
         };
 
         DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);

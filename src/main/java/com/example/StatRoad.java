@@ -21,7 +21,7 @@ public class StatRoad {
     public boolean has_left_turn_lane;  // if the road has a left-turn lane
     public boolean has_right_turn_lane; // if the road has a right-turn lane
     
-    public StatRoad(Road road) {
+    public StatRoad(BaseRoad road) {
         this.actual_light_duration = road.actual_light_duration;
         this.inbound_vph = road.inbound_vph.clone();
         this.lanes = road.lanes;

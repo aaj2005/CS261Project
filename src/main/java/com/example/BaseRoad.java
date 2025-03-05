@@ -1,7 +1,7 @@
 package com.example;
 
 /* DUMMY CLASS */
-public class Road implements JunctionElement {
+public class BaseRoad implements JunctionElement {
     public double actual_light_duration; // how long the light is green for
     public double[] inbound_vph;         // how many cars come into the junction from this road per second
     public int lanes;                   // number of lanes on this road
@@ -18,7 +18,7 @@ public class Road implements JunctionElement {
     /*
      * This constructior assumes that no left nor right-turn exist
      */
-    public Road(
+    public BaseRoad(
         double actual_light_duration,
         double[] inbound_vph,
         int lanes,
@@ -33,7 +33,7 @@ public class Road implements JunctionElement {
     /*
      * This constructor allows you to specify what types of lanes exist
      */
-    public Road(
+    public BaseRoad(
         double actual_light_duration,
         double[] inbound_vph,
         int lanes,

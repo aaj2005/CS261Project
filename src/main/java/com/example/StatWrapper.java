@@ -7,7 +7,7 @@ public class StatWrapper {
      * Constructor.
      * @param Road[] the roads of the junction
      */
-    public StatWrapper(Road[] roads) {
+    public StatWrapper(BaseRoad[] roads) {
         for (int i=0; i<4; i++) {
             this.roads[i] = new StatRoad(roads[i]);
         }
