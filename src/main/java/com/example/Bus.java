@@ -9,8 +9,8 @@ public class Bus extends Vehicle {
 
     private final Rectangle shape;
 
-    public static final ImagePattern bus_texture_ver = new ImagePattern(new Image("bustopviewhor.png"));
-    public static final ImagePattern bus_texture_hor = new ImagePattern(new Image("bustopviewver.png"));
+    public static final ImagePattern bus_texture_ver = new ImagePattern(new Image("bustopviewver.png"));
+    public static final ImagePattern bus_texture_hor = new ImagePattern(new Image("bustopviewhor.png"));
     private static final double BUS_WIDTH = 18;
     private static final double BUS_HEIGHT = 60;
 
