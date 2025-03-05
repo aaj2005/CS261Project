@@ -111,6 +111,11 @@ public class PrimaryController {
         clip.setHeight(600);
         sim_anchor.setClip(clip);
 
+        // start/resume simulation
+        simComponent.start_simulation();
+
+        // pause simulation
+//        simComponent.stop_simulation();
 
 
     }

@@ -55,6 +55,9 @@ public class Animations {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private AnimationTimer timer_right;
+    private PathTransition pathTransitionRight;
+
     public void turn_right(Car car, Direction direction, double carX, double carY){
 
 
@@ -111,14 +114,14 @@ public class Animations {
         path.getElements().add (quad);
 
         // create the path transition animation object
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(totalDuration*1000));
-        pathTransition.setNode(car.getShape());
-        pathTransition.setPath(path);
+        pathTransitionRight = new PathTransition();
+        pathTransitionRight.setDuration(Duration.millis(totalDuration*1000));
+        pathTransitionRight.setNode(car.getShape());
+        pathTransitionRight.setPath(path);
 
         car.set_turning();
         // rotate the car as it moves
-        AnimationTimer timer = new AnimationTimer() {
+        timer_right = new AnimationTimer() {
             double startTime = 0;
             @Override
             public void handle(long now) {
@@ -172,8 +175,8 @@ public class Animations {
                 }
             }
         };
-        pathTransition.play();
-        timer.start();
+        pathTransitionRight.play();
+        timer_right.start();
 
     }
 
@@ -183,6 +186,9 @@ public class Animations {
     ////////////////////                                                             //////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private AnimationTimer timer_left;
+    private PathTransition pathTransitionLeft;
 
 
     public void turn_left(Car car, Direction direction, double carX, double carY, int lane_number, int max_lane_out){
@@ -258,18 +264,17 @@ public class Animations {
         path.getElements().add(moveTo);
         path.getElements().add (quad);
         // create the path transition animation object
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(totalDuration*1000));
-        pathTransition.setNode(car.getShape());
-        pathTransition.setPath(path);
+        pathTransitionLeft = new PathTransition();
+        pathTransitionLeft.setDuration(Duration.millis(totalDuration*1000));
+        pathTransitionLeft.setNode(car.getShape());
+        pathTransitionLeft.setPath(path);
         car.set_turning();
 
         // rotate the car as it moves
-        AnimationTimer timer = new AnimationTimer() {
+        timer_left = new AnimationTimer() {
             double startTime = 0;
             @Override
             public void handle(long now) {
-
                 // time passed in the animation
                 double elapsedTime = (now - startTime);
 
@@ -312,6 +317,7 @@ public class Animations {
 //                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
 
                 // stop transition once animation time is reached
+
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     car.set_made_turn();
                     stop();
@@ -319,8 +325,38 @@ public class Animations {
             }
         };
 
-        pathTransition.play();
-        timer.start();
+        pathTransitionLeft.play();
+        timer_left.start();
+    }
+
+    public void pause_turns(){
+        if (timer_right != null){
+            timer_right.stop();
+        }
+        if (timer_left != null){
+            timer_left.stop();
+        }
+        if (pathTransitionLeft!= null){
+            pathTransitionLeft.pause();
+        }
+        if (pathTransitionRight != null){
+            pathTransitionRight.pause();
+        }
+    }
+
+    public void resume_turns(){
+        if (timer_right != null){
+            timer_right.start();
+        }
+        if (timer_left != null){
+            timer_left.start();
+        }
+        if (pathTransitionLeft!= null){
+            pathTransitionLeft.play();
+        }
+        if (pathTransitionRight != null){
+            pathTransitionRight.play();
+        }
     }
 
     private static double[] bezierDerivative(double t, double carX, double carY, double pivotX, double pivotY, double endX, double endY ) {

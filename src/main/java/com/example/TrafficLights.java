@@ -53,7 +53,7 @@ public class TrafficLights {
 
     }
 
-    private boolean[] light_status = {false,false,true,false};
+    private boolean[] light_status = {true,false,false,false};
 
     private boolean pedestrian_crossing = false; // run pedestrian crossings after current traffic lights finish
 
@@ -70,7 +70,9 @@ public class TrafficLights {
     private boolean run_crossing =false;    // disable all lights and allow pedestrians to move
 
     private boolean car_in_junction = false;
-    
+
+    private Timeline traffic_timeline;
+
     public Rectangle[] create_rectangles(Rectangle[] lanes, double scale_factor, double[] center){
         lights = new Rectangle[]{
             new Rectangle(
@@ -120,7 +122,7 @@ public class TrafficLights {
 
 
     public void run_lights(){
-        Timeline traffic_timeline = new Timeline(new KeyFrame(Duration.millis(100), event ->{
+        traffic_timeline = new Timeline(new KeyFrame(Duration.millis(100), event ->{
             time_traffic +=0.1;
             time_crossing +=0.1;
 
@@ -295,12 +297,23 @@ public class TrafficLights {
             
 
         }));
-
-        traffic_timeline.setCycleCount(Timeline.INDEFINITE);
         traffic_timeline.play();
-
+        traffic_timeline.setCycleCount(Timeline.INDEFINITE);
 
     }
+    public void lights_start(){
+        if (traffic_timeline != null){
+            traffic_timeline.play();
+        }else{
+            run_lights();
+        }
+    }
+
+    public void lights_stop(){
+        traffic_timeline.stop();
+    }
+
+
 
     private void check_car_in_junction(){
         car_in_junction = false;

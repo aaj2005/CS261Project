@@ -62,6 +62,8 @@ public class SimulationComponents {
 
     private int has_pedestrian;
 
+    private Timeline timeline;
+
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +97,7 @@ public class SimulationComponents {
         // NORTH - EAST - SOUTH - WEST
         float[] vph_1 = new float[] {0, 0, 3600, 3600};
         float[] vph_2 = new float[] {3600, 0, 0, 0};
-        float[] vph_3 = new float[] {0, 3600, 3600, 3600};
+        float[] vph_3 = new float[] {0, 36000, 3600, 3600};
         float[] vph_4 = new float[] {0, 0, 0, 3600};
 
 
@@ -249,7 +251,7 @@ public class SimulationComponents {
 
         traffic_system = new TrafficLights(new int[] {0,0,0,0},60,4,junction_arms_out);
         lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters());
-        traffic_system.run_lights();
+
 
         corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.GREEN);
@@ -278,13 +280,26 @@ public class SimulationComponents {
             root.getChildren().add(rect);
         }
 
-        Timeline timeline = new Timeline(
+        this.timeline = new Timeline(
                 new KeyFrame(Duration.millis(33), e -> animation(root))
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-        timeline.play();
     }
+
+    public void start_simulation(){
+        timeline.play();
+        traffic_system.lights_start();
+        animations.resume_turns();
+
+    }
+
+    public void stop_simulation(){
+        timeline.stop();
+        animations.pause_turns();
+        traffic_system.lights_stop();
+    }
+
 
     private void animation(AnchorPane root){
         this.update(root);
@@ -542,4 +557,6 @@ public class SimulationComponents {
         }
         return all_arrows;
     }
+
+
 }
