@@ -289,7 +289,7 @@ public class SimulationComponents {
     }
 
     public void start_simulation(){
-        if (running) {
+        if (!running) {
             timeline.play();
             traffic_system.lights_start();
             animations.resume_turns();
@@ -298,7 +298,7 @@ public class SimulationComponents {
     }
 
     public void stop_simulation(){
-        if (!running) {
+        if (running) {
             timeline.stop();
             animations.pause_turns();
             traffic_system.lights_stop();
