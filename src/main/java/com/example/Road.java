@@ -48,10 +48,13 @@ public class Road extends JunctionElement{
     new Image(TrafficLights.class.getResource("/rightarrow.png").toExternalForm()));
     public static final ImagePattern forward_arrow = new ImagePattern(
     new Image(TrafficLights.class.getResource("/forwardarrow.png").toExternalForm()));
+    public static final ImagePattern bus_lane_writing = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/buslane.png").toExternalForm()));
     private int lane_count;
     private double[] corner1;
     private double[] corner2;
     private boolean has_pedestrian;
+    private boolean has_bus_lane;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -145,6 +148,7 @@ public class Road extends JunctionElement{
         this(lane_count, priority, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,animations,road_going_into_junction,cars_to_remove);
         this.has_left_turn = has_left_turn;
         this.has_right_turn = has_right_turn;
+        this.has_bus_lane = has_bus_lane;
         if (has_left_turn){
             lanes.get(0).set_left_turn();
         }
@@ -424,21 +428,26 @@ public class Road extends JunctionElement{
             switch (this.direction){
                 case TOP:
                     arrow_y = Math.min(this.corner2[1],this.corner1[1])-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    //System.out.println("Position = "+arrow_y);
                     arrow_x = SimulationComponents.sim_h-this.corner2[0]-(i*30)-Car.CAR_HEIGHT+Car.CAR_WIDTH;
                     rotate = 180;
                     break;
                 case RIGHT:
                     arrow_x = SimulationComponents.sim_w-Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-6+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    //System.out.println("Position = "+arrow_x);
+
                     arrow_y = SimulationComponents.sim_w-this.corner2[1]-(i*30)+Car.CAR_WIDTH-Car.CAR_HEIGHT-10;
                     rotate = 270;
                     break;
                 case BOTTOM:
                     arrow_y = SimulationComponents.sim_h-Math.min(this.corner1[1],this.corner2[1])+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    //System.out.println("Position = "+arrow_y);
                     arrow_x = corner2[0]+(i*30)+6;
                     rotate = 0;
                     break;
                 case LEFT:
                     arrow_x = Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
+                    //System.out.println("Position = "+arrow_x);
                     arrow_y = this.corner2[1]+(i*30)-6;
                     rotate = 90;
                     break;
@@ -451,6 +460,8 @@ public class Road extends JunctionElement{
             lane_arrows.get(0).setFill(left_arrow);
         }if (this.has_right_turn){
             lane_arrows.get(lane_count-1).setFill(right_arrow);
+        }if (this.has_bus_lane){
+            lane_arrows.get(0).setFill(bus_lane_writing);
         }
         return lane_arrows;
     }
