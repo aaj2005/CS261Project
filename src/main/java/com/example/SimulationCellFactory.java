@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -23,17 +24,46 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
+            setStyle("-fx-background-color: transparent; -fx-border-width: 0;"); // Remove background and borders
+            setPrefHeight(0);  // Make the empty cell height 0 to remove gaps
             return;
         }
 
+        // Reset styling for non-empty cells
+        setStyle("");
+
+
         if (item.getSimName().equals("New Simulation")) {
+            setPrefHeight(50);
             setGraphic(createNewSimulationCell());
+            getStyleClass().add("new-simulation");
+
         } else {
+            setPrefHeight(75);
+
             setGraphic(createRegularSimulationCell(item));
         }
 
+//        this.setOnMouseClicked(event -> {
+//            if (!item.getSimName().equals("New Simulation")) {
+//                controller.setSelectedCell(this);
+//            }
+//        });
+
         this.setOnMouseClicked(event -> {
+            // If the clicked item is a regular cell (not "New Simulation"), apply selected styling manually
             if (!item.getSimName().equals("New Simulation")) {
+                // Manually trigger the selection state based on your tracking mechanism
+                controller.setSelectedCell(this);  // Assuming this method tracks selected cells and updates styling
+
+                // Add the "selected" style class (or your own mechanism for selected styling)
+                getStyleClass().add("selected");
+                setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
+
+                // Optionally remove the "selected" style from other cells if needed
+
+            } else {
+                // Handle clicking on the "New Simulation" cell if needed (no selection change here)
                 controller.setSelectedCell(this);
             }
         });
@@ -41,19 +71,35 @@ public class SimulationCellFactory extends ListCell<Simulation> {
 
     private HBox createNewSimulationCell() {
         HBox hbox = new HBox(10);
-        hbox.setPrefHeight(20);
+        hbox.setPrefHeight(40);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+
         Text titleText = new Text("New Simulation");
 
-        Button addButton = new Button("add");
+        VBox textContainer = new VBox(titleText);
+        textContainer.setAlignment(Pos.CENTER_LEFT);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button addButton = new Button();
+        FontIcon addIcon = new FontIcon(FontAwesomeSolid.PLUS);
+        addIcon.setIconSize(30);  // Set size
+        addIcon.setIconColor(Color.WHITE);
+        addButton.setGraphic(addIcon);
+
         addButton.getStyleClass().add("button");
         addButton.setOnAction(event -> simulationManager.addNewSimulation());
-        hbox.getChildren().addAll(titleText, addButton);
+
+        hbox.getChildren().addAll(textContainer, spacer, addButton);
+
+
+
         return hbox;
     }
 
     private HBox createRegularSimulationCell(Simulation item) {
         HBox hbox = new HBox(10);
-        hbox.setPrefHeight(75);
         hbox.setPrefHeight(75);
         hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
 
@@ -66,7 +112,6 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         Button renameButton = new Button();
         FontIcon renameIcon = new FontIcon(FontAwesomeSolid.PENCIL_ALT);
         renameIcon.setIconSize(30);  // Set size
-//        renameIcon.setStyle("-fx-icon-color: white;");  // Set color to white
         renameIcon.setIconColor(Color.WHITE);
         renameButton.setGraphic(renameIcon);
         renameButton.getStyleClass().add("button-rename");
@@ -75,10 +120,8 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
         deleteIcon.setIconSize(30);  // Set size
         deleteIcon.setIconColor(Color.WHITE);
-//        deleteIcon.setStyle("-fx-icon-color: white;");  // Set color to white
         deleteButton.setGraphic(deleteIcon);
         deleteButton.getStyleClass().add("button-delete");
-
 
         renameButton.setVisible(false);
         deleteButton.setVisible(false);
