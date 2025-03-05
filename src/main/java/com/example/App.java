@@ -30,8 +30,6 @@ public class App extends Application {
 
     private static Scene scene;
 
-
-
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -43,20 +41,19 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Traffic Simulation");
         //                                           junction arm: top - right - bottom - left
-        SimulationComponents simComponent = new SimulationComponents(
-                3,4,3,3, true,
-                true, true,
-                true, true,
-                true, true,
-                true, true,
-                true,false,
-                false, false
-        );
-        AnchorPane root = simComponent.getRoot();
+//        SimulationComponents simComponent = new SimulationComponents(
+//                3,4,3,3, true,
+//                true, true,
+//                true, true,
+//                true, true,
+//                true, true,
+//                true,false,
+//                false, false
+//        );
+//        AnchorPane root = simComponent.getRoot();
 
-        stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
+//        stage.setScene(new Scene(root, SimulationComponents.sim_w,SimulationComponents.sim_h));
         stage.show();
-
 
     }
 

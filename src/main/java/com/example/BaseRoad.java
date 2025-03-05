@@ -1,7 +1,7 @@
 package com.example;
 
 /* DUMMY CLASS */
-public class BaseRoad implements JunctionElement {
+public class BaseRoad extends JunctionElement {
     public double actual_light_duration; // how long the light is green for
     public double[] inbound_vph;         // how many cars come into the junction from this road per second
     public int lanes;                   // number of lanes on this road
