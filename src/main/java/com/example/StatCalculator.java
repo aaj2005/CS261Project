@@ -1,7 +1,6 @@
 package com.example;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 /*
  * TODO:
@@ -80,13 +79,13 @@ public class StatCalculator {
     private void calculateJamLengtheningRate() throws InvalidParametersException {
         double r = this.getArrivalRate();
         int num_lanes = this.roads[this.road].lanes;
-        this.cs = (Car.length + Car.distance)/num_lanes;
+        this.cs = (BaseCar.length + BaseCar.distance)/num_lanes;
         
         if (DoubleCompare.approximatelyEqual(r, 0)) { // avoids a divisionby0 error
             this.jam_lengthening_rate = 0;
             this.r_prime = 0;
         } else {
-            this.r_prime = 1/(1/r - cs/Car.max_speed);
+            this.r_prime = 1/(1/r - cs/ BaseCar.max_speed);
             this.jam_lengthening_rate = this.r_prime * cs;
 
             if (DoubleCompare.geq(0, this.jam_lengthening_rate)) {
@@ -99,7 +98,7 @@ public class StatCalculator {
      * Calculates how may seconds it takes for the jam to deplete
      */
     private double getJamDepletionTime() {
-        return this.jam_length / Car.max_speed;
+        return this.jam_length / BaseCar.max_speed;
     }
 
     /*
@@ -161,7 +160,7 @@ public class StatCalculator {
             this.t = t_green_end;
 
             // decrease the size of the jam
-            this.jam_length -= jam_depletion_time*Car.max_speed;
+            this.jam_length -= jam_depletion_time* BaseCar.max_speed;
 
             // if the initialjamlength hasn't been set yet,
             // set it to be length of the jam after the green traffic light has just turned red
@@ -190,7 +189,7 @@ public class StatCalculator {
         this.max_jam_length = Math.max(this.max_jam_length, this.jam_length); // final check for max queue length
         double jam_depletion_time = Math.min(this.getJamDepletionTime(), getRoadLightLength(this.road));
         this.t += jam_depletion_time;
-        this.jam_length -= jam_depletion_time*Car.max_speed;
+        this.jam_length -= jam_depletion_time* BaseCar.max_speed;
 
         // check if jam length grows to infinity
         // if so, throw exception
@@ -352,7 +351,7 @@ public class StatCalculator {
         
         for (StatCar car : this.cars) {
             // move cars
-            car.d -= Car.max_speed*t_green;
+            car.d -= BaseCar.max_speed*t_green;
             
             // check if any of the cars exiting the jam have waited the longest
             // and update max_wait_time accordingly
