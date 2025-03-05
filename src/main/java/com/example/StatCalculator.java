@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
  * After instantiating, call run()
  */
 public class StatCalculator {
+    // the roads being simulated
+    private StatRoad[] roads;
+
     // the time that is currently being simulated (in seconds)
     private double t = 0;
     
@@ -64,7 +67,8 @@ public class StatCalculator {
      * Constructor for StatCalculator
      * @param road The road to run the calculations for
      */
-    public StatCalculator(int road) throws InvalidParametersException {
+    public StatCalculator(StatRoad[] roads, int road) throws InvalidParametersException {
+        this.roads = roads;
         this.road = road;
         this.calculateJamLengtheningRate();
     }
@@ -75,17 +79,18 @@ public class StatCalculator {
      */
     private void calculateJamLengtheningRate() throws InvalidParametersException {
         double r = this.getArrivalRate();
+        int num_lanes = this.roads[this.road].lanes;
+        this.cs = (Car.length + Car.distance)/num_lanes;
         
         if (DoubleCompare.approximatelyEqual(r, 0)) { // avoids a divisionby0 error
             this.jam_lengthening_rate = 0;
+            this.r_prime = 0;
         } else {
-            int num_lanes = ((Road)DynamicComponents.junction_elements.get(this.road)).lanes;
-            this.cs = (Car.length + Car.distance)/num_lanes;
             this.r_prime = 1/(1/r - cs/Car.max_speed);
             this.jam_lengthening_rate = this.r_prime * cs;
 
             if (DoubleCompare.geq(0, this.jam_lengthening_rate)) {
-                throw new InvalidParametersException("Cars are too close together! Either the inbound rate of vehicles is too high or the speed of the vehicles is too low");
+                throw new InvalidParametersException("Cars are too close together! Either the inbound rate of vehicles is too high.");
             }
         }
     }
@@ -204,7 +209,8 @@ public class StatCalculator {
         return new Stats(
             this.max_wait_time,
             this.max_jam_length/this.cs,
-            this.total_wait_time/(this.cycle_length*this.getArrivalRate())
+            this.total_wait_time,
+            (int)(this.cycle_length*this.getArrivalRate())
         );
     }
 
@@ -270,15 +276,15 @@ public class StatCalculator {
     }
 
     private double getPedLightRate() {
-        return ((PedestrianCrossing)DynamicComponents.junction_elements.get(DynamicComponents.junction_elements.size()-1)).ped_light_rate;
+        return DynamicComponents.pedestrian_crossing.ped_light_rate;
     }
 
     private double getPedLightLength() {
-        return ((PedestrianCrossing)DynamicComponents.junction_elements.get(DynamicComponents.junction_elements.size()-1)).ped_light_length;
+        return DynamicComponents.pedestrian_crossing.ped_light_length;
     }
 
     private double getRoadLightLength(int r) {
-        return ((Road)DynamicComponents.junction_elements.get(r)).actual_light_duration;
+        return this.roads[r].actual_light_duration;
     }
 
     /*
@@ -292,17 +298,15 @@ public class StatCalculator {
         // r cars arrive per second where r = jam_lengthening_rate/car.length
         // so in t seconds, t*r cars arrive
         // arriving cars wait on average t/2 seconds
-
-        double r = this.getArrivalRate();
-        return t*r*(queue_len/this.cs) // how long the cars in the initial queue have to wait
-             + t*r*t/2;                  // how long the arriving cars have to wait
+        return t*this.r_prime*(queue_len/this.cs) // how long the cars in the initial queue have to wait
+             + t*this.r_prime*t/2;                // how long the arriving cars have to wait
     }
 
     /*
      * returns the arrival rate of cars to the junction
      */
     private double getArrivalRate() {
-        return ((Road)DynamicComponents.junction_elements.get(this.road)).inbound_vph/3600;
+        return this.roads[this.road].getTotalVph()/3600;
     }
 
     /*

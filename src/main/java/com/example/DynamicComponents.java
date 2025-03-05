@@ -4,5 +4,6 @@ import java.util.ArrayList;
 
 /* dummy class */
 public class DynamicComponents {
-    public static ArrayList<JunctionElement> junction_elements;
+    public static Road[] roads;
+    public static PedestrianCrossing pedestrian_crossing;
 }
