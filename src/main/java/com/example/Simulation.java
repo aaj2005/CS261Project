@@ -22,6 +22,8 @@ public class Simulation {
     private Integer duration_of_crossings = 0;
     private Integer requests_per_hour = 0;
 
+    private SimulationData resultsData;
+
 
     public Simulation(String simName) {
         this.simName = simName;
@@ -59,7 +61,6 @@ public class Simulation {
         System.out.println("NEW REQUEST OF " + duration_of_crossings);
         this.duration_of_crossings = duration_of_crossings;
         this.requests_per_hour = requests_per_hour;
-
     }
 
     public void setNorthNumLanes(Integer north_num_lanes) {
@@ -226,4 +227,10 @@ public class Simulation {
     public Integer getRequests_per_hour() {
         return requests_per_hour;
     }
+
+    public void setResultsData(SimulationData data) {
+        this.resultsData = data;
+    }
+
+    public SimulationData getResultsData() { return this.resultsData; }
 }

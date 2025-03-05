@@ -6,9 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class PrimaryController {
     @FXML private ListView<Simulation> simList;
     @FXML private AnchorPane graphContainer;
@@ -40,6 +37,23 @@ public class PrimaryController {
     @FXML private CheckBox pc_enabled;
     @FXML private Label lbl_duration, lbl_requests;
     @FXML private TextField crossing_duration, crossing_requests;
+
+    // Result labels
+    @FXML private Label avg_wait_north;
+    @FXML private Label avg_wait_east;
+    @FXML private Label avg_wait_south;
+    @FXML private Label avg_wait_west;
+
+    @FXML private Label max_wait_north;
+    @FXML private Label max_wait_east;
+    @FXML private Label max_wait_south;
+    @FXML private Label max_wait_west;
+
+    @FXML private Label max_queue_north;
+    @FXML private Label max_queue_east;
+    @FXML private Label max_queue_south;
+    @FXML private Label max_queue_west;
+
 
     private SimulationManager simulationManager;
     private ListCell<Simulation> selectedCell;
@@ -83,11 +97,11 @@ public class PrimaryController {
 
     private void loadSimulationData() {
         SimulationData[] runs = new SimulationData[5];
-        runs[0] = new SimulationData("Run 1", new double[]{2.5, 3.0, 4.5, 1.5}, new double[]{5.0, 6.0, 8.0, 3.0}, new double[]{3.2, 4.0, 5.5, 2.5});
-        runs[1] = new SimulationData("Run 2", new double[]{2.8, 3.5, 4.8, 1.8}, new double[]{5.5, 6.5, 8.5, 3.5}, new double[]{3.5, 4.2, 5.8, 2.8});
-        runs[2] = new SimulationData("Run 3", new double[]{3.0, 3.8, 5.0, 2.0}, new double[]{6.0, 7.0, 9.0, 4.0}, new double[]{3.8, 4.5, 6.0, 3.0});
-        runs[3] = new SimulationData("Run 4", new double[]{2.6, 3.2, 4.6, 1.6}, new double[]{5.2, 6.2, 8.2, 3.2}, new double[]{3.3, 4.1, 5.6, 2.6});
-        runs[4] = new SimulationData("Run 5", new double[]{2.6, 3.2, 4.6, 1.6}, new double[]{5.2, 6.2, 8.2, 3.2}, new double[]{3.3, 4.1, 5.6, 2.6});
+        runs[0] = new SimulationData("Run 1", new Double[]{2.5, 3.0, 4.5, 1.5}, new Double[]{5.0, 6.0, 8.0, 3.0}, new Double[]{3.2, 4.0, 5.5, 2.5});
+        runs[1] = new SimulationData("Run 2", new Double[]{2.8, 3.5, 4.8, 1.8}, new Double[]{5.5, 6.5, 8.5, 3.5}, new Double[]{3.5, 4.2, 5.8, 2.8});
+        runs[2] = new SimulationData("Run 3", new Double[]{3.0, 3.8, 5.0, 2.0}, new Double[]{6.0, 7.0, 9.0, 4.0}, new Double[]{3.8, 4.5, 6.0, 3.0});
+        runs[3] = new SimulationData("Run 4", new Double[]{2.6, 3.2, 4.6, 1.6}, new Double[]{5.2, 6.2, 8.2, 3.2}, new Double[]{3.3, 4.1, 5.6, 2.6});
+        runs[4] = new SimulationData("Run 5", new Double[]{2.6, 3.2, 4.6, 1.6}, new Double[]{5.2, 6.2, 8.2, 3.2}, new Double[]{3.3, 4.1, 5.6, 2.6});
 
         VBox graph = Graph.createGraph(runs);
         graphContainer.setTopAnchor(graph, 0.0);
@@ -102,35 +116,67 @@ public class PrimaryController {
 
         run_button.setDisable(true);
 
-        DynamicComponents.junction_elements = new ArrayList<>(Arrays.asList(new JunctionElement[] {
-                new Road(10, 300, 1),
-                new Road(10, 300, 1),
-                new Road(0, 50, 2),
-                new Road(0, 50, 2),
-                new PedestrianCrossing(0, 1)
-        }));
+        DynamicComponents.roads = new Road[] {
+                new Road(10, new double[] {0,3,5,2}, 4, Cardinal.N, true, false),
+                new Road(10, new double[] {0,0,0,0}, 2, Cardinal.E, true, true),
+                new Road(10, new double[] {0,0,0,0}, 1, Cardinal.S, true, false),
+                new Road(10, new double[] {0,0,0,0}, 2, Cardinal.W)
+        };
+
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
 
         try {
+            StatWrapper sc = new StatWrapper(DynamicComponents.roads);
+            System.out.println(sc.run().toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        try {
+            StatRoad[] roads = new StatRoad[4];
+            for (int i=0; i<4; i++) { roads[i] = new StatRoad(DynamicComponents.roads[i]); }
+
             // North
-            StatCalculator sc1 = new StatCalculator(0);
+            StatCalculator sc1 = new StatCalculator(roads, 0);
             Stats northResult = sc1.run();
 
             // East
-            StatCalculator sc2 = new StatCalculator(1);
+            StatCalculator sc2 = new StatCalculator(roads, 1);
             Stats eastResult = sc2.run();
 
             // South
-            StatCalculator sc3 = new StatCalculator(2);
+            StatCalculator sc3 = new StatCalculator(roads, 2);
             Stats southResult = sc3.run();
 
             // West
-            StatCalculator sc4 = new StatCalculator(3);
+            StatCalculator sc4 = new StatCalculator(roads, 3);
             Stats westResult = sc4.run();
 
-            // Store results in Simulation object
+            // Set result data
+            Double[] avgWaitTime = {northResult.getAverageWaitTime(), eastResult.getAverageWaitTime(), southResult.getAverageWaitTime(), westResult.getAverageWaitTime()};
+            Double[] maxWaitTime = {northResult.getMaxWaitTime(), eastResult.getMaxWaitTime(), southResult.getMaxWaitTime(), westResult.getMaxWaitTime()};
+            Double[] maxQueueLength = {northResult.getMaxQueueLength(), eastResult.getMaxQueueLength(), southResult.getMaxQueueLength(), westResult.getMaxQueueLength()};
+            SimulationData results = new SimulationData(selectedCell.getItem().getSimName(), avgWaitTime, maxWaitTime, maxQueueLength);
+            selectedCell.getItem().setResultsData(results);
+
+            // Set all the result values on UI
+            avg_wait_north.setText("Exiting North: " + String.format("%.2f", avgWaitTime[0]));
+            avg_wait_east.setText("Exiting East: " + String.format("%.2f", avgWaitTime[1]));
+            avg_wait_south.setText("Exiting South: " + String.format("%.2f", avgWaitTime[2]));
+            avg_wait_west.setText("Exiting West: " + String.format("%.2f", avgWaitTime[3]));
+
+            max_wait_north.setText("Exiting North: " + String.format("%.2f", maxWaitTime[0]));
+            max_wait_east.setText("Exiting East: " + String.format("%.2f", maxWaitTime[1]));
+            max_wait_south.setText("Exiting South: " + String.format("%.2f", maxWaitTime[2]));
+            max_wait_west.setText("Exiting West: " + String.format("%.2f", maxWaitTime[3]));
+
+            max_queue_north.setText("North: " + String.format("%.2f", maxQueueLength[0]));
+            max_queue_east.setText("East: " + String.format("%.2f", maxQueueLength[1]));
+            max_queue_south.setText("South: " + String.format("%.2f", maxQueueLength[2]));
+            max_queue_west.setText("West: " + String.format("%.2f", maxQueueLength[3]));
 
 
-            // Display result on UI
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -275,6 +321,42 @@ public class PrimaryController {
         System.out.println(selectedSim.getDuration_of_crossings());
         crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
         System.out.println(selectedSim.getRequests_per_hour());
+
+        // Load results
+        SimulationData results = selectedSim.getResultsData();
+        if (results != null) {
+            avg_wait_north.setText("Exiting North: " + String.format("%.2f", results.getAvgWaitTime()[0]));
+            avg_wait_east.setText("Exiting East: " + String.format("%.2f", results.getAvgWaitTime()[1]));
+            avg_wait_south.setText("Exiting South: " + String.format("%.2f", results.getAvgWaitTime()[2]));
+            avg_wait_west.setText("Exiting West: " + String.format("%.2f", results.getAvgWaitTime()[3]));
+
+            max_wait_north.setText("Exiting North: " + String.format("%.2f", results.getMaxWaitTime()[0]));
+            max_wait_east.setText("Exiting East: " + String.format("%.2f", results.getMaxWaitTime()[1]));
+            max_wait_south.setText("Exiting South: " + String.format("%.2f", results.getMaxWaitTime()[2]));
+            max_wait_west.setText("Exiting West: " + String.format("%.2f", results.getMaxWaitTime()[3]));
+
+            max_queue_north.setText("North: " + String.format("%.2f", results.getMaxQueueLength()[0]));
+            max_queue_east.setText("East: " + String.format("%.2f", results.getMaxQueueLength()[1]));
+            max_queue_south.setText("South: " + String.format("%.2f", results.getMaxQueueLength()[2]));
+            max_queue_west.setText("West: " + String.format("%.2f", results.getMaxQueueLength()[3]));
+
+        } else {
+            // Load empty vals
+            avg_wait_north.setText("Exiting North:");
+            avg_wait_east.setText("Exiting East:");
+            avg_wait_south.setText("Exiting South:");
+            avg_wait_west.setText("Exiting West:");
+
+            max_wait_north.setText("Exiting North:");
+            max_wait_east.setText("Exiting East:");
+            max_wait_south.setText("Exiting South:");
+            max_wait_west.setText("Exiting West:");
+
+            max_queue_north.setText("North:");
+            max_queue_east.setText("East:");
+            max_queue_south.setText("South:");
+            max_queue_west.setText("West:");
+        }
     }
 
     public void initialise_choiceboxes() {

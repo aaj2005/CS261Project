@@ -331,47 +331,62 @@
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="887.0" layoutY="758.0" styleClass="input-label" text="Exiting North:">
+                                          <Label fx:id="avg_wait_north" layoutX="887.0" layoutY="758.0" styleClass="input-label" text="Exiting North:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="887.0" layoutY="784.0" styleClass="input-label" text="Exiting East:">
+                                          <Label fx:id="avg_wait_east" layoutX="887.0" layoutY="784.0" styleClass="input-label" text="Exiting East:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="887.0" layoutY="838.0" styleClass="input-label" text="Exiting West:">
+                                          <Label fx:id="avg_wait_west" layoutX="887.0" layoutY="838.0" styleClass="input-label" text="Exiting West:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="887.0" layoutY="811.0" styleClass="input-label" text="Exiting South:">
+                                          <Label fx:id="avg_wait_south" layoutX="887.0" layoutY="811.0" styleClass="input-label" text="Exiting South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1084.0" layoutY="759.0" styleClass="input-label" text="Exiting North:">
+                                          <Label fx:id="max_wait_north" layoutX="1084.0" layoutY="759.0" styleClass="input-label" text="Exiting North:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1084.0" layoutY="785.0" styleClass="input-label" text="Exiting East:">
+                                          <Label fx:id="max_wait_east" layoutX="1084.0" layoutY="785.0" styleClass="input-label" text="Exiting East:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1084.0" layoutY="839.0" styleClass="input-label" text="Exiting West:">
+                                          <Label fx:id="max_wait_west" layoutX="1084.0" layoutY="839.0" styleClass="input-label" text="Exiting West:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1084.0" layoutY="812.0" styleClass="input-label" text="Exiting South:">
+                                          <Label fx:id="max_wait_south" layoutX="1084.0" layoutY="812.0" styleClass="input-label" text="Exiting South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1286.0" layoutY="759.0" styleClass="input-label" text="Longest Queue:">
+                                          <Label fx:id="max_queue_north" layoutX="1286.0" layoutY="759.0" styleClass="input-label" text="North:">
+                                             <font>
+                                                <Font name="Istok Web Regular" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="max_queue_east" layoutX="1286.0" layoutY="785.0" styleClass="input-label" text="East:">
+                                             <font>
+                                                <Font name="Istok Web Regular" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="max_queue_west" layoutX="1286.0" layoutY="839.0" styleClass="input-label" text="West:">
+                                             <font>
+                                                <Font name="Istok Web Regular" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="max_queue_south" layoutX="1286.0" layoutY="812.0" styleClass="input-label" text="South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>

@@ -75,14 +75,14 @@ public class Graph {
         }
 
         for (SimulationData run : runs) {
-            double[] values;
+            Double[] values;
             switch (metric) {
                 case "maxWaitTime":
                     values = run.getMaxWaitTime();
                     barChart.getYAxis().setLabel("Maximum Wait Time (Mins)");
                     break;
                 case "avgQueueLength":
-                    values = run.getAvgQueueLength();
+                    values = run.getMaxQueueLength();
                     barChart.getYAxis().setLabel("Average Queue Length (Cars)");
                     break;
                 case "avgWaitTime":

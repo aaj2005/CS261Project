@@ -2,16 +2,16 @@ package com.example;
 
 public class SimulationData {
     private String name;
-    private double score;
-    private double[] avgWaitTime; 
-    private double[] maxWaitTime;  
-    private double[] avgQueueLength; 
+    private Double score;
+    private Double[] avgWaitTime;
+    private Double[] maxWaitTime;
+    private Double[] maxQueueLength;
 
-    public SimulationData(String name, double[] avgWaitTime, double[] maxWaitTime, double[] avgQueueLength) {
+    public SimulationData(String name, Double[] avgWaitTime, Double[] maxWaitTime, Double[] maxQueueLength) {
         this.name = name;
         this.avgWaitTime = avgWaitTime;
         this.maxWaitTime = maxWaitTime;
-        this.avgQueueLength = avgQueueLength;
+        this.maxQueueLength = maxQueueLength;
         this.score = calculatePerformanceScore();
     }
 
@@ -21,7 +21,7 @@ public class SimulationData {
         for (int i = 0; i < 4; i++) {
             sumofaveragewaiting += avgWaitTime[i];
             sumofmaxwaiting += maxWaitTime[i];
-            sumofmaxqueues += avgQueueLength[i];
+            sumofmaxqueues += maxQueueLength[i];
         }
 
         double avgWait = sumofaveragewaiting / 4;
@@ -40,15 +40,15 @@ public class SimulationData {
         return score;
     }
 
-    public double[] getAvgWaitTime() {
+    public Double[] getAvgWaitTime() {
         return avgWaitTime;
     }
 
-    public double[] getMaxWaitTime() {
+    public Double[] getMaxWaitTime() {
         return maxWaitTime;
     }
 
-    public double[] getAvgQueueLength() {
-        return avgQueueLength;
+    public Double[] getMaxQueueLength() {
+        return maxQueueLength;
     }
 }
