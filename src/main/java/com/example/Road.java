@@ -12,9 +12,6 @@ public class Road extends JunctionElement{
     // each lane object in the particular road
     private ArrayList<Lane> lanes;
 
-    // priority of this junction arm
-    private int priority = 1;
-
     public static int default_light_duration = 30;
 
     // direction of the road (TOP, RIGHT, BOTTOM, LEFT)
@@ -102,36 +99,12 @@ public class Road extends JunctionElement{
     }
 
 
-
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public Road(
             int lane_count,
-            int priority,
-            double[] corner1,
-            double[] corner2,
-            boolean has_pedestrian,
-            Direction direction,
-            float[] vph,
-            int max_lane_out,
-            Animations animations,
-            boolean road_going_into_junction,
-            ArrayList<Rectangle> cars_to_remove
-            ){
-        this(lane_count, corner1, corner2, has_pedestrian, direction, vph,max_lane_out,animations, road_going_into_junction,cars_to_remove);
-        this.priority = priority;
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    public Road(
-            int lane_count,
-            int priority,
             double[] corner1,
             double[] corner2,
             boolean has_pedestrian,
@@ -145,7 +118,7 @@ public class Road extends JunctionElement{
             boolean road_going_into_junction,
             ArrayList<Rectangle> cars_to_remove
     ){
-        this(lane_count, priority, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,animations,road_going_into_junction,cars_to_remove);
+        this(lane_count, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,animations,road_going_into_junction,cars_to_remove);
         this.has_left_turn = has_left_turn;
         this.has_right_turn = has_right_turn;
         this.has_bus_lane = has_bus_lane;

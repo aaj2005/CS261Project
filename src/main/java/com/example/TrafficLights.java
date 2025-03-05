@@ -22,23 +22,28 @@ public class TrafficLights {
     public static final ImagePattern red_pedestrian = new ImagePattern(
     new Image(TrafficLights.class.getResource("/donotfkingwalk.png").toExternalForm()));
 
-    private double time1; // time for top junction lights to be on
-    private double time2; // time for right junction lights to be on
-    private double time3; // time for bottom junction lights to be on
-    private double time4; // time for left junction lights to be on
+    private double time1; // time for top junction lights to be on in seconds
+    private double time2; // time for right junction lights to be on in seconds
+    private double time3; // time for bottom junction lights to be on in seconds
+    private double time4; // time for left junction lights to be on in seconds
     private double s_per_request; // seconds per request for pedestrian crossings
     private double crossing_dur; // pedestrian crossing duration
     private Road[] out_junc;
+
+    private static double default_time = 10; // the default time that a traffic light is on for in seconds
+    private static double priority_multiplier = 2; // the amount of time longer that a traffic light is on for in seconds for each priority unit it thas
+    // a traffic light with priority n stays on for default_time + priority_multiplier*n
 
     // time1 = top junction
     // time2 = right junction
     // time3 = bottom junction
     // time4 = left junction
-    public TrafficLights(double time1, double time2, double time3, double time4, double requests_ph, double crossing_dur,Road[] out_junc ) {
-        this.time1 = time1;
-        this.time2 = time2;
-        this.time3 = time3;
-        this.time4 = time4;
+    public TrafficLights(int[] priorities, double requests_ph, double crossing_dur,Road[] out_junc ) {
+        this.time1 = priorities[0]*priority_multiplier + default_time;
+        this.time2 = priorities[1]*priority_multiplier + default_time;
+        this.time3 = priorities[2]*priority_multiplier + default_time;
+        this.time4 = priorities[3]*priority_multiplier + default_time;
+
         this.out_junc = out_junc;
         this.s_per_request = 1/(requests_ph/3600); // convert from requests per hour to seconds per request
         this.crossing_dur = crossing_dur;

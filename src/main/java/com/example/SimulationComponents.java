@@ -138,7 +138,6 @@ public class SimulationComponents {
         // create a road instance for TOP junction arm, this road is specifically for cars entering the junction
         junction_arms_in[0] = new Road(
                 lanes_arm1, // number of lanes
-                1, // priority
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 crossings_enabled, // pedestrian crossings
@@ -163,7 +162,6 @@ public class SimulationComponents {
         // create a road instance for RIGHT junction arm, this road is specifically for cars entering the junction
         junction_arms_in[1] = new Road(
                 lanes_arm2, // number of lanes,
-                1, // priority
                 getCornerDims("tr"), // the two corners that are adjacent to the Road
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 crossings_enabled,  // pedestrian crossings
@@ -188,7 +186,6 @@ public class SimulationComponents {
         // create a road instance for BOTTOM junction arm, this road is specifically for cars entering the junction
         junction_arms_in[2] = new Road(
                 lanes_arm3, // number of lanes,
-                1, // priority
                 getCornerDims("br"), // the two corners that are adjacent to the Road
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 crossings_enabled,  // pedestrian crossings
@@ -213,7 +210,6 @@ public class SimulationComponents {
         // create a road instance for LEFT junction arm, this road is specifically for cars entering the junction
         junction_arms_in[3] = new Road(
                 lanes_arm4, // number of lanes
-                1, // priority
                 getCornerDims("bl"), // the two corners that are adjacent to the Road
                 getCornerDims("tl"), // the two corners that are adjacent to the Road
                 crossings_enabled,  // pedestrian crossings
@@ -235,12 +231,12 @@ public class SimulationComponents {
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
-        junction_arms_out[0] = new Road(max_out,1,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1, is_bus_lane1, max_out,animations,false, cars_to_remove);
-        junction_arms_out[1] = new Road(max_out,1,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2, is_bus_lane2, max_out,animations,false, cars_to_remove);
-        junction_arms_out[2] = new Road(max_out,1,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,animations,false, cars_to_remove);
-        junction_arms_out[3] = new Road(max_out,1,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
+        junction_arms_out[0] = new Road(max_out,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1, is_bus_lane1, max_out,animations,false, cars_to_remove);
+        junction_arms_out[1] = new Road(max_out,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2, is_bus_lane2, max_out,animations,false, cars_to_remove);
+        junction_arms_out[2] = new Road(max_out,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,animations,false, cars_to_remove);
+        junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
 
-        traffic_system = new TrafficLights(10,10,10,10,60,4,junction_arms_out);
+        traffic_system = new TrafficLights(new int[] {0,0,0,0},60,4,junction_arms_out);
         lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters());
         traffic_system.run_lights();
 
