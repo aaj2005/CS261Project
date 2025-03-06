@@ -63,7 +63,6 @@ public class PrimaryController {
 
 
     private SimulationManager simulationManager;
-//    private ListCell<Simulation> selectedCell;
     private int selectedIndex = -1;
     private SimulationComponents simComponent;
 
@@ -78,12 +77,22 @@ public class PrimaryController {
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         // Select the first listcell after it has been created (after the initialize function finishes)
-        Platform.runLater(() -> {
-            if (!simList.getItems().isEmpty()) {
-                simList.getSelectionModel().select(0);
-                selectedIndex = 0;
-            }
-        });
+        selectedIndex = 0;
+        if (!simList.getItems().isEmpty()) {
+            simList.getSelectionModel().select(0);
+
+        }
+        simList.getSelectionModel().select(0);
+        simList.requestFocus();
+        simList.refresh();
+//        Platform.runLater(() -> {
+//            Simulation sim = simList.getItems().get(0);
+//
+//            if (!simList.getItems().isEmpty()) {
+//                simList.getSelectionModel().select(0);
+//                simList.requestFocus();
+//            }
+//        });
 
         // Trigger the metrics tab to load the simulation data
         metricsTab.setOnSelectionChanged(event -> {
@@ -96,6 +105,7 @@ public class PrimaryController {
         setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
 
+        // Create the sim UI component
         simComponent = new SimulationComponents(
                 1,1,1,1, false,
                 false, false,
@@ -114,13 +124,6 @@ public class PrimaryController {
         clip.setWidth(600);
         clip.setHeight(600);
         sim_anchor.setClip(clip);
-
-        // start/resume simulation
-
-
-        // pause simulation
-//        simComponent.stop_simulation();
-
 
     }
 
@@ -165,8 +168,6 @@ public class PrimaryController {
 
     private void runSimulation() {
 
-        System.gc();
-
         run_button.setDisable(true);
 
         simComponent.start_simulation();
@@ -174,21 +175,13 @@ public class PrimaryController {
         Simulation sim = getSelectedCell().getItem();
 
         DynamicComponents.roads = new BaseRoad[] {
-                new BaseRoad(10, new double[] {0,3,5,2}, 4, Cardinal.N, sim.getNorth_left_turn(), false),
-                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.E, sim.getEast_left_turn(), true),
-                new BaseRoad(10, new double[] {0,0,0,0}, 1, Cardinal.S, sim.getSouth_left_turn(), false),
-                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.W, sim.getWest_left_turn(), false)
+                new BaseRoad(10, new double[] {sim.getNorth_north_vph(), sim.getNorth_east_vph(), 0, sim.getNorth_west_vph()}, 4, Cardinal.N, sim.getNorth_left_turn(), false),
+                new BaseRoad(10, new double[] {sim.getEast_north_vph(), sim.getEast_east_vph(),sim.getEast_south_vph(), 0}, 2, Cardinal.E, sim.getEast_left_turn(), true),
+                new BaseRoad(10, new double[] {0,sim.getSouth_east_vph(), sim.getSouth_south_vph(), sim.getSouth_west_vph()}, 1, Cardinal.S, sim.getSouth_left_turn(), false),
+                new BaseRoad(10, new double[] {sim.getWest_north_vph(),0,sim.getWest_south_vph(), sim.getWest_west_vph()}, 2, Cardinal.W, sim.getWest_left_turn(), false)
         };
 
-        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(sim.getDuration_of_crossings(), 9.98);
-
-
-//        try {
-//            StatWrapper sc = new StatWrapper(DynamicComponents.roads);
-//            System.out.println(sc.run().toString());
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
 
         try {
             StatRoad[] roads = new StatRoad[4];
@@ -233,8 +226,6 @@ public class PrimaryController {
             max_queue_south.setText("South: " + String.format("%.2f", maxQueueLength[2]));
             max_queue_west.setText("West: " + String.format("%.2f", maxQueueLength[3]));
 
-
-
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -244,7 +235,6 @@ public class PrimaryController {
     public void setSelectedCell(ListCell<Simulation> cell) {
         ListCell<Simulation> selectedCell = getSelectedCell();
         if (selectedCell == cell) {
-            System.out.println("SELECTED CELL == NEW CELL");
             return;
         }
 
@@ -274,22 +264,11 @@ public class PrimaryController {
         }
 
         simComponent.stop_simulation();
-        // Make new simulation with the required components
 
         sim_anchor.getChildren().clear();
-        simComponent = new SimulationComponents(
-                3,4,3,3, true,
-                true, true,
-                true, true,
-                true, true,
-                true, true,
-                true,false,
-                false, false
-        );
-        AnchorPane childPane = simComponent.getRoot();
-        sim_anchor.getChildren().add(childPane);
 
-//        selectedCell = cell;
+        resetSimulationUI();
+
         selectedIndex = cell.getIndex();
         selectedCell = getSelectedCell();
         simList.getSelectionModel().select(selectedIndex);
@@ -297,26 +276,14 @@ public class PrimaryController {
 
         if (selectedCell != null) {
             System.out.println("Selecting: " + ((Simulation) selectedCell.getItem()).getSimName());
-//            System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
 
-            // Skip styling for "New Simulation"
             if (!selectedCell.getItem().getSimName().equals("New Simulation")) {
-//                System.out.println("Setting to blue");
-//                selectedCell.setStyle("-fx-background-color: lightblue;");
-//                selectedCell.setTextFill(javafx.scene.paint.Color.BLACK);
-//                selectedCell.setStyle("-fx-font-weight: bold;");
                 selectedCell.setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
 
             }
 
             loadParameterValues(selectedCell.getItem());
         }
-//        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
-//
-//        if (cell != null && cell.getListView() != null) {
-//            cell.getListView().refresh();
-//        }
-//        simList.refresh();
         System.out.println("Selected cell: " + (selectedCell != null ? selectedCell.getIndex() : "None"));
     }
 
@@ -398,7 +365,6 @@ public class PrimaryController {
     }
 
     public void loadParameterValues(Simulation selectedSim) {
-//        System.out.println("North num lanes for " + selectedSim.getSimName() + " is " + selectedSim.getNorth_num_lanes());
         sim_title.setText(selectedSim.getSimName().toUpperCase());
 
         nb_lanes.setValue(selectedSim.getNorth_num_lanes());
@@ -432,11 +398,8 @@ public class PrimaryController {
         pc_enabled.setSelected(selectedSim.getPedestrian_crossings());
         togglePedestrianInputs(pc_enabled.isSelected());
 
-//        System.out.println(selectedSim.getPedestrian_crossings());
         crossing_duration.setText(selectedSim.getDuration_of_crossings().toString());
-//        System.out.println(selectedSim.getDuration_of_crossings());
         crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
-//        System.out.println(selectedSim.getRequests_per_hour());
 
         // Load results
         SimulationData results = selectedSim.getResultsData();
@@ -457,7 +420,7 @@ public class PrimaryController {
             max_queue_west.setText("West: " + String.format("%.2f", results.getMaxQueueLength()[3]));
 
         } else {
-                // Load empty vals
+            // Load empty vals
             avg_wait_north.setText("Exiting North:");
             avg_wait_east.setText("Exiting East:");
             avg_wait_south.setText("Exiting South:");

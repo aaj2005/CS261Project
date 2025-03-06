@@ -81,6 +81,10 @@
     -fx-font-weight: bold;
 }
 
+.manual-select {
+    -fx-background-color: orange;
+}
+
 /* Override selected styling for the "New Simulation" cell */
 .list-cell.new-simulation:selected {
     -fx-background-color: white;  /* or any color you prefer */

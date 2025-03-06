@@ -15,38 +15,33 @@ import javafx.scene.layout.*;
 public class Graph {
 
     public static VBox createGraph(SimulationData[] runs) {
-        // VBox to hold all the graphs
+
         VBox vbox = new VBox();
 
-        // Title label with "METRICS" text
         Label titleLabel = new Label("METRICS");
         titleLabel.getStyleClass().add("title-label");
 
-        // Create a StackPane for absolute positioning of the title
         StackPane titlePane = new StackPane();
         titlePane.getChildren().add(titleLabel);
-        titlePane.setPrefSize(600, 100);  // Set the preferred size of the title pane
+        titlePane.setPrefSize(600, 100);
 
-        // Manually set the position of the title inside the StackPane
         StackPane.setAlignment(titleLabel, Pos.CENTER);
 
-        // Create the GridPane to hold the four charts
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(20); // Horizontal gap between charts
-        gridPane.setVgap(20); // Vertical gap between charts
+        gridPane.setHgap(20);
+        gridPane.setVgap(20);
 
-        // Set the grid to take up the whole available width and height
         gridPane.setPrefWidth(1921);
         gridPane.setPrefHeight(800);
 
         // Make each column and row in the GridPane grow to fill the available space
         for (int i = 0; i < 2; i++) {
             ColumnConstraints column = new ColumnConstraints();
-            column.setHgrow(Priority.ALWAYS);  // Make the column grow horizontally
+            column.setHgrow(Priority.ALWAYS);
             gridPane.getColumnConstraints().add(column);
 
             RowConstraints row = new RowConstraints();
-            row.setVgrow(Priority.ALWAYS);  // Make the row grow vertically
+            row.setVgrow(Priority.ALWAYS);
             gridPane.getRowConstraints().add(row);
         }
 
@@ -62,7 +57,6 @@ public class Graph {
         gridPane.add(avgQueueLengthChart, 0, 1); // Bottom-left
         gridPane.add(avgWaitTimeChart, 1, 1); // Bottom-right
 
-        // Add the titlePane and gridPane to the VBox
         vbox.getChildren().addAll(titlePane, gridPane);
 
         vbox.setPrefSize(1000, 1000);
@@ -70,18 +64,15 @@ public class Graph {
     }
 
     private static BarChart<String, Number> createChart(SimulationData[] runs, String metric) {
-        // Create the X and Y axes for the BarChart
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Simulation Run");
 
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel(getYAxisLabel(metric));
 
-        // Create BarChart using the axes
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle(getChartTitle(metric));
 
-        // Update the chart with the corresponding data
         updateChart(barChart, runs, metric);
 
         return barChart;
@@ -122,10 +113,8 @@ public class Graph {
 
 
     private static void updateChart(BarChart<String, Number> barChart, SimulationData[] runs, String metric) {
-        System.out.println("RUNS: " + runs.length);
 
-        if (runs.length == 0 || runs == null) {
-            // If there are no runs
+        if (runs.length == 0) {
             return;
 
         }

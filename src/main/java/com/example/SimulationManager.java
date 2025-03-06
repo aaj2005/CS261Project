@@ -37,15 +37,4 @@ public class SimulationManager {
         alert.showAndWait();
     }
 
-//    private void updateListViewHeight() {
-//        int itemCount = simList.size();
-//
-//        if (itemCount > 0) {
-//            double totalHeight = (itemCount - 1) * 75 + 20; // 75px for all except last, 20px for last
-//            simList.setPrefHeight(totalHeight);
-//        } else {
-//            simList.setPrefHeight(75); // Default minimum height for at least one item
-//        }
-//    }
-
 }

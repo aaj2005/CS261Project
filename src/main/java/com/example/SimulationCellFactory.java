@@ -20,8 +20,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
     @Override
     protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
-//        System.out.println("updateItem -> item: " + (item == null ? "NULL" : item.getSimName()) +
-//                ", empty: " + empty + ", index: " + getIndex());
+
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
@@ -30,13 +29,10 @@ public class SimulationCellFactory extends ListCell<Simulation> {
             return;
         }
 
-        // Reset styling for non-empty cells
-//        setStyle("");
-        // 🔥 Explicitly reapply selection highlight
         if (controller.getSelectedCell() == this) {
             setStyle("-fx-background-color: lightblue;");
         } else {
-            setStyle("");  // Reset styling for non-selected cells
+            setStyle("");
         }
 
 
@@ -54,8 +50,6 @@ public class SimulationCellFactory extends ListCell<Simulation> {
             System.out.println("Clicked: " + item.getSimName() + " (Index: " + getIndex() + ")");
             if (!item.getSimName().equals("New Simulation")) {
                 controller.setSelectedCell(this);
-
-//                getListView().refresh();
             }
         });
     }
@@ -75,7 +69,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
 
         Button addButton = new Button();
         FontIcon addIcon = new FontIcon(FontAwesomeSolid.PLUS);
-        addIcon.setIconSize(30);  // Set size
+        addIcon.setIconSize(30);
         addIcon.setIconColor(Color.WHITE);
         addButton.setGraphic(addIcon);
 
@@ -83,8 +77,6 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         addButton.setOnAction(event -> simulationManager.addNewSimulation());
 
         hbox.getChildren().addAll(textContainer, spacer, addButton);
-
-
 
         return hbox;
     }
@@ -95,7 +87,6 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
 
         Text titleText = new Text(item.getSimName());
-
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
