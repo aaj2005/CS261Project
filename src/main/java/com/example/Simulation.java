@@ -233,4 +233,52 @@ public class Simulation {
     }
 
     public SimulationData getResultsData() { return this.resultsData; }
+
+    public void setNorth_north_vph(Integer north_north_vph) {
+        this.north_north_vph = north_north_vph;
+    }
+
+    public void setNorth_east_vph(Integer north_east_vph) {
+        this.north_east_vph = north_east_vph;
+    }
+
+    public void setNorth_west_vph(Integer north_west_vph) {
+        this.north_west_vph = north_west_vph;
+    }
+
+    public void setEast_north_vph(Integer east_north_vph) {
+        this.east_north_vph = east_north_vph;
+    }
+
+    public void setEast_east_vph(Integer east_east_vph) {
+        this.east_east_vph = east_east_vph;
+    }
+
+    public void setEast_south_vph(Integer east_south_vph) {
+        this.east_south_vph = east_south_vph;
+    }
+
+    public void setSouth_east_vph(Integer south_east_vph) {
+        this.south_east_vph = south_east_vph;
+    }
+
+    public void setSouth_south_vph(Integer south_south_vph) {
+        this.south_south_vph = south_south_vph;
+    }
+
+    public void setSouth_west_vph(Integer south_west_vph) {
+        this.south_west_vph = south_west_vph;
+    }
+
+    public void setWest_north_vph(Integer west_north_vph) {
+        this.west_north_vph = west_north_vph;
+    }
+
+    public void setWest_south_vph(Integer west_south_vph) {
+        this.west_south_vph = west_south_vph;
+    }
+
+    public void setWest_west_vph(Integer west_west_vph) {
+        this.west_west_vph = west_west_vph;
+    }
 }

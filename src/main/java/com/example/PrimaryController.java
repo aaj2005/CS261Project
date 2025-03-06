@@ -9,6 +9,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 
 public class PrimaryController {
     @FXML private ListView<Simulation> simList;
@@ -113,7 +116,8 @@ public class PrimaryController {
                 false, false,
                 false, false,
                 false,false,
-                false, false
+                false, false,
+                new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}
         );
 
         AnchorPane childPane = simComponent.getRoot();
@@ -362,7 +366,101 @@ public class PrimaryController {
             togglePedestrianInputs(newValue);
             resetSimulationUI();
         });
+
+        txt_nn.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // When focus is lost
+                updateSimulationValue(txt_nn, selectedSim -> selectedSim.setNorth_north_vph(parseInt(txt_nn.getText())));
+            }
+        });
+
+        txt_ne.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_ne, selectedSim -> selectedSim.setNorth_east_vph(parseInt(txt_ne.getText())));
+            }
+        });
+
+        txt_nw.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_nw, selectedSim -> selectedSim.setNorth_west_vph(parseInt(txt_nw.getText())));
+            }
+        });
+
+        txt_en.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_en, selectedSim -> selectedSim.setEast_north_vph(parseInt(txt_en.getText())));
+            }
+        });
+
+        txt_ee.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_ee, selectedSim -> selectedSim.setEast_east_vph(parseInt(txt_ee.getText())));
+            }
+        });
+
+        txt_es.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_es, selectedSim -> selectedSim.setEast_south_vph(parseInt(txt_es.getText())));
+            }
+        });
+
+        txt_se.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_se, selectedSim -> selectedSim.setSouth_east_vph(parseInt(txt_se.getText())));
+            }
+        });
+
+        txt_ss.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_ss, selectedSim -> selectedSim.setSouth_south_vph(parseInt(txt_ss.getText())));
+            }
+        });
+
+        txt_sw.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_sw, selectedSim -> selectedSim.setSouth_west_vph(parseInt(txt_sw.getText())));
+            }
+        });
+
+        txt_wn.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_wn, selectedSim -> selectedSim.setWest_north_vph(parseInt(txt_wn.getText())));
+            }
+        });
+
+        txt_ws.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_ws, selectedSim -> selectedSim.setWest_south_vph(parseInt(txt_ws.getText())));
+            }
+        });
+
+        txt_ww.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(txt_ww, selectedSim -> selectedSim.setWest_west_vph(parseInt(txt_ww.getText())));
+            }
+        });
+
+
+
     }
+
+    private void updateSimulationValue(TextField textField, Consumer<Simulation> updateAction) {
+        if (!textField.getText().isEmpty()) {
+            Simulation selectedSim = getSelectedCell().getItem();
+            if (selectedSim != null) {
+                updateAction.accept(selectedSim);
+                resetSimulationUI();
+            }
+        }
+    }
+
+    private int parseInt(String text) {
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return 0; // Default to 0 if input is invalid
+        }
+    }
+
 
     public void loadParameterValues(Simulation selectedSim) {
         sim_title.setText(selectedSim.getSimName().toUpperCase());
@@ -457,6 +555,13 @@ public class PrimaryController {
     public void resetSimulationUI() {
         sim_anchor.getChildren().clear();
         Simulation sim = getSelectedCell().getItem();
+
+        float[] vph_1 = new float[] {sim.getNorth_north_vph().floatValue(), sim.getNorth_east_vph().floatValue(), 0, sim.getNorth_west_vph().floatValue()};
+        float[] vph_2 = new float[] {sim.getEast_north_vph().floatValue(), sim.getEast_east_vph().floatValue(), sim.getEast_south_vph().floatValue(), 0};
+        float[] vph_3 = new float[] {0, sim.getSouth_east_vph().floatValue(), sim.getSouth_south_vph().floatValue(), sim.getSouth_west_vph().floatValue()};
+        float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), 0, sim.getWest_south_vph().floatValue(), sim.getWest_west_vph().floatValue()};
+
+
         simComponent = new SimulationComponents(
                 sim.getNorth_num_lanes(), sim.getEast_num_lanes(), sim.getSouth_num_lanes(), sim.getWest_num_lanes(), sim.getPedestrian_crossings(),
                 sim.getNorth_left_turn(), true,
@@ -464,7 +569,8 @@ public class PrimaryController {
                 sim.getSouth_left_turn(), true,
                 sim.getWest_left_turn(), true,
                 sim.getNorth_bus_lane(), sim.getEast_bus_lane(),
-                sim.getSouth_bus_lane(), sim.getWest_bus_lane()
+                sim.getSouth_bus_lane(), sim.getWest_bus_lane(),
+                vph_1, vph_2, vph_3, vph_4
         );
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);

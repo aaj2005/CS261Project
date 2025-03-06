@@ -80,7 +80,8 @@ public class SimulationComponents {
                                 boolean left_turn3,boolean right_turn3,
                                 boolean left_turn4,boolean right_turn4,
                                 boolean is_bus_lane1, boolean is_bus_lane2,
-                                boolean is_bus_lane3, boolean is_bus_lane4
+                                boolean is_bus_lane3, boolean is_bus_lane4,
+                                float[] vph_1, float[] vph_2, float[] vph_3, float[] vph_4
 
                                 ){
 
@@ -95,13 +96,6 @@ public class SimulationComponents {
 
         // cars in the junction or that have left the junction
         junction_arms_out = new Road[4];
-        // NORTH - EAST - SOUTH - WEST
-        float[] vph_1 = new float[] {0, 0, 3600, 3600};
-        float[] vph_2 = new float[] {3600, 0, 0, 0};
-        float[] vph_3 = new float[] {0, 36000, 3600, 3600};
-        float[] vph_4 = new float[] {0, 0, 0, 3600};
-
-
 
         // generate the rectangles for each corner based on the input lanes
         corners = new Rectangle[]{
