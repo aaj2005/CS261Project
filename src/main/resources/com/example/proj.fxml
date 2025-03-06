@@ -413,7 +413,13 @@
                 <Tab fx:id="metricsTab" text="Metrics">
                   <content>
                      <AnchorPane fx:id="graphContainer" minHeight="0.0" minWidth="0.0">
-                     </AnchorPane>
+                           <children>
+                              <Label fx:id="sim_title1" layoutX="397.0" layoutY="37.0" styleClass="title-label" text="METRICS">
+                                 <font>
+                                    <Font name="Istok Web Bold" size="31.0" />
+                                 </font>
+                              </Label>
+                           </children></AnchorPane>
                   </content>
                </Tab>      
               </tabs>

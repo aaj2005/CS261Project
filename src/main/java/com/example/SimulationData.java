@@ -51,4 +51,8 @@ public class SimulationData {
     public Double[] getMaxQueueLength() {
         return maxQueueLength;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

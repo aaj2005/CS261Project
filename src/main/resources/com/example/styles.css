@@ -10,7 +10,7 @@
 
 .tab {
     -fx-padding: 10px 30px;  /* Top/Bottom padding = 10px, Left/Right padding = 30px */
-    -fx-min-width: 300px;  /* Minimum width of each tab */
+    -fx-min-width: 600px;  /* Minimum width of each tab */
 }
 
 .list-cell:empty {

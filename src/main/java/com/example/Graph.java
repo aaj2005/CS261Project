@@ -3,53 +3,132 @@ package com.example;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 
 public class Graph {
 
     public static VBox createGraph(SimulationData[] runs) {
-        CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Simulation Run");
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Placeholder");
+        // VBox to hold all the graphs
+        VBox vbox = new VBox();
 
-        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Simulation Score Comparisons");
-        ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.getItems().addAll("Performance Score", "Average Wait Time", "Max Wait Time", "Average Queue Length");
-        comboBox.setValue("Performance Score");
+        // Title label with "METRICS" text
+        Label titleLabel = new Label("METRICS");
+        titleLabel.getStyleClass().add("title-label");
 
-        updateChart(barChart, runs, "score");
+        // Create a StackPane for absolute positioning of the title
+        StackPane titlePane = new StackPane();
+        titlePane.getChildren().add(titleLabel);
+        titlePane.setPrefSize(600, 100);  // Set the preferred size of the title pane
 
-        comboBox.setOnAction(event -> {
-            String selectedMetric = comboBox.getValue();
-            switch (selectedMetric) {
-                case "Max Wait Time":
-                    updateChart(barChart, runs, "maxWaitTime");
-                    break;
-                case "Average Queue Length":
-                    updateChart(barChart, runs, "avgQueueLength");
-                    break;
-                case "Average Wait Time":
-                    updateChart(barChart, runs, "avgWaitTime");
-                    break;
-                default:
-                    updateChart(barChart, runs, "score");
-                    break;
-            }
-        });
+        // Manually set the position of the title inside the StackPane
+        StackPane.setAlignment(titleLabel, Pos.CENTER);
 
-        VBox vbox = new VBox(comboBox, barChart);
-        VBox.setVgrow(barChart, javafx.scene.layout.Priority.ALWAYS); 
+        // Create the GridPane to hold the four charts
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(20); // Horizontal gap between charts
+        gridPane.setVgap(20); // Vertical gap between charts
+
+        // Set the grid to take up the whole available width and height
+        gridPane.setPrefWidth(1921);
+        gridPane.setPrefHeight(800);
+
+        // Make each column and row in the GridPane grow to fill the available space
+        for (int i = 0; i < 2; i++) {
+            ColumnConstraints column = new ColumnConstraints();
+            column.setHgrow(Priority.ALWAYS);  // Make the column grow horizontally
+            gridPane.getColumnConstraints().add(column);
+
+            RowConstraints row = new RowConstraints();
+            row.setVgrow(Priority.ALWAYS);  // Make the row grow vertically
+            gridPane.getRowConstraints().add(row);
+        }
+
+        // Create the BarChart for each metric
+        BarChart<String, Number> performanceScoreChart = createChart(runs, "score");
+        BarChart<String, Number> maxWaitTimeChart = createChart(runs, "maxWaitTime");
+        BarChart<String, Number> avgQueueLengthChart = createChart(runs, "avgQueueLength");
+        BarChart<String, Number> avgWaitTimeChart = createChart(runs, "avgWaitTime");
+
+        // Add all the charts to the grid, in different quarters of the screen
+        gridPane.add(performanceScoreChart, 0, 0); // Top-left
+        gridPane.add(maxWaitTimeChart, 1, 0); // Top-right
+        gridPane.add(avgQueueLengthChart, 0, 1); // Bottom-left
+        gridPane.add(avgWaitTimeChart, 1, 1); // Bottom-right
+
+        // Add the titlePane and gridPane to the VBox
+        vbox.getChildren().addAll(titlePane, gridPane);
+
+        vbox.setPrefSize(1000, 1000);
         return vbox;
     }
 
+    private static BarChart<String, Number> createChart(SimulationData[] runs, String metric) {
+        // Create the X and Y axes for the BarChart
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Simulation Run");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel(getYAxisLabel(metric));
+
+        // Create BarChart using the axes
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle(getChartTitle(metric));
+
+        // Update the chart with the corresponding data
+        updateChart(barChart, runs, metric);
+
+        return barChart;
+    }
+
+    // Get Y-Axis label based on the metric
+    private static String getYAxisLabel(String metric) {
+        switch (metric) {
+            case "score":
+                return "Performance Score";
+            case "maxWaitTime":
+                return "Maximum Wait Time (Mins)";
+            case "avgQueueLength":
+                return "Max Queue Length (Cars)";
+            case "avgWaitTime":
+                return "Average Wait Time (Mins)";
+            default:
+                return "Unknown Metric";
+        }
+    }
+
+    // Get chart title based on the metric
+    private static String getChartTitle(String metric) {
+        switch (metric) {
+            case "score":
+                return "Performance Score Comparisons";
+            case "maxWaitTime":
+                return "Maximum Wait Time Comparisons";
+            case "avgQueueLength":
+                return "Max Queue Length Comparisons";
+            case "avgWaitTime":
+                return "Average Wait Time Comparisons";
+            default:
+                return "Unknown Metric";
+        }
+    }
+
+
+
     private static void updateChart(BarChart<String, Number> barChart, SimulationData[] runs, String metric) {
+        System.out.println("RUNS: " + runs.length);
+
+        if (runs.length == 0 || runs == null) {
+            // If there are no runs
+            return;
+
+        }
         barChart.getData().clear();
 
         if (metric.equals("score")) {
@@ -83,7 +162,7 @@ public class Graph {
                     break;
                 case "avgQueueLength":
                     values = run.getMaxQueueLength();
-                    barChart.getYAxis().setLabel("Average Queue Length (Cars)");
+                    barChart.getYAxis().setLabel("Max Queue Length (Cars)");
                     break;
                 case "avgWaitTime":
                     values = run.getAvgWaitTime();

@@ -20,7 +20,8 @@ public class SimulationCellFactory extends ListCell<Simulation> {
     @Override
     protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
-        System.out.println("updateItem called with: " + (item == null ? "NULL" : item.getSimName()) + ", empty: " + empty);
+        System.out.println("updateItem -> item: " + (item == null ? "NULL" : item.getSimName()) +
+                ", empty: " + empty + ", index: " + getIndex());
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
@@ -30,7 +31,13 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         }
 
         // Reset styling for non-empty cells
-        setStyle("");
+//        setStyle("");
+        // 🔥 Explicitly reapply selection highlight
+        if (controller.getSelectedCell() == this) {
+            setStyle("-fx-background-color: lightblue;");
+        } else {
+            setStyle("");  // Reset styling for non-selected cells
+        }
 
 
         if (item.getSimName().equals("New Simulation")) {
@@ -40,31 +47,15 @@ public class SimulationCellFactory extends ListCell<Simulation> {
 
         } else {
             setPrefHeight(75);
-
             setGraphic(createRegularSimulationCell(item));
         }
 
-//        this.setOnMouseClicked(event -> {
-//            if (!item.getSimName().equals("New Simulation")) {
-//                controller.setSelectedCell(this);
-//            }
-//        });
-
         this.setOnMouseClicked(event -> {
-            // If the clicked item is a regular cell (not "New Simulation"), apply selected styling manually
+            System.out.println("Clicked: " + item.getSimName() + " (Index: " + getIndex() + ")");
             if (!item.getSimName().equals("New Simulation")) {
-                // Manually trigger the selection state based on your tracking mechanism
-                controller.setSelectedCell(this);  // Assuming this method tracks selected cells and updates styling
-
-                // Add the "selected" style class (or your own mechanism for selected styling)
-                getStyleClass().add("selected");
-                setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
-
-                // Optionally remove the "selected" style from other cells if needed
-
-            } else {
-                // Handle clicking on the "New Simulation" cell if needed (no selection change here)
                 controller.setSelectedCell(this);
+
+//                getListView().refresh();
             }
         });
     }

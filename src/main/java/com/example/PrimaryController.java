@@ -1,6 +1,7 @@
 package com.example;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -129,12 +130,27 @@ public class PrimaryController {
     }
 
     private void loadSimulationData() {
-        SimulationData[] runs = new SimulationData[5];
-        runs[0] = new SimulationData("Run 1", new Double[]{2.5, 3.0, 4.5, 1.5}, new Double[]{5.0, 6.0, 8.0, 3.0}, new Double[]{3.2, 4.0, 5.5, 2.5});
-        runs[1] = new SimulationData("Run 2", new Double[]{2.8, 3.5, 4.8, 1.8}, new Double[]{5.5, 6.5, 8.5, 3.5}, new Double[]{3.5, 4.2, 5.8, 2.8});
-        runs[2] = new SimulationData("Run 3", new Double[]{3.0, 3.8, 5.0, 2.0}, new Double[]{6.0, 7.0, 9.0, 4.0}, new Double[]{3.8, 4.5, 6.0, 3.0});
-        runs[3] = new SimulationData("Run 4", new Double[]{2.6, 3.2, 4.6, 1.6}, new Double[]{5.2, 6.2, 8.2, 3.2}, new Double[]{3.3, 4.1, 5.6, 2.6});
-        runs[4] = new SimulationData("Run 5", new Double[]{2.6, 3.2, 4.6, 1.6}, new Double[]{5.2, 6.2, 8.2, 3.2}, new Double[]{3.3, 4.1, 5.6, 2.6});
+        ObservableList<Simulation> simulations = simList.getItems();
+
+        // Count how many non-null SimulationData objects there are
+        int validCount = 0;
+        for (Simulation simulation : simulations) {
+            if (simulation.getResultsData() != null) {
+                validCount++;
+            }
+        }
+
+        // Create an array to store the non-null SimulationData objects
+        SimulationData[] runs = new SimulationData[validCount];
+        int index = 0;
+
+        // Fill the runs array with non-null SimulationData objects
+        for (Simulation simulation : simulations) {
+            SimulationData data = simulation.getResultsData();
+            if (data != null) {
+                runs[index++] = data;
+            }
+        }
 
         VBox graph = Graph.createGraph(runs);
         graphContainer.setTopAnchor(graph, 0.0);
@@ -151,21 +167,24 @@ public class PrimaryController {
 
         simComponent.start_simulation();
 
+        Simulation sim = selectedCell.getItem();
+
         DynamicComponents.roads = new BaseRoad[] {
-                new BaseRoad(10, new double[] {0,3,5,2}, 4, Cardinal.N, true, false),
-                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.E, true, true),
-                new BaseRoad(10, new double[] {0,0,0,0}, 1, Cardinal.S, true, false),
-                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.W)
+                new BaseRoad(10, new double[] {0,3,5,2}, 4, Cardinal.N, sim.getNorth_left_turn(), false),
+                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.E, sim.getEast_left_turn(), true),
+                new BaseRoad(10, new double[] {0,0,0,0}, 1, Cardinal.S, sim.getSouth_left_turn(), false),
+                new BaseRoad(10, new double[] {0,0,0,0}, 2, Cardinal.W, sim.getWest_left_turn(), false)
         };
 
-        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(sim.getDuration_of_crossings(), 9.98);
 
-        try {
-            StatWrapper sc = new StatWrapper(DynamicComponents.roads);
-            System.out.println(sc.run().toString());
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
+
+//        try {
+//            StatWrapper sc = new StatWrapper(DynamicComponents.roads);
+//            System.out.println(sc.run().toString());
+//        } catch (Exception e) {
+//            System.out.println(e.toString());
+//        }
 
         try {
             StatRoad[] roads = new StatRoad[4];
@@ -218,127 +237,77 @@ public class PrimaryController {
 
     }
 
-//    public void setSelectedCell(ListCell<Simulation> cell) {
-//        if (selectedCell != null && selectedCell.getItem() != null) {
-//            System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
-//            selectedCell.setStyle("");
-//            Simulation selectedSim = selectedCell.getItem();
-//            selectedSim.setNumberParameters(
-//                    Integer.valueOf(txt_nn.getText()),
-//                    Integer.valueOf(txt_ne.getText()),
-//                    Integer.valueOf(txt_nw.getText()),
-//                    Integer.valueOf(txt_en.getText()),
-//                    Integer.valueOf(txt_ee.getText()),
-//                    Integer.valueOf(txt_es.getText()),
-//                    Integer.valueOf(txt_se.getText()),
-//                    Integer.valueOf(txt_ss.getText()),
-//                    Integer.valueOf(txt_sw.getText()),
-//                    Integer.valueOf(txt_wn.getText()),
-//                    Integer.valueOf(txt_ws.getText()),
-//                    Integer.valueOf(txt_ww.getText()),
-//                    Integer.valueOf(crossing_duration.getText()),
-//                    Integer.valueOf(crossing_requests.getText())
-//            );
-//        }
-//
-//        simComponent.stop_simulation();
-//        // Make new simulation with the required components
-//
-//        sim_anchor.getChildren().clear();
-//        simComponent = new SimulationComponents(
-//                3,4,3,3, true,
-//                true, true,
-//                true, true,
-//                true, true,
-//                true, true,
-//                true,false,
-//                false, false
-//        );
-//        AnchorPane childPane = simComponent.getRoot();
-//        sim_anchor.getChildren().add(childPane);
-//
-//
-//
-//        selectedCell = cell;
-//        run_button.setDisable(false);
-//
-////        if (selectedCell != null) {
-////            System.out.println("Setting to bloo");
-////            selectedCell.setStyle("-fx-background-color: lightblue;");
-////            loadParameterValues(selectedCell.getItem());
-////        }
-//
-//        if (selectedCell != null) {
-//            System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
-//
-//            // Skip styling for "New Simulation"
-//            if (!selectedCell.getItem().getSimName().equals("New Simulation")) {
-//                System.out.println("Setting to blue");
-//                selectedCell.setStyle("-fx-background-color: lightblue;");
-//                selectedCell.setTextFill(javafx.scene.paint.Color.BLACK); // Optional, if you want to set text color
-//                selectedCell.setStyle("-fx-font-weight: bold;"); // Optional, if you want to set text as bold
-//            }
-//
-//            loadParameterValues(selectedCell.getItem());
-//        }
-//        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
-//    }
+    public void setSelectedCell(ListCell<Simulation> cell) {
+        if (selectedCell == cell) {
+            return;
+        }
 
-public void setSelectedCell(ListCell<Simulation> cell) {
-    if (selectedCell != null && selectedCell.getItem() != null) {
-        System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
-        selectedCell.setStyle(""); // Remove any previous style
-        Simulation selectedSim = selectedCell.getItem();
-        selectedSim.setNumberParameters(
-                Integer.valueOf(txt_nn.getText()),
-                Integer.valueOf(txt_ne.getText()),
-                Integer.valueOf(txt_nw.getText()),
-                Integer.valueOf(txt_en.getText()),
-                Integer.valueOf(txt_ee.getText()),
-                Integer.valueOf(txt_es.getText()),
-                Integer.valueOf(txt_se.getText()),
-                Integer.valueOf(txt_ss.getText()),
-                Integer.valueOf(txt_sw.getText()),
-                Integer.valueOf(txt_wn.getText()),
-                Integer.valueOf(txt_ws.getText()),
-                Integer.valueOf(txt_ww.getText()),
-                Integer.valueOf(crossing_duration.getText()),
-                Integer.valueOf(crossing_requests.getText())
+        if (selectedCell != null) {
+            System.out.println("Deselecting: " + selectedCell.getIndex());
+        }
+        if (selectedCell != null && selectedCell.getItem() != null) {
+            System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
+            selectedCell.setStyle("");
+            Simulation selectedSim = selectedCell.getItem();
+            selectedSim.setNumberParameters(
+                    Integer.valueOf(txt_nn.getText()),
+                    Integer.valueOf(txt_ne.getText()),
+                    Integer.valueOf(txt_nw.getText()),
+                    Integer.valueOf(txt_en.getText()),
+                    Integer.valueOf(txt_ee.getText()),
+                    Integer.valueOf(txt_es.getText()),
+                    Integer.valueOf(txt_se.getText()),
+                    Integer.valueOf(txt_ss.getText()),
+                    Integer.valueOf(txt_sw.getText()),
+                    Integer.valueOf(txt_wn.getText()),
+                    Integer.valueOf(txt_ws.getText()),
+                    Integer.valueOf(txt_ww.getText()),
+                    Integer.valueOf(crossing_duration.getText()),
+                    Integer.valueOf(crossing_requests.getText())
+            );
+        }
+
+        simComponent.stop_simulation();
+        // Make new simulation with the required components
+
+        sim_anchor.getChildren().clear();
+        simComponent = new SimulationComponents(
+                3,4,3,3, true,
+                true, true,
+                true, true,
+                true, true,
+                true, true,
+                true,false,
+                false, false
         );
+        AnchorPane childPane = simComponent.getRoot();
+        sim_anchor.getChildren().add(childPane);
+
+        selectedCell = cell;
+        run_button.setDisable(false);
+
+        if (selectedCell != null) {
+            System.out.println("Selecting: " + ((Simulation) selectedCell.getItem()).getSimName());
+//            System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
+
+            // Skip styling for "New Simulation"
+            if (!selectedCell.getItem().getSimName().equals("New Simulation")) {
+                System.out.println("Setting to blue");
+//                selectedCell.setStyle("-fx-background-color: lightblue;");
+//                selectedCell.setTextFill(javafx.scene.paint.Color.BLACK);
+//                selectedCell.setStyle("-fx-font-weight: bold;");
+                selectedCell.setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
+
+            }
+
+            loadParameterValues(selectedCell.getItem());
+        }
+        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
+
+//        if (cell != null && cell.getListView() != null) {
+//            cell.getListView().refresh();
+//        }
     }
-
-    simComponent.stop_simulation();
-
-    // Make new simulation with the required components
-    sim_anchor.getChildren().clear();
-    simComponent = new SimulationComponents(
-            3, 4, 3, 3, true,
-            true, true,
-            true, true,
-            true, true,
-            true, true,
-            true, false,
-            false, false
-    );
-    AnchorPane childPane = simComponent.getRoot();
-    sim_anchor.getChildren().add(childPane);
-
-    selectedCell = cell;
-    run_button.setDisable(false);
-
-    // Check for "New Simulation" and avoid applying styles
-    if (selectedCell != null && !selectedCell.getItem().getSimName().equals("New Simulation")) {
-        System.out.println("Setting to blue");
-        selectedCell.setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
-        loadParameterValues(selectedCell.getItem());
-    } else {
-        // If it's "New Simulation", do not apply any styles
-        selectedCell.setStyle(""); // Ensure no styles are applied
-    }
-
-    System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
-}
-
 
     public ListCell<Simulation> getSelectedCell() {
         return selectedCell;

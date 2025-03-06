@@ -24,7 +24,6 @@ public class Simulation {
 
     private SimulationData resultsData;
 
-
     public Simulation(String simName) {
         this.simName = simName;
     }
@@ -113,6 +112,9 @@ public class Simulation {
 
     public void setSimName(String simName) {
         this.simName = simName;
+        if (resultsData != null) {
+            resultsData.setName(simName);
+        }
     }
 
     @Override
