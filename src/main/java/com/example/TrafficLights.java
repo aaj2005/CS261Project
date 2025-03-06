@@ -73,37 +73,41 @@ public class TrafficLights {
 
     private Timeline traffic_timeline;
 
-    public Rectangle[] create_rectangles(Rectangle[] lanes, double scale_factor, double[] center){
+    public Rectangle[] create_rectangles(Rectangle[] lanes, double scale_factor, double[] center, int max_lanes){
+        double resize = max_lanes /4.0;
+        if (resize < 0.3){
+            resize = 0.3333;
+        }
         lights = new Rectangle[]{
             new Rectangle(
-                lanes[0].getX() + lanes[0].getWidth()/2 - (((center[0]+center[1])/2)/scale_factor)/2,
+                lanes[0].getX() + lanes[0].getWidth()/2 - ((((center[0]+center[1])/2)/scale_factor)/2)*resize,
                 lanes[0].getY() + lanes[0].getHeight() ,
-                ((center[0] + center[1])/2)/scale_factor,
-                (center[0]+center[1])/scale_factor
+                (((center[0] + center[1])/2)/scale_factor)*resize,
+                ((center[0]+center[1])/scale_factor)*resize
             ),
             new Rectangle(
-                lanes[1].getX() - ((center[0] + center[1])/2)/scale_factor,
-                lanes[1].getY() + lanes[1].getHeight()/2 - ((center[0] + center[1])/scale_factor)/2,
-                ((center[0] + center[1])/2)/scale_factor,
-                (center[0] + center[1])/scale_factor
+                lanes[1].getX() - (((center[0] + center[1])/2)/scale_factor)*resize,
+                lanes[1].getY() + lanes[1].getHeight()/2 - (((center[0] + center[1])/scale_factor)/2)*resize,
+                (((center[0] + center[1])/2)/scale_factor)*resize,
+                ((center[0] + center[1])/scale_factor)*resize
             ),
             new Rectangle(
-                lanes[2].getX() + lanes[2].getWidth()/2 - (((center[0] + center[1])/2)/scale_factor)/2,
-                lanes[2].getY() - (center[0] + center[1])/scale_factor ,
-                ((center[0] + center[1])/2)/scale_factor,
-                (center[0] + center[1])/scale_factor
+                lanes[2].getX() + lanes[2].getWidth()/2 - ((((center[0] + center[1])/2)/scale_factor)/2)*resize,
+                lanes[2].getY() - ((center[0] + center[1])/scale_factor)*resize ,
+                (((center[0] + center[1])/2)/scale_factor)*resize,
+                ((center[0] + center[1])/scale_factor)*resize
             ),
             new Rectangle(
                 lanes[3].getX() + lanes[3].getWidth(),
-                lanes[3].getY() + lanes[3].getHeight()/2 - ((center[0] + center[1])/scale_factor)/2,
-                ((center[0] + center[1])/2)/scale_factor,
-                (center[0] + center[1])/scale_factor
+                lanes[3].getY() + lanes[3].getHeight()/2 - (((center[0] + center[1])/scale_factor)/2)*resize,
+                (((center[0] + center[1])/2)/scale_factor)*resize,
+                ((center[0] + center[1])/scale_factor)*resize
             ),
             new Rectangle(
-                center[0] - ((center[0] + center[1])/scale_factor)/2,
-                center[1] - ((2*(center[0] + center[1]))/scale_factor)/2,
-                (center[0] + center[1])/scale_factor,
-                (2*(center[0] + center[1]))/scale_factor
+                center[0] - (((center[0] + center[1])/scale_factor)/2)*resize,
+                center[1] - (((2*(center[0] + center[1]))/scale_factor)/2)*resize,
+                ((center[0] + center[1])/scale_factor)*resize,
+                ((2*(center[0] + center[1]))/scale_factor)*resize
             )
 
         };
