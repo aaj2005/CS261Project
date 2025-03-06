@@ -341,8 +341,6 @@ public class PrimaryController {
         n_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setNorthBusLane(newValue);
-            System.out.print("SET value to " + newValue + " for " + selectedSim.getSimName());
-            lbl_duration.setText(newValue.toString());
             resetSimulationUI();
         });
         eb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -453,9 +451,6 @@ public class PrimaryController {
                 updateSimulationValue(txt_ww, selectedSim -> selectedSim.setWest_west_vph(parseInt(txt_ww.getText())));
             }
         });
-
-
-
     }
 
     private void updateSimulationValue(TextField textField, Consumer<Simulation> updateAction) {
