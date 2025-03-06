@@ -251,13 +251,13 @@ public class SimulationComponents {
         junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
 
         traffic_system = new TrafficLights(new int[] {0,0,0,0},60,4,junction_arms_out);
-        lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters());
+        lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters(), max_out);
 
 
         corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.GREEN);
         corners[2].setFill(Color.GREEN);
-        corners[3].setFill(Color.GREEN);
+        corners[3].setFill(Color.GREEN);,
 
 
         if (crossings_enabled){
