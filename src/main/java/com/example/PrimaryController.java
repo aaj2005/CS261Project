@@ -23,22 +23,22 @@ public class PrimaryController {
 
     // Northbound controls
     @FXML private ChoiceBox<Integer> nb_lanes;
-    @FXML private CheckBox n_buslane, n_leftturn;
+    @FXML private CheckBox n_buslane;
     @FXML private TextField txt_nn, txt_ne, txt_nw;
 
     // Eastbound controls
     @FXML private ChoiceBox<Integer> eb_lanes;
-    @FXML private CheckBox e_buslane, e_leftturn;
+    @FXML private CheckBox e_buslane;
     @FXML private TextField txt_en, txt_ee, txt_es;
 
     // Southbound controls
     @FXML private ChoiceBox<Integer> sb_lanes;
-    @FXML private CheckBox s_buslane, s_leftturn;
+    @FXML private CheckBox s_buslane;
     @FXML private TextField txt_se, txt_ss, txt_sw;
 
     // Westbound controls
     @FXML private ChoiceBox<Integer> wb_lanes;
-    @FXML private CheckBox w_buslane, w_leftturn;
+    @FXML private CheckBox w_buslane;
     @FXML private TextField txt_wn, txt_ws, txt_ww;
 
     // Pedestrian crossing controls
@@ -148,6 +148,7 @@ public class PrimaryController {
     private void loadSimulationData() {
         ObservableList<Simulation> simulations = simList.getItems();
 
+        stopSimulation();
         // Count how many non-null SimulationData objects there are
         int validCount = 0;
         for (Simulation simulation : simulations) {
@@ -185,11 +186,23 @@ public class PrimaryController {
 
         Simulation sim = getSelectedCell().getItem();
 
+        boolean north_left_turn = sim.getNorth_east_vph() > 0;
+        boolean north_right_turn = sim.getNorth_west_vph() > 0;
+
+        boolean east_left_turn = sim.getEast_south_vph() > 0;
+        boolean east_right_turn = sim.getEast_north_vph() > 0;
+
+        boolean south_left_turn = sim.getSouth_east_vph() > 0;
+        boolean south_right_turn = sim.getSouth_west_vph() > 0;
+
+        boolean west_left_turn = sim.getWest_north_vph() > 0;
+        boolean west_right_turn = sim.getWest_south_vph() > 0;
+
         DynamicComponents.roads = new BaseRoad[] {
-                new BaseRoad(10, new double[] {sim.getNorth_north_vph(), sim.getNorth_east_vph(), 0, sim.getNorth_west_vph()}, 4, Cardinal.N, sim.getNorth_left_turn(), false),
-                new BaseRoad(10, new double[] {sim.getEast_north_vph(), sim.getEast_east_vph(),sim.getEast_south_vph(), 0}, 2, Cardinal.E, sim.getEast_left_turn(), true),
-                new BaseRoad(10, new double[] {0,sim.getSouth_east_vph(), sim.getSouth_south_vph(), sim.getSouth_west_vph()}, 1, Cardinal.S, sim.getSouth_left_turn(), false),
-                new BaseRoad(10, new double[] {sim.getWest_north_vph(),0,sim.getWest_south_vph(), sim.getWest_west_vph()}, 2, Cardinal.W, sim.getWest_left_turn(), false)
+                new BaseRoad(10, new double[] {sim.getNorth_north_vph(), sim.getNorth_east_vph(), 0, sim.getNorth_west_vph()}, 4, Cardinal.N, north_left_turn, north_right_turn),
+                new BaseRoad(10, new double[] {sim.getEast_north_vph(), sim.getEast_east_vph(),sim.getEast_south_vph(), 0}, 2, Cardinal.E, east_left_turn, east_right_turn),
+                new BaseRoad(10, new double[] {0,sim.getSouth_east_vph(), sim.getSouth_south_vph(), sim.getSouth_west_vph()}, 1, Cardinal.S, south_left_turn, south_right_turn),
+                new BaseRoad(10, new double[] {sim.getWest_north_vph(),0,sim.getWest_south_vph(), sim.getWest_west_vph()}, 2, Cardinal.W, west_left_turn, west_right_turn),
         };
 
         DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
@@ -332,11 +345,6 @@ public class PrimaryController {
             lbl_duration.setText(newValue.toString());
             resetSimulationUI();
         });
-        n_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = getSelectedCell().getItem();
-            selectedSim.setNorthLeftTurn(newValue);
-            resetSimulationUI();
-        });
         eb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setEastNumLanes(newVal);
@@ -345,11 +353,6 @@ public class PrimaryController {
         e_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setEastBusLane(newValue);
-            resetSimulationUI();
-        });
-        e_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = getSelectedCell().getItem();
-            selectedSim.setEastLeftTurn(newValue);
             resetSimulationUI();
         });
         sb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -362,11 +365,6 @@ public class PrimaryController {
             selectedSim.setSouthBusLane(newValue);
             resetSimulationUI();
         });
-        s_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = getSelectedCell().getItem();
-            selectedSim.setSouthLeftTurn(newValue);
-            resetSimulationUI();
-        });
         wb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setWestNumLanes(newVal);
@@ -375,11 +373,6 @@ public class PrimaryController {
         w_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setWestBusLane(newValue);
-            resetSimulationUI();
-        });
-        w_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = getSelectedCell().getItem();
-            selectedSim.setWestLeftTurn(newValue);
             resetSimulationUI();
         });
         pc_enabled.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -489,28 +482,24 @@ public class PrimaryController {
 
         nb_lanes.setValue(selectedSim.getNorth_num_lanes());
         n_buslane.setSelected(selectedSim.getNorth_bus_lane());
-        n_leftturn.setSelected(selectedSim.getNorth_left_turn());
         txt_nn.setText(selectedSim.getNorth_north_vph().toString());
         txt_ne.setText(selectedSim.getNorth_east_vph().toString());
         txt_nw.setText(selectedSim.getNorth_west_vph().toString());
 
         eb_lanes.setValue(selectedSim.getEast_num_lanes());
         e_buslane.setSelected(selectedSim.getEast_bus_lane());
-        e_leftturn.setSelected(selectedSim.getEast_left_turn());
         txt_ee.setText(selectedSim.getEast_east_vph().toString());
         txt_en.setText(selectedSim.getEast_north_vph().toString());
         txt_es.setText(selectedSim.getEast_south_vph().toString());
 
         sb_lanes.setValue(selectedSim.getSouth_num_lanes());
         s_buslane.setSelected(selectedSim.getSouth_bus_lane());
-        s_leftturn.setSelected(selectedSim.getSouth_left_turn());
         txt_se.setText(selectedSim.getSouth_east_vph().toString());
         txt_ss.setText(selectedSim.getSouth_south_vph().toString());
         txt_sw.setText(selectedSim.getSouth_west_vph().toString());
 
         wb_lanes.setValue(selectedSim.getWest_num_lanes());
         w_buslane.setSelected(selectedSim.getWest_bus_lane());
-        w_leftturn.setSelected(selectedSim.getWest_left_turn());
         txt_wn.setText(selectedSim.getWest_north_vph().toString());
         txt_ws.setText(selectedSim.getWest_south_vph().toString());
         txt_ww.setText(selectedSim.getWest_west_vph().toString());
@@ -583,13 +572,24 @@ public class PrimaryController {
         float[] vph_3 = new float[] {0, sim.getSouth_east_vph().floatValue(), sim.getSouth_south_vph().floatValue(), sim.getSouth_west_vph().floatValue()};
         float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), 0, sim.getWest_south_vph().floatValue(), sim.getWest_west_vph().floatValue()};
 
+        boolean north_left_turn = sim.getNorth_east_vph() > 0;
+        boolean north_right_turn = sim.getNorth_west_vph() > 0;
+
+        boolean east_left_turn = sim.getEast_south_vph() > 0;
+        boolean east_right_turn = sim.getEast_north_vph() > 0;
+
+        boolean south_left_turn = sim.getSouth_east_vph() > 0;
+        boolean south_right_turn = sim.getSouth_west_vph() > 0;
+
+        boolean west_left_turn = sim.getWest_north_vph() > 0;
+        boolean west_right_turn = sim.getWest_south_vph() > 0;
 
         simComponent = new SimulationComponents(
                 sim.getNorth_num_lanes(), sim.getEast_num_lanes(), sim.getSouth_num_lanes(), sim.getWest_num_lanes(), sim.getPedestrian_crossings(),
-                sim.getNorth_left_turn(), true,
-                sim.getEast_left_turn(), true,
-                sim.getSouth_left_turn(), true,
-                sim.getWest_left_turn(), true,
+                north_left_turn, north_right_turn,
+                east_left_turn, east_right_turn,
+                south_left_turn, south_right_turn,
+                west_left_turn, west_right_turn,
                 sim.getNorth_bus_lane(), sim.getEast_bus_lane(),
                 sim.getSouth_bus_lane(), sim.getWest_bus_lane(),
                 vph_1, vph_2, vph_3, vph_4

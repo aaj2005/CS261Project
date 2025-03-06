@@ -3,19 +3,19 @@ package com.example;
 public class Simulation {
     private String simName;
     private Integer north_num_lanes = 1;
-    private Boolean north_bus_lane = false, north_left_turn = false;
+    private Boolean north_bus_lane = false;
     private Integer north_north_vph = 0, north_east_vph = 0, north_west_vph = 0;
 
     private Integer east_num_lanes = 1;
-    private Boolean east_bus_lane = false, east_left_turn = false;
+    private Boolean east_bus_lane = false;
     private Integer east_north_vph = 0, east_east_vph = 0, east_south_vph = 0;
 
     private Integer south_num_lanes =1;
-    private Boolean south_bus_lane = false, south_left_turn = false;
+    private Boolean south_bus_lane = false;
     private Integer south_east_vph = 0, south_south_vph = 0, south_west_vph = 0;
 
     private Integer west_num_lanes = 1;
-    private Boolean west_bus_lane = false, west_left_turn = false;
+    private Boolean west_bus_lane = false;
     private Integer west_north_vph = 0, west_south_vph = 0, west_west_vph = 0;
 
     private Boolean pedestrian_crossings = false;
@@ -66,18 +66,12 @@ public class Simulation {
     public void setNorthBusLane(Boolean north_bus_lane) {
         this.north_bus_lane = north_bus_lane;
     }
-    public void setNorthLeftTurn(Boolean north_left_turn) {
-        this.north_left_turn = north_left_turn;
-    }
 
     public void setEastNumLanes(Integer east_num_lanes) {
         this.east_num_lanes = east_num_lanes;
     }
     public void setEastBusLane(Boolean east_bus_lane) {
         this.east_bus_lane = east_bus_lane;
-    }
-    public void setEastLeftTurn(Boolean east_left_turn) {
-        this.east_left_turn = east_left_turn;
     }
 
     public void setSouthNumLanes(Integer south_num_lanes) {
@@ -86,18 +80,12 @@ public class Simulation {
     public void setSouthBusLane(Boolean south_bus_lane) {
         this.south_bus_lane = south_bus_lane;
     }
-    public void setSouthLeftTurn(Boolean south_left_turn) {
-        this.south_left_turn = south_left_turn;
-    }
 
     public void setWestNumLanes(Integer west_num_lanes) {
         this.west_num_lanes = west_num_lanes;
     }
     public void setWestBusLane(Boolean west_bus_lane) {
         this.west_bus_lane = west_bus_lane;
-    }
-    public void setWestLeftTurn(Boolean west_left_turn) {
-        this.west_left_turn = west_left_turn;
     }
 
     public void setPedestrianCrossings(Boolean pedestrian_crossings) {
@@ -128,10 +116,6 @@ public class Simulation {
         return north_bus_lane;
     }
 
-    public Boolean getNorth_left_turn() {
-        return north_left_turn;
-    }
-
     public Integer getNorth_north_vph() {
         return north_north_vph;
     }
@@ -150,10 +134,6 @@ public class Simulation {
 
     public Boolean getEast_bus_lane() {
         return east_bus_lane;
-    }
-
-    public Boolean getEast_left_turn() {
-        return east_left_turn;
     }
 
     public Integer getEast_north_vph() {
@@ -176,10 +156,6 @@ public class Simulation {
         return south_bus_lane;
     }
 
-    public Boolean getSouth_left_turn() {
-        return south_left_turn;
-    }
-
     public Integer getSouth_east_vph() {
         return south_east_vph;
     }
@@ -198,10 +174,6 @@ public class Simulation {
 
     public Boolean getWest_bus_lane() {
         return west_bus_lane;
-    }
-
-    public Boolean getWest_left_turn() {
-        return west_left_turn;
     }
 
     public Integer getWest_north_vph() {
