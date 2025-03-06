@@ -3,6 +3,7 @@ package com.example;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -62,7 +63,8 @@ public class PrimaryController {
 
 
     private SimulationManager simulationManager;
-    private ListCell<Simulation> selectedCell;
+//    private ListCell<Simulation> selectedCell;
+    private int selectedIndex = -1;
     private SimulationComponents simComponent;
 
     @FXML
@@ -79,7 +81,7 @@ public class PrimaryController {
         Platform.runLater(() -> {
             if (!simList.getItems().isEmpty()) {
                 simList.getSelectionModel().select(0);
-                selectedCell = (ListCell<Simulation>) simList.lookup(".list-cell");
+                selectedIndex = 0;
             }
         });
 
@@ -163,11 +165,13 @@ public class PrimaryController {
 
     private void runSimulation() {
 
+        System.gc();
+
         run_button.setDisable(true);
 
         simComponent.start_simulation();
 
-        Simulation sim = selectedCell.getItem();
+        Simulation sim = getSelectedCell().getItem();
 
         DynamicComponents.roads = new BaseRoad[] {
                 new BaseRoad(10, new double[] {0,3,5,2}, 4, Cardinal.N, sim.getNorth_left_turn(), false),
@@ -210,8 +214,8 @@ public class PrimaryController {
             Double[] avgWaitTime = {northResult.getAverageWaitTime(), eastResult.getAverageWaitTime(), southResult.getAverageWaitTime(), westResult.getAverageWaitTime()};
             Double[] maxWaitTime = {northResult.getMaxWaitTime(), eastResult.getMaxWaitTime(), southResult.getMaxWaitTime(), westResult.getMaxWaitTime()};
             Double[] maxQueueLength = {northResult.getMaxQueueLength(), eastResult.getMaxQueueLength(), southResult.getMaxQueueLength(), westResult.getMaxQueueLength()};
-            SimulationData results = new SimulationData(selectedCell.getItem().getSimName(), avgWaitTime, maxWaitTime, maxQueueLength);
-            selectedCell.getItem().setResultsData(results);
+            SimulationData results = new SimulationData(getSelectedCell().getItem().getSimName(), avgWaitTime, maxWaitTime, maxQueueLength);
+            getSelectedCell().getItem().setResultsData(results);
 
             // Set all the result values on UI
             avg_wait_north.setText("Exiting North: " + String.format("%.2f", avgWaitTime[0]));
@@ -238,7 +242,9 @@ public class PrimaryController {
     }
 
     public void setSelectedCell(ListCell<Simulation> cell) {
+        ListCell<Simulation> selectedCell = getSelectedCell();
         if (selectedCell == cell) {
+            System.out.println("SELECTED CELL == NEW CELL");
             return;
         }
 
@@ -283,7 +289,10 @@ public class PrimaryController {
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);
 
-        selectedCell = cell;
+//        selectedCell = cell;
+        selectedIndex = cell.getIndex();
+        selectedCell = getSelectedCell();
+        simList.getSelectionModel().select(selectedIndex);
         run_button.setDisable(false);
 
         if (selectedCell != null) {
@@ -292,7 +301,7 @@ public class PrimaryController {
 
             // Skip styling for "New Simulation"
             if (!selectedCell.getItem().getSimName().equals("New Simulation")) {
-                System.out.println("Setting to blue");
+//                System.out.println("Setting to blue");
 //                selectedCell.setStyle("-fx-background-color: lightblue;");
 //                selectedCell.setTextFill(javafx.scene.paint.Color.BLACK);
 //                selectedCell.setStyle("-fx-font-weight: bold;");
@@ -302,83 +311,86 @@ public class PrimaryController {
 
             loadParameterValues(selectedCell.getItem());
         }
-        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
-
+//        System.out.println("NEW SELECTED SIM: " + cell.getItem().getSimName());
+//
 //        if (cell != null && cell.getListView() != null) {
 //            cell.getListView().refresh();
 //        }
+//        simList.refresh();
+        System.out.println("Selected cell: " + (selectedCell != null ? selectedCell.getIndex() : "None"));
     }
 
+
     public ListCell<Simulation> getSelectedCell() {
-        return selectedCell;
+        return getCellByIndex(selectedIndex);
     }
 
     public void setDynamicListeners() {
         // Sets up listeners for input parameters that change the UI configuration (i.e. number of lanes)
         nb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setNorthNumLanes(newVal);
             resetSimulationUI();
         });
         n_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setNorthBusLane(newValue);
             System.out.print("SET value to " + newValue + " for " + selectedSim.getSimName());
             lbl_duration.setText(newValue.toString());
             resetSimulationUI();
         });
         n_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setNorthLeftTurn(newValue);
             resetSimulationUI();
         });
         eb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setEastNumLanes(newVal);
             resetSimulationUI();
         });
         e_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setEastBusLane(newValue);
             resetSimulationUI();
         });
         e_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setEastLeftTurn(newValue);
             resetSimulationUI();
         });
         sb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setSouthNumLanes(newVal);
             resetSimulationUI();
         });
         s_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setSouthBusLane(newValue);
             resetSimulationUI();
         });
         s_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setSouthLeftTurn(newValue);
             resetSimulationUI();
         });
         wb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setWestNumLanes(newVal);
             resetSimulationUI();
         });
         w_buslane.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setWestBusLane(newValue);
             resetSimulationUI();
         });
         w_leftturn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setWestLeftTurn(newValue);
             resetSimulationUI();
         });
         pc_enabled.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Simulation selectedSim = selectedCell.getItem();
+            Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setPedestrianCrossings(newValue);
             togglePedestrianInputs(newValue);
             resetSimulationUI();
@@ -386,7 +398,7 @@ public class PrimaryController {
     }
 
     public void loadParameterValues(Simulation selectedSim) {
-        System.out.println("North num lanes for " + selectedSim.getSimName() + " is " + selectedSim.getNorth_num_lanes());
+//        System.out.println("North num lanes for " + selectedSim.getSimName() + " is " + selectedSim.getNorth_num_lanes());
         sim_title.setText(selectedSim.getSimName().toUpperCase());
 
         nb_lanes.setValue(selectedSim.getNorth_num_lanes());
@@ -420,11 +432,11 @@ public class PrimaryController {
         pc_enabled.setSelected(selectedSim.getPedestrian_crossings());
         togglePedestrianInputs(pc_enabled.isSelected());
 
-        System.out.println(selectedSim.getPedestrian_crossings());
+//        System.out.println(selectedSim.getPedestrian_crossings());
         crossing_duration.setText(selectedSim.getDuration_of_crossings().toString());
-        System.out.println(selectedSim.getDuration_of_crossings());
+//        System.out.println(selectedSim.getDuration_of_crossings());
         crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
-        System.out.println(selectedSim.getRequests_per_hour());
+//        System.out.println(selectedSim.getRequests_per_hour());
 
         // Load results
         SimulationData results = selectedSim.getResultsData();
@@ -481,7 +493,7 @@ public class PrimaryController {
 
     public void resetSimulationUI() {
         sim_anchor.getChildren().clear();
-        Simulation sim = selectedCell.getItem();
+        Simulation sim = getSelectedCell().getItem();
         simComponent = new SimulationComponents(
                 sim.getNorth_num_lanes(), sim.getEast_num_lanes(), sim.getSouth_num_lanes(), sim.getWest_num_lanes(), sim.getPedestrian_crossings(),
                 sim.getNorth_left_turn(), true,
@@ -493,5 +505,17 @@ public class PrimaryController {
         );
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);
+    }
+
+    private ListCell<Simulation> getCellByIndex(int index) {
+        for (Node node : simList.lookupAll(".list-cell")) {
+            if (node instanceof ListCell) {
+                ListCell<Simulation> cell = (ListCell<Simulation>) node;
+                if (cell.getIndex() == index) {
+                    return cell;
+                }
+            }
+        }
+        return null; // Return null if the cell isn't currently rendered
     }
 }

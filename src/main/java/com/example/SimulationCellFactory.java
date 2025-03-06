@@ -20,8 +20,8 @@ public class SimulationCellFactory extends ListCell<Simulation> {
     @Override
     protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
-        System.out.println("updateItem -> item: " + (item == null ? "NULL" : item.getSimName()) +
-                ", empty: " + empty + ", index: " + getIndex());
+//        System.out.println("updateItem -> item: " + (item == null ? "NULL" : item.getSimName()) +
+//                ", empty: " + empty + ", index: " + getIndex());
         if (empty || item == null) {
             setText(null);
             setGraphic(null);

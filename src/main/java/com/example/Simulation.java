@@ -56,8 +56,6 @@ public class Simulation {
         this.west_north_vph = west_north_vph;
         this.west_south_vph = west_south_vph;
         this.west_west_vph = west_west_vph;
-        System.out.println("NEW DURATION OF " + duration_of_crossings);
-        System.out.println("NEW REQUEST OF " + duration_of_crossings);
         this.duration_of_crossings = duration_of_crossings;
         this.requests_per_hour = requests_per_hour;
     }

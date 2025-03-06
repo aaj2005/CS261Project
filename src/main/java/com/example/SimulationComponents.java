@@ -257,7 +257,7 @@ public class SimulationComponents {
         corners[0].setFill(Color.GREEN);
         corners[1].setFill(Color.GREEN);
         corners[2].setFill(Color.GREEN);
-        corners[3].setFill(Color.GREEN);,
+        corners[3].setFill(Color.GREEN);
 
 
         if (crossings_enabled){

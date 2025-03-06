@@ -75,7 +75,8 @@
 
 /* Selected ListView item */
 .list-cell:selected {
-    -fx-background-color: #3498db;
+    /*-fx-background-color: #3498db;*/
+    -fx-background-color: red;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
