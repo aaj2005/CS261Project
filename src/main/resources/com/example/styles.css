@@ -95,7 +95,7 @@
 
 
 /* Style for the "New Simulation" button */
-.button {
+.run-button {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
     -fx-font-size: 14px;
@@ -104,8 +104,36 @@
     -fx-border-radius: 5px;
 }
 
-.button:hover {
+
+
+.run-button:hover {
     -fx-background-color: #45a049;
+}
+
+.pause-button {
+    -fx-background-color: #af4c4c;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+}
+
+.plus-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+}
+
+.plus-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.pause-button:hover {
+    -fx-background-color: #a04545;
 }
 
 /* Delete button */

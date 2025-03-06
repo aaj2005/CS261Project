@@ -18,6 +18,7 @@ public class PrimaryController {
     @FXML private AnchorPane graphContainer;
     @FXML private Tab metricsTab;
     @FXML private Button run_button;
+    @FXML private Button pause_button;
     @FXML private Label sim_title;
 
     // Northbound controls
@@ -107,6 +108,8 @@ public class PrimaryController {
         // Set listens for inputs that change UI configuration (i.e. number of lanes)
         setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
+        pause_button.setOnAction(event -> pauseSimulation());
+        pause_button.setDisable(true);
 
         // Create the sim UI component
         simComponent = new SimulationComponents(
@@ -129,6 +132,10 @@ public class PrimaryController {
         clip.setHeight(600);
         sim_anchor.setClip(clip);
 
+    }
+
+    private void pauseSimulation() {
+        stopSimulation();
     }
 
     private void togglePedestrianInputs(boolean enabled) {
@@ -172,9 +179,9 @@ public class PrimaryController {
 
     private void runSimulation() {
 
-        run_button.setDisable(true);
+        SetToPlayMode();
 
-        simComponent.start_simulation();
+
 
         Simulation sim = getSelectedCell().getItem();
 
@@ -232,8 +239,23 @@ public class PrimaryController {
 
         } catch (Exception e) {
             System.out.println(e.toString());
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Input Parameters Error");
+            alert.setHeaderText(null);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            SetToPauseMode();
+            return;
         }
 
+
+        simComponent.start_simulation();
+
+    }
+
+    public void stopSimulation() {
+        simComponent.stop_simulation();
+        SetToPauseMode();
     }
 
     public void setSelectedCell(ListCell<Simulation> cell) {
@@ -267,7 +289,7 @@ public class PrimaryController {
             );
         }
 
-        simComponent.stop_simulation();
+        stopSimulation();
 
         sim_anchor.getChildren().clear();
 
@@ -276,7 +298,7 @@ public class PrimaryController {
         selectedIndex = cell.getIndex();
         selectedCell = getSelectedCell();
         simList.getSelectionModel().select(selectedIndex);
-        run_button.setDisable(false);
+        SetToPauseMode();
 
         if (selectedCell != null) {
             System.out.println("Selecting: " + ((Simulation) selectedCell.getItem()).getSimName());
@@ -574,6 +596,7 @@ public class PrimaryController {
         );
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);
+        SetToPauseMode();
     }
 
     private ListCell<Simulation> getCellByIndex(int index) {
@@ -586,5 +609,15 @@ public class PrimaryController {
             }
         }
         return null; // Return null if the cell isn't currently rendered
+    }
+
+    private void SetToPlayMode() {
+        run_button.setDisable(true);
+        pause_button.setDisable(false);
+    }
+
+    private void SetToPauseMode() {
+        run_button.setDisable(false);
+        pause_button.setDisable(true);
     }
 }

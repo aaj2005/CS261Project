@@ -68,6 +68,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button addButton = new Button();
+        addButton.getStyleClass().add("plus-button");
         FontIcon addIcon = new FontIcon(FontAwesomeSolid.PLUS);
         addIcon.setIconSize(30);
         addIcon.setIconColor(Color.WHITE);
