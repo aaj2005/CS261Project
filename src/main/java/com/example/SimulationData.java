@@ -7,12 +7,21 @@ public class SimulationData {
     private Double[] maxWaitTime;
     private Double[] maxQueueLength;
 
-    public SimulationData(String name, Double[] avgWaitTime, Double[] maxWaitTime, Double[] maxQueueLength) {
+    public SimulationData(String name, Double[] avgWaitTime, Double[] maxWaitTime, Double[] maxQueueLength, double score ) {
         this.name = name;
         this.avgWaitTime = avgWaitTime;
         this.maxWaitTime = maxWaitTime;
         this.maxQueueLength = maxQueueLength;
-        this.score = calculatePerformanceScore();
+        this.score = score;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public double getScore() {
+        return score;
     }
 
     private double calculatePerformanceScore() {
@@ -30,14 +39,6 @@ public class SimulationData {
 
         return (1 / (avgWait + 1)) * 100 - (maxWait / 10) + (50 / (avgQueue + 1));
         //Not sure what the actual metric we're using is yet this is just a placeholder
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getScore() {
-        return score;
     }
 
     public Double[] getAvgWaitTime() {
