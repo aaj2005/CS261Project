@@ -4,19 +4,19 @@ public class Simulation {
     private String simName;
     private Integer north_num_lanes = 1;
     private Boolean north_bus_lane = false;
-    private Integer north_north_vph = 0, north_east_vph = 0, north_west_vph = 0;
+    private Integer north_south_vph = 0, north_east_vph = 0, north_west_vph = 0;
 
     private Integer east_num_lanes = 1;
     private Boolean east_bus_lane = false;
-    private Integer east_north_vph = 0, east_east_vph = 0, east_south_vph = 0;
+    private Integer east_north_vph = 0, east_west_vph = 0, east_south_vph = 0;
 
     private Integer south_num_lanes =1;
     private Boolean south_bus_lane = false;
-    private Integer south_east_vph = 0, south_south_vph = 0, south_west_vph = 0;
+    private Integer south_east_vph = 0, south_north_vph = 0, south_west_vph = 0;
 
     private Integer west_num_lanes = 1;
     private Boolean west_bus_lane = false;
-    private Integer west_north_vph = 0, west_south_vph = 0, west_west_vph = 0;
+    private Integer west_north_vph = 0, west_south_vph = 0, west_east_vph = 0;
 
     private Boolean pedestrian_crossings = false;
     private Integer duration_of_crossings = 0;
@@ -44,18 +44,18 @@ public class Simulation {
             Integer duration_of_crossings,
             Integer requests_per_hour)
     {
-        this.north_north_vph = north_north_vph;
+        this.north_south_vph = north_north_vph;
         this.north_east_vph = north_east_vph;
         this.north_west_vph = north_west_vph;
         this.east_north_vph = east_north_vph;
-        this.east_east_vph = east_east_vph;
+        this.east_west_vph = east_east_vph;
         this.east_south_vph = east_south_vph;
         this.south_east_vph = south_east_vph;
-        this.south_south_vph = south_south_vph;
+        this.south_north_vph = south_south_vph;
         this.south_west_vph = south_west_vph;
         this.west_north_vph = west_north_vph;
         this.west_south_vph = west_south_vph;
-        this.west_west_vph = west_west_vph;
+        this.west_east_vph = west_west_vph;
         this.duration_of_crossings = duration_of_crossings;
         this.requests_per_hour = requests_per_hour;
     }
@@ -116,8 +116,8 @@ public class Simulation {
         return north_bus_lane;
     }
 
-    public Integer getNorth_north_vph() {
-        return north_north_vph;
+    public Integer getNorth_south_vph() {
+        return north_south_vph;
     }
 
     public Integer getNorth_east_vph() {
@@ -140,8 +140,8 @@ public class Simulation {
         return east_north_vph;
     }
 
-    public Integer getEast_east_vph() {
-        return east_east_vph;
+    public Integer getEast_west_vph() {
+        return east_west_vph;
     }
 
     public Integer getEast_south_vph() {
@@ -160,8 +160,8 @@ public class Simulation {
         return south_east_vph;
     }
 
-    public Integer getSouth_south_vph() {
-        return south_south_vph;
+    public Integer getSouth_north_vph() {
+        return south_north_vph;
     }
 
     public Integer getSouth_west_vph() {
@@ -184,8 +184,8 @@ public class Simulation {
         return west_south_vph;
     }
 
-    public Integer getWest_west_vph() {
-        return west_west_vph;
+    public Integer getWest_east_vph() {
+        return west_east_vph;
     }
 
     public Boolean getPedestrian_crossings() {
@@ -206,8 +206,8 @@ public class Simulation {
 
     public SimulationData getResultsData() { return this.resultsData; }
 
-    public void setNorth_north_vph(Integer north_north_vph) {
-        this.north_north_vph = north_north_vph;
+    public void setNorth_south_vph(Integer north_south_vph) {
+        this.north_south_vph = north_south_vph;
     }
 
     public void setNorth_east_vph(Integer north_east_vph) {
@@ -222,8 +222,8 @@ public class Simulation {
         this.east_north_vph = east_north_vph;
     }
 
-    public void setEast_east_vph(Integer east_east_vph) {
-        this.east_east_vph = east_east_vph;
+    public void setEast_west_vph(Integer east_west_vph) {
+        this.east_west_vph = east_west_vph;
     }
 
     public void setEast_south_vph(Integer east_south_vph) {
@@ -234,8 +234,8 @@ public class Simulation {
         this.south_east_vph = south_east_vph;
     }
 
-    public void setSouth_south_vph(Integer south_south_vph) {
-        this.south_south_vph = south_south_vph;
+    public void setSouth_north_vph(Integer south_north_vph) {
+        this.south_north_vph = south_north_vph;
     }
 
     public void setSouth_west_vph(Integer south_west_vph) {
@@ -250,7 +250,7 @@ public class Simulation {
         this.west_south_vph = west_south_vph;
     }
 
-    public void setWest_west_vph(Integer west_west_vph) {
-        this.west_west_vph = west_west_vph;
+    public void setWest_east_vph(Integer west_east_vph) {
+        this.west_east_vph = west_east_vph;
     }
 }

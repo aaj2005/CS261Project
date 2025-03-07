@@ -1,6 +1,5 @@
 package com.example;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,7 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 
@@ -24,22 +22,22 @@ public class PrimaryController {
     // Northbound controls
     @FXML private ChoiceBox<Integer> nb_lanes;
     @FXML private CheckBox n_buslane;
-    @FXML private TextField txt_nn, txt_ne, txt_nw;
+    @FXML private TextField txt_ns, txt_ne, txt_nw;
 
     // Eastbound controls
     @FXML private ChoiceBox<Integer> eb_lanes;
     @FXML private CheckBox e_buslane;
-    @FXML private TextField txt_en, txt_ee, txt_es;
+    @FXML private TextField txt_en, txt_ew, txt_es;
 
     // Southbound controls
     @FXML private ChoiceBox<Integer> sb_lanes;
     @FXML private CheckBox s_buslane;
-    @FXML private TextField txt_se, txt_ss, txt_sw;
+    @FXML private TextField txt_se, txt_sn, txt_sw;
 
     // Westbound controls
     @FXML private ChoiceBox<Integer> wb_lanes;
     @FXML private CheckBox w_buslane;
-    @FXML private TextField txt_wn, txt_ws, txt_ww;
+    @FXML private TextField txt_wn, txt_ws, txt_we;
 
     // Pedestrian crossing controls
     @FXML private CheckBox pc_enabled;
@@ -79,6 +77,9 @@ public class PrimaryController {
 
         simList.setCellFactory(param -> new SimulationCellFactory(simulationManager, this));
         simList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        RestrictTextFields();
+
 
         // Select the first listcell after it has been created (after the initialize function finishes)
         selectedIndex = 0;
@@ -199,10 +200,10 @@ public class PrimaryController {
         boolean west_right_turn = sim.getWest_south_vph() > 0;
 
         DynamicComponents.roads = new BaseRoad[] {
-                new BaseRoad(10, new double[] {sim.getNorth_north_vph(), sim.getNorth_east_vph(), 0, sim.getNorth_west_vph()}, 4, Cardinal.N, north_left_turn, north_right_turn),
-                new BaseRoad(10, new double[] {sim.getEast_north_vph(), sim.getEast_east_vph(),sim.getEast_south_vph(), 0}, 2, Cardinal.E, east_left_turn, east_right_turn),
-                new BaseRoad(10, new double[] {0,sim.getSouth_east_vph(), sim.getSouth_south_vph(), sim.getSouth_west_vph()}, 1, Cardinal.S, south_left_turn, south_right_turn),
-                new BaseRoad(10, new double[] {sim.getWest_north_vph(),0,sim.getWest_south_vph(), sim.getWest_west_vph()}, 2, Cardinal.W, west_left_turn, west_right_turn),
+                new BaseRoad(10, new double[] {0, sim.getNorth_east_vph(), sim.getNorth_south_vph(), sim.getNorth_west_vph()}, 4, Cardinal.N, north_left_turn, north_right_turn),
+                new BaseRoad(10, new double[] {sim.getEast_north_vph(), 0,sim.getEast_south_vph(), sim.getEast_west_vph()}, 2, Cardinal.E, east_left_turn, east_right_turn),
+                new BaseRoad(10, new double[] {sim.getSouth_north_vph(), sim.getSouth_east_vph(), 0, sim.getSouth_west_vph()}, 1, Cardinal.S, south_left_turn, south_right_turn),
+                new BaseRoad(10, new double[] {sim.getWest_north_vph(), sim.getWest_east_vph(), sim.getWest_south_vph(), 0}, 2, Cardinal.W, west_left_turn, west_right_turn),
         };
 
         DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
@@ -285,18 +286,18 @@ public class PrimaryController {
             selectedCell.setStyle("");
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setNumberParameters(
-                    Integer.valueOf(txt_nn.getText()),
+                    Integer.valueOf(txt_ns.getText()),
                     Integer.valueOf(txt_ne.getText()),
                     Integer.valueOf(txt_nw.getText()),
                     Integer.valueOf(txt_en.getText()),
-                    Integer.valueOf(txt_ee.getText()),
+                    Integer.valueOf(txt_ew.getText()),
                     Integer.valueOf(txt_es.getText()),
                     Integer.valueOf(txt_se.getText()),
-                    Integer.valueOf(txt_ss.getText()),
+                    Integer.valueOf(txt_sn.getText()),
                     Integer.valueOf(txt_sw.getText()),
                     Integer.valueOf(txt_wn.getText()),
                     Integer.valueOf(txt_ws.getText()),
-                    Integer.valueOf(txt_ww.getText()),
+                    Integer.valueOf(txt_we.getText()),
                     Integer.valueOf(crossing_duration.getText()),
                     Integer.valueOf(crossing_requests.getText())
             );
@@ -380,9 +381,9 @@ public class PrimaryController {
             resetSimulationUI();
         });
 
-        txt_nn.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        txt_ns.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) { // When focus is lost
-                updateSimulationValue(txt_nn, selectedSim -> selectedSim.setNorth_north_vph(parseInt(txt_nn.getText())));
+                updateSimulationValue(txt_ns, selectedSim -> selectedSim.setNorth_south_vph(parseInt(txt_ns.getText())));
             }
         });
 
@@ -404,9 +405,9 @@ public class PrimaryController {
             }
         });
 
-        txt_ee.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        txt_ew.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                updateSimulationValue(txt_ee, selectedSim -> selectedSim.setEast_east_vph(parseInt(txt_ee.getText())));
+                updateSimulationValue(txt_ew, selectedSim -> selectedSim.setEast_west_vph(parseInt(txt_ew.getText())));
             }
         });
 
@@ -422,9 +423,9 @@ public class PrimaryController {
             }
         });
 
-        txt_ss.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        txt_sn.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                updateSimulationValue(txt_ss, selectedSim -> selectedSim.setSouth_south_vph(parseInt(txt_ss.getText())));
+                updateSimulationValue(txt_sn, selectedSim -> selectedSim.setSouth_north_vph(parseInt(txt_sn.getText())));
             }
         });
 
@@ -446,9 +447,9 @@ public class PrimaryController {
             }
         });
 
-        txt_ww.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        txt_we.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                updateSimulationValue(txt_ww, selectedSim -> selectedSim.setWest_west_vph(parseInt(txt_ww.getText())));
+                updateSimulationValue(txt_we, selectedSim -> selectedSim.setWest_east_vph(parseInt(txt_we.getText())));
             }
         });
     }
@@ -477,27 +478,27 @@ public class PrimaryController {
 
         nb_lanes.setValue(selectedSim.getNorth_num_lanes());
         n_buslane.setSelected(selectedSim.getNorth_bus_lane());
-        txt_nn.setText(selectedSim.getNorth_north_vph().toString());
+        txt_ns.setText(selectedSim.getNorth_south_vph().toString());
         txt_ne.setText(selectedSim.getNorth_east_vph().toString());
         txt_nw.setText(selectedSim.getNorth_west_vph().toString());
 
         eb_lanes.setValue(selectedSim.getEast_num_lanes());
         e_buslane.setSelected(selectedSim.getEast_bus_lane());
-        txt_ee.setText(selectedSim.getEast_east_vph().toString());
+        txt_ew.setText(selectedSim.getEast_west_vph().toString());
         txt_en.setText(selectedSim.getEast_north_vph().toString());
         txt_es.setText(selectedSim.getEast_south_vph().toString());
 
         sb_lanes.setValue(selectedSim.getSouth_num_lanes());
         s_buslane.setSelected(selectedSim.getSouth_bus_lane());
         txt_se.setText(selectedSim.getSouth_east_vph().toString());
-        txt_ss.setText(selectedSim.getSouth_south_vph().toString());
+        txt_sn.setText(selectedSim.getSouth_north_vph().toString());
         txt_sw.setText(selectedSim.getSouth_west_vph().toString());
 
         wb_lanes.setValue(selectedSim.getWest_num_lanes());
         w_buslane.setSelected(selectedSim.getWest_bus_lane());
         txt_wn.setText(selectedSim.getWest_north_vph().toString());
         txt_ws.setText(selectedSim.getWest_south_vph().toString());
-        txt_ww.setText(selectedSim.getWest_west_vph().toString());
+        txt_we.setText(selectedSim.getWest_east_vph().toString());
 
         pc_enabled.setSelected(selectedSim.getPedestrian_crossings());
         togglePedestrianInputs(pc_enabled.isSelected());
@@ -562,10 +563,10 @@ public class PrimaryController {
         sim_anchor.getChildren().clear();
         Simulation sim = getSelectedCell().getItem();
 
-        float[] vph_1 = new float[] {sim.getNorth_north_vph().floatValue(), sim.getNorth_east_vph().floatValue(), 0, sim.getNorth_west_vph().floatValue()};
-        float[] vph_2 = new float[] {sim.getEast_north_vph().floatValue(), sim.getEast_east_vph().floatValue(), sim.getEast_south_vph().floatValue(), 0};
-        float[] vph_3 = new float[] {0, sim.getSouth_east_vph().floatValue(), sim.getSouth_south_vph().floatValue(), sim.getSouth_west_vph().floatValue()};
-        float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), 0, sim.getWest_south_vph().floatValue(), sim.getWest_west_vph().floatValue()};
+        float[] vph_1 = new float[] {0, sim.getNorth_east_vph().floatValue(), sim.getNorth_south_vph().floatValue(), sim.getNorth_west_vph().floatValue()};
+        float[] vph_2 = new float[] {sim.getEast_north_vph().floatValue(), 0, sim.getEast_south_vph().floatValue(), sim.getEast_west_vph().floatValue()};
+        float[] vph_3 = new float[] {sim.getSouth_north_vph().floatValue(), sim.getSouth_east_vph().floatValue(), 0, sim.getSouth_west_vph().floatValue()};
+        float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), sim.getWest_east_vph().floatValue(), sim.getWest_south_vph().floatValue(), 0};
 
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
         boolean north_right_turn = sim.getNorth_west_vph() > 0;
@@ -614,5 +615,30 @@ public class PrimaryController {
     private void SetToPauseMode() {
         run_button.setDisable(false);
         pause_button.setDisable(true);
+    }
+
+    private void RestrictTextFields() {
+
+        InputValidator.restrictToNumbers(txt_ns, 3657);
+        InputValidator.restrictToNumbers(txt_ne, 3657);
+        InputValidator.restrictToNumbers(txt_nw, 3657);
+
+
+        InputValidator.restrictToNumbers(txt_en, 3657);
+        InputValidator.restrictToNumbers(txt_ew, 3657);
+        InputValidator.restrictToNumbers(txt_es, 3657);
+
+        InputValidator.restrictToNumbers(txt_se, 3657);
+        InputValidator.restrictToNumbers(txt_sw, 3657);
+        InputValidator.restrictToNumbers(txt_sn, 3657);
+
+        InputValidator.restrictToNumbers(txt_wn, 3657);
+        InputValidator.restrictToNumbers(txt_ws, 3657);
+        InputValidator.restrictToNumbers(txt_we, 3657);
+
+        InputValidator.restrictToNumbers(crossing_duration, 3657);
+        InputValidator.restrictToNumbers(crossing_duration, 3657);
+
+
     }
 }

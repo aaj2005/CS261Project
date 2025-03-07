@@ -1,22 +1,17 @@
-/* @font-face {
-    font-family: "IstokWeb";
-    src: url("fonts/IstokWeb-Regular.ttf");
+/* Ensures padding inside the tab */
+.tab {
+    -fx-padding: 10 30 10 30; /* Top Right Bottom Left */
 }
 
-@font-face {
-    font-family: "IstokWeb-Bold";
-    src: url("fonts/IstokWeb-Bold.ttf");
-} */
-
-.tab {
-    -fx-padding: 10px 30px;  /* Top/Bottom padding = 10px, Left/Right padding = 30px */
-    -fx-min-width: 600px;  /* Minimum width of each tab */
+/* Controls the width of each tab */
+.tab-header-area .tab {
+    -fx-min-width: 150px; /* Minimum width */
+    -fx-pref-width: 300px; /* Preferred width */
 }
 
 .list-cell:empty {
     -fx-background-color: white;
 }
-
 
 /* Typography hierarchy */
 
@@ -87,9 +82,9 @@
 
 /* Override selected styling for the "New Simulation" cell */
 .list-cell.new-simulation:selected {
-    -fx-background-color: white;  /* or any color you prefer */
-    -fx-text-fill: black;         /* reset text color */
-    -fx-font-weight: normal;      /* reset font weight */
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
 }
 
 
