@@ -115,7 +115,8 @@ public class PrimaryController {
                 false, false,
                 false,false,
                 false, false,
-                new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}
+                new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0},
+                0,0
         );
 
         // Attach sim UI to the anchor frame
@@ -595,6 +596,9 @@ public class PrimaryController {
         boolean west_left_turn = sim.getWest_north_vph() > 0;
         boolean west_right_turn = sim.getWest_south_vph() > 0;
 
+        double crossing_rph = Double.valueOf(crossing_requests.getText());
+        double crossing_dur = Double.valueOf(crossing_duration.getText());
+
         simComponent = new SimulationComponents(
                 sim.getNorth_num_lanes(), sim.getEast_num_lanes(), sim.getSouth_num_lanes(), sim.getWest_num_lanes(), sim.getPedestrian_crossings(),
                 north_left_turn, north_right_turn,
@@ -603,7 +607,8 @@ public class PrimaryController {
                 west_left_turn, west_right_turn,
                 sim.getNorth_bus_lane(), sim.getEast_bus_lane(),
                 sim.getSouth_bus_lane(), sim.getWest_bus_lane(),
-                vph_1, vph_2, vph_3, vph_4
+                vph_1, vph_2, vph_3, vph_4,
+                crossing_rph, crossing_dur
         );
 
         // Anchor the simulation to the anchor pane on the main UI
