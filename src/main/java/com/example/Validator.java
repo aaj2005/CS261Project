@@ -2,8 +2,10 @@ package com.example;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.text.Text;
 
-public class InputValidator {
+public class Validator {
     public static void restrictToNumbers(TextField textField, int maxValue) {
         textField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();

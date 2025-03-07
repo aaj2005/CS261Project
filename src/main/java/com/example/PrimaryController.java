@@ -182,11 +182,7 @@ public class PrimaryController {
 
 
     private void runSimulation() {
-
         SetToPlayMode();
-
-
-
         Simulation sim = getSelectedCell().getItem();
 
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
@@ -202,10 +198,14 @@ public class PrimaryController {
         boolean west_right_turn = sim.getWest_south_vph() > 0;
 
         DynamicComponents.roads = new BaseRoad[] {
-                new BaseRoad(10, new double[] {0, sim.getNorth_east_vph(), sim.getNorth_south_vph(), sim.getNorth_west_vph()}, 4, Cardinal.N, north_left_turn, north_right_turn),
-                new BaseRoad(10, new double[] {sim.getEast_north_vph(), 0,sim.getEast_south_vph(), sim.getEast_west_vph()}, 2, Cardinal.E, east_left_turn, east_right_turn),
-                new BaseRoad(10, new double[] {sim.getSouth_north_vph(), sim.getSouth_east_vph(), 0, sim.getSouth_west_vph()}, 1, Cardinal.S, south_left_turn, south_right_turn),
-                new BaseRoad(10, new double[] {sim.getWest_north_vph(), sim.getWest_east_vph(), sim.getWest_south_vph(), 0}, 2, Cardinal.W, west_left_turn, west_right_turn),
+            new BaseRoad(10, new double[] {0, sim.getNorth_east_vph(), sim.getNorth_south_vph(), sim.getNorth_west_vph()},
+            sim.getNorth_num_lanes(), Cardinal.N, north_left_turn, north_right_turn),
+            new BaseRoad(10, new double[] {sim.getEast_north_vph(), 0,sim.getEast_south_vph(), sim.getEast_west_vph()},
+            sim.getEast_num_lanes(), Cardinal.E, east_left_turn, east_right_turn),
+            new BaseRoad(10, new double[] {sim.getSouth_north_vph(), sim.getSouth_east_vph(), 0, sim.getSouth_west_vph()},
+            sim.getSouth_num_lanes(), Cardinal.S, south_left_turn, south_right_turn),
+            new BaseRoad(10, new double[] {sim.getWest_north_vph(), sim.getWest_east_vph(), sim.getWest_south_vph(), 0},
+            sim.getWest_num_lanes(), Cardinal.W, west_left_turn, west_right_turn),
         };
 
         DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
@@ -627,25 +627,31 @@ public class PrimaryController {
 
     private void RestrictTextFields() {
 
-        InputValidator.restrictToNumbers(txt_ns, 3657);
-        InputValidator.restrictToNumbers(txt_ne, 3657);
-        InputValidator.restrictToNumbers(txt_nw, 3657);
+        // Truncate title with an elipsis if its too long
+        sim_title.setTextOverrun(OverrunStyle.ELLIPSIS);
+        sim_title.setMaxWidth(400);
+        sim_title.setWrapText(false);
 
 
-        InputValidator.restrictToNumbers(txt_en, 3657);
-        InputValidator.restrictToNumbers(txt_ew, 3657);
-        InputValidator.restrictToNumbers(txt_es, 3657);
+        Validator.restrictToNumbers(txt_ns, 3657);
+        Validator.restrictToNumbers(txt_ne, 3657);
+        Validator.restrictToNumbers(txt_nw, 3657);
 
-        InputValidator.restrictToNumbers(txt_se, 3657);
-        InputValidator.restrictToNumbers(txt_sw, 3657);
-        InputValidator.restrictToNumbers(txt_sn, 3657);
 
-        InputValidator.restrictToNumbers(txt_wn, 3657);
-        InputValidator.restrictToNumbers(txt_ws, 3657);
-        InputValidator.restrictToNumbers(txt_we, 3657);
+        Validator.restrictToNumbers(txt_en, 3657);
+        Validator.restrictToNumbers(txt_ew, 3657);
+        Validator.restrictToNumbers(txt_es, 3657);
 
-        InputValidator.restrictToNumbers(crossing_duration, 3657);
-        InputValidator.restrictToNumbers(crossing_duration, 3657);
+        Validator.restrictToNumbers(txt_se, 3657);
+        Validator.restrictToNumbers(txt_sw, 3657);
+        Validator.restrictToNumbers(txt_sn, 3657);
+
+        Validator.restrictToNumbers(txt_wn, 3657);
+        Validator.restrictToNumbers(txt_ws, 3657);
+        Validator.restrictToNumbers(txt_we, 3657);
+
+        Validator.restrictToNumbers(crossing_duration, 3657);
+        Validator.restrictToNumbers(crossing_duration, 3657);
 
 
     }
