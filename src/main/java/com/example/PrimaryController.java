@@ -227,27 +227,27 @@ public class PrimaryController {
             Stats westResult = sc4.run();
 
             // Set result data
-            Double[] avgWaitTime = {northResult.getAverageWaitTime(), eastResult.getAverageWaitTime(), southResult.getAverageWaitTime(), westResult.getAverageWaitTime()};
-            Double[] maxWaitTime = {northResult.getMaxWaitTime(), eastResult.getMaxWaitTime(), southResult.getMaxWaitTime(), westResult.getMaxWaitTime()};
+            Double[] maxWaitTime = {northResult.getAverageWaitTime(), eastResult.getAverageWaitTime(), southResult.getAverageWaitTime(), westResult.getAverageWaitTime()};
+            Double[] avgWaitTime = {northResult.getMaxWaitTime(), eastResult.getMaxWaitTime(), southResult.getMaxWaitTime(), westResult.getMaxWaitTime()};
             Double[] maxQueueLength = {northResult.getMaxQueueLength(), eastResult.getMaxQueueLength(), southResult.getMaxQueueLength(), westResult.getMaxQueueLength()};
             SimulationData results = new SimulationData(getSelectedCell().getItem().getSimName(), avgWaitTime, maxWaitTime, maxQueueLength, (northResult.getOverallScore() + eastResult.getOverallScore() + southResult.getOverallScore() + westResult.getOverallScore())/4.0);
             getSelectedCell().getItem().setResultsData(results);
 
             // Set all the result values on UI
-            avg_wait_north.setText("Exiting North: " + String.format("%.2f", avgWaitTime[0]));
-            avg_wait_east.setText("Exiting East: " + String.format("%.2f", avgWaitTime[1]));
-            avg_wait_south.setText("Exiting South: " + String.format("%.2f", avgWaitTime[2]));
-            avg_wait_west.setText("Exiting West: " + String.format("%.2f", avgWaitTime[3]));
+            avg_wait_north.setText("Exiting South: " + String.format("%.2f", avgWaitTime[0]));
+            avg_wait_east.setText("Exiting West: " + String.format("%.2f", avgWaitTime[1]));
+            avg_wait_south.setText("Exiting North: " + String.format("%.2f", avgWaitTime[2]));
+            avg_wait_west.setText("Exiting East: " + String.format("%.2f", avgWaitTime[3]));
 
-            max_wait_north.setText("Exiting North: " + String.format("%.2f", maxWaitTime[0]));
-            max_wait_east.setText("Exiting East: " + String.format("%.2f", maxWaitTime[1]));
-            max_wait_south.setText("Exiting South: " + String.format("%.2f", maxWaitTime[2]));
-            max_wait_west.setText("Exiting West: " + String.format("%.2f", maxWaitTime[3]));
+            max_wait_north.setText("Exiting South: " + String.format("%.2f", maxWaitTime[0]));
+            max_wait_east.setText("Exiting West: " + String.format("%.2f", maxWaitTime[1]));
+            max_wait_south.setText("Exiting North: " + String.format("%.2f", maxWaitTime[2]));
+            max_wait_west.setText("Exiting East: " + String.format("%.2f", maxWaitTime[3]));
 
-            max_queue_north.setText("North: " + String.format("%.2f", maxQueueLength[0]));
-            max_queue_east.setText("East: " + String.format("%.2f", maxQueueLength[1]));
-            max_queue_south.setText("South: " + String.format("%.2f", maxQueueLength[2]));
-            max_queue_west.setText("West: " + String.format("%.2f", maxQueueLength[3]));
+            max_queue_north.setText("North: " + String.format("%.0f", maxQueueLength[0]));
+            max_queue_east.setText("East: " + String.format("%.0f", maxQueueLength[1]));
+            max_queue_south.setText("South: " + String.format("%.0f", maxQueueLength[2]));
+            max_queue_west.setText("West: " + String.format("%.0f", maxQueueLength[3]));
 
             junc_score.setText(String.format("%.2f", northResult.getOverallScore()));
 

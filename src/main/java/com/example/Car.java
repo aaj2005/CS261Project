@@ -11,8 +11,8 @@ public class Car extends Vehicle{
     // car static properties
     public static final ImagePattern car_texture_ver = new ImagePattern(new Image("car2dtopviewver.png"));
     public static final ImagePattern car_texture_hor = new ImagePattern(new Image("car2dtopviewhor.png"));
-    public static final double CAR_WIDTH = 12;
-    public static final double CAR_HEIGHT = 29.06;
+    public static final double CAR_WIDTH = 18;
+    public static final double CAR_HEIGHT = 43.6;
 
     // used for determining the direction the car will travel to
     private Cardinal dir;

@@ -44,6 +44,7 @@ public class App extends Application {
         stage.setTitle("Traffic Simulation");
 
         stage.show();
+        stage.setFullScreen(true);
 
     }
 
