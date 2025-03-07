@@ -2,22 +2,28 @@ package com.example;
 
 public class Simulation {
     private String simName;
+
+    // North lane parameters
     private Integer north_num_lanes = 1;
     private Boolean north_bus_lane = false;
     private Integer north_south_vph = 0, north_east_vph = 0, north_west_vph = 0;
 
+    // East lane parameters
     private Integer east_num_lanes = 1;
     private Boolean east_bus_lane = false;
     private Integer east_north_vph = 0, east_west_vph = 0, east_south_vph = 0;
 
-    private Integer south_num_lanes =1;
+    // South lane parameters
+    private Integer south_num_lanes = 1;
     private Boolean south_bus_lane = false;
     private Integer south_east_vph = 0, south_north_vph = 0, south_west_vph = 0;
 
+    // West lane parameters
     private Integer west_num_lanes = 1;
     private Boolean west_bus_lane = false;
     private Integer west_north_vph = 0, west_south_vph = 0, west_east_vph = 0;
 
+    // Pedestrian crossing parameters
     private Boolean pedestrian_crossings = false;
     private Integer duration_of_crossings = 0;
     private Integer requests_per_hour = 0;
@@ -60,6 +66,7 @@ public class Simulation {
         this.requests_per_hour = requests_per_hour;
     }
 
+    // Getters and setters
     public void setNorthNumLanes(Integer north_num_lanes) {
         this.north_num_lanes = north_num_lanes;
     }

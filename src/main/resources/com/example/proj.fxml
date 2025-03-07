@@ -297,77 +297,77 @@
                                                 <Font name="Istok Web Bold" size="23.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="887.0" layoutY="722.0" styleClass="bold-label" text="AVG. WAIT TIME">
+                                          <Label layoutX="887.0" layoutY="746.0" styleClass="bold-label" text="AVG. WAIT TIME">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1084.0" layoutY="722.0" styleClass="bold-label" text="MAX WAIT TIME">
+                                          <Label layoutX="1084.0" layoutY="746.0" styleClass="bold-label" text="MAX WAIT TIME">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="1285.0" layoutY="722.0" styleClass="bold-label" text="MAX QUEUE">
+                                          <Label layoutX="1285.0" layoutY="746.0" styleClass="bold-label" text="MAX QUEUE">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="avg_wait_north" layoutX="887.0" layoutY="758.0" styleClass="input-label" text="Exiting North:">
+                                          <Label fx:id="avg_wait_north" layoutX="887.0" layoutY="767.0" styleClass="input-label" text="Exiting North:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="avg_wait_east" layoutX="887.0" layoutY="784.0" styleClass="input-label" text="Exiting East:">
+                                          <Label fx:id="avg_wait_east" layoutX="887.0" layoutY="793.0" styleClass="input-label" text="Exiting East:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="avg_wait_west" layoutX="887.0" layoutY="838.0" styleClass="input-label" text="Exiting West:">
+                                          <Label fx:id="avg_wait_west" layoutX="887.0" layoutY="847.0" styleClass="input-label" text="Exiting West:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="avg_wait_south" layoutX="887.0" layoutY="811.0" styleClass="input-label" text="Exiting South:">
+                                          <Label fx:id="avg_wait_south" layoutX="887.0" layoutY="820.0" styleClass="input-label" text="Exiting South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_wait_north" layoutX="1084.0" layoutY="759.0" styleClass="input-label" text="Exiting North:">
+                                          <Label fx:id="max_wait_north" layoutX="1084.0" layoutY="768.0" styleClass="input-label" text="Exiting North:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_wait_east" layoutX="1084.0" layoutY="785.0" styleClass="input-label" text="Exiting East:">
+                                          <Label fx:id="max_wait_east" layoutX="1084.0" layoutY="794.0" styleClass="input-label" text="Exiting East:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_wait_west" layoutX="1084.0" layoutY="839.0" styleClass="input-label" text="Exiting West:">
+                                          <Label fx:id="max_wait_west" layoutX="1084.0" layoutY="848.0" styleClass="input-label" text="Exiting West:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_wait_south" layoutX="1084.0" layoutY="812.0" styleClass="input-label" text="Exiting South:">
+                                          <Label fx:id="max_wait_south" layoutX="1084.0" layoutY="821.0" styleClass="input-label" text="Exiting South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_queue_north" layoutX="1286.0" layoutY="759.0" styleClass="input-label" text="North:">
+                                          <Label fx:id="max_queue_north" layoutX="1286.0" layoutY="768.0" styleClass="input-label" text="North:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_queue_east" layoutX="1286.0" layoutY="785.0" styleClass="input-label" text="East:">
+                                          <Label fx:id="max_queue_east" layoutX="1286.0" layoutY="794.0" styleClass="input-label" text="East:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_queue_west" layoutX="1286.0" layoutY="839.0" styleClass="input-label" text="West:">
+                                          <Label fx:id="max_queue_west" layoutX="1286.0" layoutY="848.0" styleClass="input-label" text="West:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="max_queue_south" layoutX="1286.0" layoutY="812.0" styleClass="input-label" text="South:">
+                                          <Label fx:id="max_queue_south" layoutX="1286.0" layoutY="821.0" styleClass="input-label" text="South:">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
@@ -381,6 +381,16 @@
                                                 <String fx:value="pause-button" />
                                              </styleClass>
                                           </Button>
+                                          <Label layoutX="887.0" layoutY="716.0" styleClass="bold-label" text="JUNCTION SCORE">
+                                             <font>
+                                                <Font name="Istok Web Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="junc_score" layoutX="1055.0" layoutY="716.0" styleClass="input-label">
+                                             <font>
+                                                <Font name="Istok Web Regular" size="18.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                  </center>

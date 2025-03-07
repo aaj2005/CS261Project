@@ -60,6 +60,8 @@ public class PrimaryController {
     @FXML private Label max_queue_south;
     @FXML private Label max_queue_west;
 
+    @FXML private Label junc_score;
+
 
     @FXML private AnchorPane sim_anchor;
 
@@ -250,6 +252,8 @@ public class PrimaryController {
             max_queue_east.setText("East: " + String.format("%.2f", maxQueueLength[1]));
             max_queue_south.setText("South: " + String.format("%.2f", maxQueueLength[2]));
             max_queue_west.setText("West: " + String.format("%.2f", maxQueueLength[3]));
+
+            junc_score.setText(String.format("%.2f", northResult.getOverallScore()));
 
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -524,6 +528,8 @@ public class PrimaryController {
             max_queue_south.setText("South: " + String.format("%.2f", results.getMaxQueueLength()[2]));
             max_queue_west.setText("West: " + String.format("%.2f", results.getMaxQueueLength()[3]));
 
+            junc_score.setText(String.format("%.2f", results.getScore()));
+
         } else {
             // Load empty vals
             avg_wait_north.setText("Exiting North:");
@@ -540,6 +546,8 @@ public class PrimaryController {
             max_queue_east.setText("East:");
             max_queue_south.setText("South:");
             max_queue_west.setText("West:");
+
+            junc_score.setText("");
         }
     }
 
