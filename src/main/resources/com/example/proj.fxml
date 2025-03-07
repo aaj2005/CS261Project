@@ -137,12 +137,12 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="85.0" layoutY="194.0" styleClass="input-label" text="Exiting North">
+                                          <Label layoutX="85.0" layoutY="194.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="85.0" layoutY="224.0" styleClass="input-label" text="Exiting East">
+                                          <Label layoutX="85.0" layoutY="224.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
@@ -152,8 +152,8 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_nn" layoutX="217.0" layoutY="196.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_ne" layoutX="217.0" layoutY="225.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ne" layoutX="217.0" layoutY="196.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ns" layoutX="217.0" layoutY="225.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <TextField fx:id="txt_nw" layoutX="217.0" layoutY="255.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="384.0" layoutY="110.0" styleClass="bold-label" text="EAST JUNCTION ARM">
                                              <font>
@@ -177,19 +177,19 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="384.0" layoutY="224.0" styleClass="input-label" text="Exiting East">
+                                          <Label layoutX="384.0" layoutY="224.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="384.0" layoutY="253.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="384.0" layoutY="253.0" styleClass="input-label" text="Exiting West">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
                                           <TextField fx:id="txt_en" layoutX="517.0" layoutY="196.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_ee" layoutX="516.0" layoutY="225.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_es" layoutX="515.0" layoutY="255.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_es" layoutX="516.0" layoutY="225.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ew" layoutX="515.0" layoutY="255.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="85.0" layoutY="343.0" styleClass="bold-label" text="SOUTH JUNCTION ARM">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
@@ -207,12 +207,12 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="85.0" layoutY="427.0" styleClass="input-label" text="Exiting East">
+                                          <Label layoutX="85.0" layoutY="427.0" styleClass="input-label" text="Exiting North">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="85.0" layoutY="457.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="85.0" layoutY="457.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
@@ -222,8 +222,8 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txt_se" layoutX="218.0" layoutY="429.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_ss" layoutX="218.0" layoutY="458.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_sn" layoutX="218.0" layoutY="429.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_se" layoutX="218.0" layoutY="458.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <TextField fx:id="txt_sw" layoutX="218.0" layoutY="488.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Label layoutX="384.0" layoutY="343.0" styleClass="bold-label" text="WEST JUNCTION ARM">
                                              <font>
@@ -247,19 +247,19 @@
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="385.0" layoutY="457.0" styleClass="input-label" text="Exiting South">
+                                          <Label layoutX="385.0" layoutY="457.0" styleClass="input-label" text="Exiting East">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="385.0" layoutY="486.0" styleClass="input-label" text="Exiting West">
+                                          <Label layoutX="385.0" layoutY="486.0" styleClass="input-label" text="Exiting South">
                                              <font>
                                                 <Font name="Istok Web Regular" size="18.0" />
                                              </font>
                                           </Label>
                                           <TextField fx:id="txt_wn" layoutX="517.0" layoutY="429.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_ws" layoutX="517.0" layoutY="458.0" prefHeight="26.0" prefWidth="83.0" text="0" />
-                                          <TextField fx:id="txt_ww" layoutX="517.0" layoutY="488.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_we" layoutX="517.0" layoutY="458.0" prefHeight="26.0" prefWidth="83.0" text="0" />
+                                          <TextField fx:id="txt_ws" layoutX="517.0" layoutY="488.0" prefHeight="26.0" prefWidth="83.0" text="0" />
                                           <Button fx:id="run_button" layoutX="165.0" layoutY="781.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="219.0" text="RUN SIMULATION">
                                              <font>
                                                 <Font name="Istok Web Bold" size="18.0" />
