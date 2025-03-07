@@ -10,7 +10,6 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.function.Consumer;
 
-
 public class PrimaryController {
     @FXML private ListView<Simulation> simList;
     @FXML private AnchorPane graphContainer;
@@ -62,9 +61,7 @@ public class PrimaryController {
 
     @FXML private Label junc_score;
 
-
     @FXML private AnchorPane sim_anchor;
-
 
     private SimulationManager simulationManager;
     private int selectedIndex = -1;
@@ -72,8 +69,11 @@ public class PrimaryController {
 
     @FXML
     public void initialize() {
+
+
         simulationManager = new SimulationManager(simList.getItems());
 
+        // Add the starting two simulation list items
         simList.getItems().add(new Simulation("Simulation 1"));
         simList.getItems().add(new Simulation("New Simulation"));
 
@@ -82,8 +82,7 @@ public class PrimaryController {
 
         RestrictTextFields();
 
-
-        // Select the first listcell after it has been created (after the initialize function finishes)
+        // Select the first listcell after it has been created
         selectedIndex = 0;
         if (!simList.getItems().isEmpty()) {
             simList.getSelectionModel().select(0);
@@ -92,29 +91,22 @@ public class PrimaryController {
         simList.getSelectionModel().select(0);
         simList.requestFocus();
         simList.refresh();
-//        Platform.runLater(() -> {
-//            Simulation sim = simList.getItems().get(0);
-//
-//            if (!simList.getItems().isEmpty()) {
-//                simList.getSelectionModel().select(0);
-//                simList.requestFocus();
-//            }
-//        });
 
         // Trigger the metrics tab to load the simulation data
         metricsTab.setOnSelectionChanged(event -> {
             if (metricsTab.isSelected()) loadSimulationData();
         });
 
+        // Set the valid options fo the choice boxes
         initialise_choiceboxes();
 
-        // Set listens for inputs that change UI configuration (i.e. number of lanes)
+        // Set listeners for inputs that change UI configuration (i.e. number of lanes)
         setDynamicListeners();
         run_button.setOnAction(event -> runSimulation());
-        pause_button.setOnAction(event -> pauseSimulation());
+        pause_button.setOnAction(event -> stopSimulation());
         pause_button.setDisable(true);
 
-        // Create the sim UI component
+        // Create the sim UI component with default values
         simComponent = new SimulationComponents(
                 1,1,1,1, false,
                 false, false,
@@ -126,6 +118,7 @@ public class PrimaryController {
                 new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}, new float[] {0,0,0,0}
         );
 
+        // Attach sim UI to the anchor frame
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);
 
@@ -137,17 +130,17 @@ public class PrimaryController {
 
     }
 
-    private void pauseSimulation() {
-        stopSimulation();
-    }
-
     private void togglePedestrianInputs(boolean enabled) {
+        // Enable or disable the labels and text inputs
         lbl_duration.setDisable(!enabled);
         lbl_requests.setDisable(!enabled);
         crossing_duration.setDisable(!enabled);
         crossing_requests.setDisable(!enabled);
     }
 
+    /*
+    * Gets all the results data from each simulation and renders it in the graph container for the metrics tab
+    */
     private void loadSimulationData() {
         ObservableList<Simulation> simulations = simList.getItems();
 
@@ -164,7 +157,7 @@ public class PrimaryController {
         SimulationData[] runs = new SimulationData[validCount];
         int index = 0;
 
-        // Fill the runs array with non-null SimulationData objects
+        // Fill the array with non-null SimulationData objects
         for (Simulation simulation : simulations) {
             SimulationData data = simulation.getResultsData();
             if (data != null) {
@@ -172,6 +165,7 @@ public class PrimaryController {
             }
         }
 
+        // Create the graphs
         VBox graph = Graph.createGraph(runs);
         graphContainer.setTopAnchor(graph, 0.0);
         graphContainer.setBottomAnchor(graph, 0.0);
@@ -185,6 +179,7 @@ public class PrimaryController {
         SetToPlayMode();
         Simulation sim = getSelectedCell().getItem();
 
+        // Calculate where the left and right turn lanes are needed
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
         boolean north_right_turn = sim.getNorth_west_vph() > 0;
 
@@ -197,6 +192,7 @@ public class PrimaryController {
         boolean west_left_turn = sim.getWest_north_vph() > 0;
         boolean west_right_turn = sim.getWest_south_vph() > 0;
 
+        // Load values into the config for the stats calculation
         DynamicComponents.roads = new BaseRoad[] {
             new BaseRoad(10, new double[] {0, sim.getNorth_east_vph(), sim.getNorth_south_vph(), sim.getNorth_west_vph()},
             sim.getNorth_num_lanes(), Cardinal.N, north_left_turn, north_right_turn),
@@ -214,19 +210,19 @@ public class PrimaryController {
             StatRoad[] roads = new StatRoad[4];
             for (int i=0; i<4; i++) { roads[i] = new StatRoad(DynamicComponents.roads[i]); }
 
-            // North
+            // North lane calculation
             StatCalculator sc1 = new StatCalculator(roads, 0);
             Stats northResult = sc1.run();
 
-            // East
+            // East lane calculation
             StatCalculator sc2 = new StatCalculator(roads, 1);
             Stats eastResult = sc2.run();
 
-            // South
+            // South lane calculation
             StatCalculator sc3 = new StatCalculator(roads, 2);
             Stats southResult = sc3.run();
 
-            // West
+            // West lane calculation
             StatCalculator sc4 = new StatCalculator(roads, 3);
             Stats westResult = sc4.run();
 
@@ -256,7 +252,7 @@ public class PrimaryController {
             junc_score.setText(String.format("%.2f", northResult.getOverallScore()));
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // Show a warning alert if the input parameters for the stats functions aren't valid
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Input Parameters Error");
             alert.setHeaderText(null);
@@ -266,9 +262,7 @@ public class PrimaryController {
             return;
         }
 
-
         simComponent.start_simulation();
-
     }
 
     public void stopSimulation() {
@@ -331,13 +325,18 @@ public class PrimaryController {
         System.out.println("Selected cell: " + (selectedCell != null ? selectedCell.getIndex() : "None"));
     }
 
-
+    /*
+     * Utility function to simplify getting the current selected list cell
+     */
     public ListCell<Simulation> getSelectedCell() {
         return getCellByIndex(selectedIndex);
     }
 
+    /*
+     * Sets up listeners for input parameters that change the UI configuration (i.e. number of lanes)
+     */
     public void setDynamicListeners() {
-        // Sets up listeners for input parameters that change the UI configuration (i.e. number of lanes)
+
         nb_lanes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             Simulation selectedSim = getSelectedCell().getItem();
             selectedSim.setNorthNumLanes(newVal);
@@ -476,7 +475,9 @@ public class PrimaryController {
         }
     }
 
-
+    /*
+     * Load the values from the simulation object in the UI elements, when switching between simulations
+     */
     public void loadParameterValues(Simulation selectedSim) {
         sim_title.setText(selectedSim.getSimName().toUpperCase());
 
@@ -510,7 +511,7 @@ public class PrimaryController {
         crossing_duration.setText(selectedSim.getDuration_of_crossings().toString());
         crossing_requests.setText(selectedSim.getRequests_per_hour().toString());
 
-        // Load results
+        // Load results if the simulation has been previously run
         SimulationData results = selectedSim.getResultsData();
         if (results != null) {
             avg_wait_north.setText("Exiting North: " + String.format("%.2f", results.getAvgWaitTime()[0]));
@@ -531,7 +532,7 @@ public class PrimaryController {
             junc_score.setText(String.format("%.2f", results.getScore()));
 
         } else {
-            // Load empty vals
+            // Otherwise, clear the results labels to make sure they are empty
             avg_wait_north.setText("Exiting North:");
             avg_wait_east.setText("Exiting East:");
             avg_wait_south.setText("Exiting South:");
@@ -551,6 +552,9 @@ public class PrimaryController {
         }
     }
 
+    /*
+     * Sets the valid options and starting values for the lane number choice boxes
+     */
     public void initialise_choiceboxes() {
         nb_lanes.getItems().addAll(1,2,3,4,5);
         nb_lanes.setValue(1);
@@ -566,7 +570,9 @@ public class PrimaryController {
         return sim_title;
     }
 
-
+    /*
+     * Reinitialise the simulation UI component when changing between simulations or changing parameters
+     */
     public void resetSimulationUI() {
         sim_anchor.getChildren().clear();
         Simulation sim = getSelectedCell().getItem();
@@ -576,6 +582,7 @@ public class PrimaryController {
         float[] vph_3 = new float[] {sim.getSouth_north_vph().floatValue(), sim.getSouth_east_vph().floatValue(), 0, sim.getSouth_west_vph().floatValue()};
         float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), sim.getWest_east_vph().floatValue(), sim.getWest_south_vph().floatValue(), 0};
 
+        // Calculate whether left and right turn lanes are needed
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
         boolean north_right_turn = sim.getNorth_west_vph() > 0;
 
@@ -598,6 +605,8 @@ public class PrimaryController {
                 sim.getSouth_bus_lane(), sim.getWest_bus_lane(),
                 vph_1, vph_2, vph_3, vph_4
         );
+
+        // Anchor the simulation to the anchor pane on the main UI
         AnchorPane childPane = simComponent.getRoot();
         sim_anchor.getChildren().add(childPane);
         SetToPauseMode();
@@ -625,18 +634,20 @@ public class PrimaryController {
         pause_button.setDisable(true);
     }
 
+    /*
+     * Add input validation to the text fields in the main UI
+     */
     private void RestrictTextFields() {
 
-        // Truncate title with an elipsis if its too long
+        // Truncate simulation title with an ellipsis if it's too long
         sim_title.setTextOverrun(OverrunStyle.ELLIPSIS);
         sim_title.setMaxWidth(400);
         sim_title.setWrapText(false);
 
-
+        // Restrict all the text fields
         Validator.restrictToNumbers(txt_ns, 3657);
         Validator.restrictToNumbers(txt_ne, 3657);
         Validator.restrictToNumbers(txt_nw, 3657);
-
 
         Validator.restrictToNumbers(txt_en, 3657);
         Validator.restrictToNumbers(txt_ew, 3657);
@@ -652,7 +663,5 @@ public class PrimaryController {
 
         Validator.restrictToNumbers(crossing_duration, 3657);
         Validator.restrictToNumbers(crossing_duration, 3657);
-
-
     }
 }

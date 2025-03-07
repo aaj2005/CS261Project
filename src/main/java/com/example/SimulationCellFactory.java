@@ -17,6 +17,9 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         this.controller = controller;
     }
 
+    /*
+     * Handles when cell items in the simulation list are updated on the main UI
+     */
     @Override
     protected void updateItem(Simulation item, boolean empty) {
         super.updateItem(item, empty);
@@ -54,13 +57,16 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         });
     }
 
+    /*
+     * Creates a simulation item that's used to add new simulations. Contains a button with callback function to populate list with new items
+     */
     private HBox createNewSimulationCell() {
+        // Create elements and style them
         HBox hbox = new HBox(10);
         hbox.setPrefHeight(40);
         hbox.setAlignment(Pos.CENTER_LEFT);
 
         Text titleText = new Text("New Simulation");
-
         VBox textContainer = new VBox(titleText);
         textContainer.setAlignment(Pos.CENTER_LEFT);
 
@@ -82,7 +88,11 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         return hbox;
     }
 
+    /*
+     * Creates normal simulation items, with buttons for deleting and renaming
+     */
     private HBox createRegularSimulationCell(Simulation item) {
+        // Create elements and style them
         HBox hbox = new HBox(10);
         hbox.setPrefHeight(75);
         hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px;");
@@ -92,16 +102,18 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // Rename button with styling
         Button renameButton = new Button();
         FontIcon renameIcon = new FontIcon(FontAwesomeSolid.PENCIL_ALT);
-        renameIcon.setIconSize(30);  // Set size
+        renameIcon.setIconSize(30);
         renameIcon.setIconColor(Color.WHITE);
         renameButton.setGraphic(renameIcon);
         renameButton.getStyleClass().add("button-rename");
 
+        // Delete button with styling
         Button deleteButton = new Button();
         FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
-        deleteIcon.setIconSize(30);  // Set size
+        deleteIcon.setIconSize(30);
         deleteIcon.setIconColor(Color.WHITE);
         deleteButton.setGraphic(deleteIcon);
         deleteButton.getStyleClass().add("button-delete");
@@ -109,9 +121,11 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         renameButton.setVisible(false);
         deleteButton.setVisible(false);
 
+        // Add listeners to only show the buttons when the mouse hovers on the simulation item
         hbox.setOnMouseEntered(event -> updateButtonVisibility(renameButton, deleteButton, true));
         hbox.setOnMouseExited(event -> updateButtonVisibility(renameButton, deleteButton, false));
 
+        // Add callback function for when each button is triggerd
         deleteButton.setOnAction(event -> simulationManager.deleteSimulation(item));
         renameButton.setOnAction(event -> handleRename(item, hbox));
 
@@ -141,8 +155,13 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         renameField.requestFocus();
     }
 
+    /*
+     * Validate the renaming of a simulation item
+     */
     private void validateAndApplyRename(TextField renameField, Simulation item, HBox box) {
         String newName = renameField.getText().trim();
+
+        // Check new name isn't empty
         if (!newName.isEmpty()) {
             item.setSimName(newName);
         }

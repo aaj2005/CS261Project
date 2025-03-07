@@ -33,9 +33,11 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        // Load fonts
         Font.loadFont(getClass().getResource("fonts/IstokWeb-Regular.ttf").toExternalForm(), 18);
         Font.loadFont(getClass().getResource("fonts/IstokWeb-Bold.ttf").toExternalForm(), 18);
 
+        // Load main UI scene
         scene = new Scene(loadFXML("proj"), 1920, 1200);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
@@ -45,13 +47,9 @@ public class App extends Application {
 
     }
 
-
-
     private static  void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
-
-
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
@@ -61,6 +59,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
-
 }

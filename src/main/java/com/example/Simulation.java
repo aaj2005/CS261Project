@@ -28,12 +28,16 @@ public class Simulation {
     private Integer duration_of_crossings = 0;
     private Integer requests_per_hour = 0;
 
+    // Object to store the results of a simulation being ran
     private SimulationData resultsData;
 
     public Simulation(String simName) {
         this.simName = simName;
     }
 
+    /*
+     * Pass the input parameters into the object to store them - used when switching between simulations
+     */
     public void setNumberParameters(
             Integer north_north_vph,
             Integer north_east_vph,
@@ -105,6 +109,8 @@ public class Simulation {
 
     public void setSimName(String simName) {
         this.simName = simName;
+
+        // Update the simulation name in the results object too, if it existst
         if (resultsData != null) {
             resultsData.setName(simName);
         }

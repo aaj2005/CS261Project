@@ -12,16 +12,20 @@ public class SimulationManager {
     }
 
     public void addNewSimulation() {
+        // Check if simulation limit has been reached
         if (simList.size() - 1 >= 8) {
             showAlert("Simulation Limit Reached", "You can only have up to 8 simulations.");
             return;
         }
+
+        // Create new simulation
         int newSimPosition = simList.size() - 1;
         Simulation newSimItem = new Simulation("Simulation " + ++numSimulations);
         simList.add(newSimPosition, newSimItem);
     }
 
     public void deleteSimulation(Simulation item) {
+        // Ensure there must always be at least one simulation item
         if (simList.size() - 1 <= 1) {
             showAlert("Cannot Delete", "At least one simulation must remain.");
             return;
@@ -29,6 +33,9 @@ public class SimulationManager {
         simList.remove(item);
     }
 
+    /*
+     * Show alerts to user, used for signifying invalid input parameters
+     */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle(title);
@@ -36,5 +43,4 @@ public class SimulationManager {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
