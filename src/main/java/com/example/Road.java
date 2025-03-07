@@ -26,7 +26,8 @@ public class Road extends JunctionElement{
     // spawnRate[Direction.Up] = how frequently a car spawns on this road and is headed north
     // if cars never spawn, spawnRate[x] will be -1
     private float[] spawnFreq = new float[4];
-
+    private final double center_x;
+    private final double center_y;
     // when was the last time a car spawned?
     // a car will be spawned if some time variable > lastSpawn[x] + spawnRate[x]
     private float[] lastSpawn = new float[4];
@@ -68,10 +69,13 @@ public class Road extends JunctionElement{
             Direction direction,
             float[] vph,
             int max_lane_out,
-            Animations animations,
             boolean road_going_into_junction,
-            ArrayList<Rectangle> cars_to_remove
+            ArrayList<Rectangle> cars_to_remove,
+            double center_x,
+            double center_y
     ){
+        this.center_x = center_x;
+        this.center_y = center_y;
         light_status = false;
 
         // lane object
@@ -80,7 +84,7 @@ public class Road extends JunctionElement{
         // instantiate lane object for each lane
         this.setCardinalPos(direction);
         for (int i=0; i<lane_count;i++){
-            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,animations,road_going_into_junction,cardinal_pos));
+            lanes.add(new Lane(max_lane_out,has_pedestrian,direction,i,lane_count,corner1,corner2,road_going_into_junction,cardinal_pos, center_x, center_y));
         }
         this.direction = direction;
 
@@ -114,11 +118,12 @@ public class Road extends JunctionElement{
             boolean has_right_turn,
             boolean has_bus_lane,
             int max_lane_out,
-            Animations animations,
             boolean road_going_into_junction,
-            ArrayList<Rectangle> cars_to_remove
+            ArrayList<Rectangle> cars_to_remove,
+            double center_x,
+            double center_y
     ){
-        this(lane_count, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,animations,road_going_into_junction,cars_to_remove);
+        this(lane_count, corner1, corner2, has_pedestrian, direction, vph, max_lane_out,road_going_into_junction,cars_to_remove, center_x, center_y);
         this.has_left_turn = has_left_turn;
         this.has_right_turn = has_right_turn;
         this.has_bus_lane = has_bus_lane;
@@ -144,13 +149,13 @@ public class Road extends JunctionElement{
                 this.cardinal_pos = Cardinal.N;
                 break;
             case LEFT:
-                this.cardinal_pos = Cardinal.E;
+                this.cardinal_pos = Cardinal.W;
                 break;
             case BOTTOM:
                 this.cardinal_pos = Cardinal.S;
                 break;
             case RIGHT:
-                this.cardinal_pos = Cardinal.W;
+                this.cardinal_pos = Cardinal.E;
                 break;
         };
     }
@@ -199,9 +204,13 @@ public class Road extends JunctionElement{
 
     public Rectangle spawnCar(Cardinal dir) {
         // checks if the car will be turning left
+
         if (isLeftOf(this.cardinal_pos, dir)) {
             // if there exists a left-turn lane, that's where the car will spawn
             // assumes that the left-turn lane is 0
+            if (dir == Cardinal.S){
+                System.out.println("wubba wubba");
+            }
             if (this.has_left_turn) {
                 return this.spawn_car_in_lane(0, dir);
             }

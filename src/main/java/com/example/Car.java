@@ -16,13 +16,14 @@ public class Car extends Vehicle{
 
     // used for determining the direction the car will travel to
     private Cardinal dir;
+    private Animations animations;
 
     private final Direction direction; // origin direction of car
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
-    public Car(Direction direction, double pos_x, double pos_y, Cardinal dir){
+    public Car(Direction direction, double pos_x, double pos_y, Cardinal dir, double center_x, double center_y){
         // choose appropriate texture based on junction arm
         if (direction == Direction.TOP || direction == Direction.BOTTOM){
             shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
@@ -38,7 +39,7 @@ public class Car extends Vehicle{
         shape.setRotate(direction.getRotation());
         this.direction = direction;
         this.dir = dir;
-
+        animations = new Animations(center_x, center_y);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -60,4 +61,7 @@ public class Car extends Vehicle{
         return this.dir;
     }
 
+    public Animations getAnimations() {
+        return animations;
+    }
 }

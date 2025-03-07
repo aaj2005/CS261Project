@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class PrimaryController {
@@ -582,6 +583,11 @@ public class PrimaryController {
         float[] vph_3 = new float[] {sim.getSouth_north_vph().floatValue(), sim.getSouth_east_vph().floatValue(), 0, sim.getSouth_west_vph().floatValue()};
         float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), sim.getWest_east_vph().floatValue(), sim.getWest_south_vph().floatValue(), 0};
 
+        System.out.println(Arrays.toString(vph_1));
+        System.out.println(Arrays.toString(vph_2));
+        System.out.println(Arrays.toString(vph_3));
+        System.out.println(Arrays.toString(vph_4));
+        System.out.println();
         // Calculate whether left and right turn lanes are needed
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
         boolean north_right_turn = sim.getNorth_west_vph() > 0;
@@ -645,23 +651,23 @@ public class PrimaryController {
         sim_title.setWrapText(false);
 
         // Restrict all the text fields
-        Validator.restrictToNumbers(txt_ns, 3657);
-        Validator.restrictToNumbers(txt_ne, 3657);
-        Validator.restrictToNumbers(txt_nw, 3657);
-
-        Validator.restrictToNumbers(txt_en, 3657);
-        Validator.restrictToNumbers(txt_ew, 3657);
-        Validator.restrictToNumbers(txt_es, 3657);
-
-        Validator.restrictToNumbers(txt_se, 3657);
-        Validator.restrictToNumbers(txt_sw, 3657);
-        Validator.restrictToNumbers(txt_sn, 3657);
-
-        Validator.restrictToNumbers(txt_wn, 3657);
-        Validator.restrictToNumbers(txt_ws, 3657);
-        Validator.restrictToNumbers(txt_we, 3657);
-
-        Validator.restrictToNumbers(crossing_duration, 3657);
-        Validator.restrictToNumbers(crossing_duration, 3657);
+//        Validator.restrictToNumbers(txt_ns, 3657);
+//        Validator.restrictToNumbers(txt_ne, 3657);
+//        Validator.restrictToNumbers(txt_nw, 3657);
+//
+//        Validator.restrictToNumbers(txt_en, 3657);
+//        Validator.restrictToNumbers(txt_ew, 3657);
+//        Validator.restrictToNumbers(txt_es, 3657);
+//
+//        Validator.restrictToNumbers(txt_se, 3657);
+//        Validator.restrictToNumbers(txt_sw, 3657);
+//        Validator.restrictToNumbers(txt_sn, 3657);
+//
+//        Validator.restrictToNumbers(txt_wn, 3657);
+//        Validator.restrictToNumbers(txt_ws, 3657);
+//        Validator.restrictToNumbers(txt_we, 3657);
+//
+//        Validator.restrictToNumbers(crossing_duration, 3657);
+//        Validator.restrictToNumbers(crossing_duration, 3657);
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class Vehicle{
     public static final double VEHICLE_SPEED = 2.25;
-    public static final double VEHICLE_GAP = 5;
+    public static final double VEHICLE_GAP = 15;
 
     private boolean made_turn = false; // if the car successfully made the turn
     private boolean turning = false; // if the car is currently turning
