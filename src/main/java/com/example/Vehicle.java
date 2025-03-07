@@ -4,8 +4,8 @@ package com.example;
 import javafx.scene.shape.Rectangle;
 
 public abstract class Vehicle{
-    public static final double VEHICLE_SPEED = 20;
-    public static final double VEHICLE_GAP = 15;
+    public static final double VEHICLE_SPEED = 1.5;
+    public static final double VEHICLE_GAP = 5;
 
     private boolean made_turn = false; // if the car successfully made the turn
     private boolean turning = false; // if the car is currently turning
