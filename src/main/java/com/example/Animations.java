@@ -172,7 +172,7 @@ public class Animations {
 //                pathTransition.jumpTo(Duration.seconds(progress*totalDuration));
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
-                    car.set_made_turn();
+                    car.setMadeTurn();
                     System.out.println("true");
                     pathTransitionRight = null;
                     stop();
@@ -330,8 +330,7 @@ public class Animations {
                 // stop transition once animation time is reached
 
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
-                    car.set_made_turn();
-
+                    car.setMadeTurn();
                     pathTransitionLeft = null;
                     stop();
                 }

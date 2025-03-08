@@ -461,6 +461,18 @@ public class PrimaryController {
                 updateSimulationValue(txt_we, selectedSim -> selectedSim.setWest_east_vph(parseInt(txt_we.getText())));
             }
         });
+
+        crossing_duration.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(crossing_duration, selectedSim -> selectedSim.setDuration_of_crossings(parseInt(crossing_duration.getText())));
+            }
+        });
+
+        crossing_requests.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                updateSimulationValue(crossing_requests, selectedSim -> selectedSim.setRequests_per_hour(parseInt(crossing_requests.getText())));
+            }
+        });
     }
 
     private void updateSimulationValue(TextField textField, Consumer<Simulation> updateAction) {
@@ -618,7 +630,7 @@ public class PrimaryController {
                 sim.getNorth_bus_lane(), sim.getEast_bus_lane(),
                 sim.getSouth_bus_lane(), sim.getWest_bus_lane(),
                 vph_1, vph_2, vph_3, vph_4,
-                crossing_rph, crossing_dur
+                (sim.getPedestrian_crossings()) ? crossing_rph : 0, (sim.getPedestrian_crossings()) ? crossing_dur : 0
         );
 
         // Anchor the simulation to the anchor pane on the main UI
@@ -642,6 +654,7 @@ public class PrimaryController {
     private void SetToPlayMode() {
         run_button.setDisable(true);
         pause_button.setDisable(false);
+        pause_button.requestFocus();
     }
 
     private void SetToPauseMode() {

@@ -151,6 +151,26 @@ public enum Direction {
         return road_after_right;
     }
 
+    public static Cardinal toCardinal(Direction a) {
+        switch (a) {
+            case TOP: return Cardinal.N;
+            case RIGHT: return Cardinal.E;
+            case BOTTOM: return Cardinal.S;
+            case LEFT: return Cardinal.W;
+        }
+        return null;
+    }
+
+    public static Direction getOpposite(Direction a) {
+        switch (a) {
+            case TOP: return BOTTOM;
+            case BOTTOM: return TOP;
+            case LEFT: return RIGHT;
+            case RIGHT: return LEFT;
+        }
+        return null;
+    }
+
     public static Direction getLeft(Direction a) {
         switch (a) {
             case TOP: return RIGHT;
@@ -167,16 +187,6 @@ public enum Direction {
             case RIGHT: return TOP;
             case BOTTOM: return RIGHT;
             case LEFT: return BOTTOM;
-        }
-        return null;
-    }
-
-    public static Direction getOpposite(Direction a) {
-        switch (a) {
-            case TOP: return BOTTOM;
-            case BOTTOM: return TOP;
-            case LEFT: return RIGHT;
-            case RIGHT: return LEFT;
         }
         return null;
     }

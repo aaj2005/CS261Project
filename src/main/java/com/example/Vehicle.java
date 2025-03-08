@@ -14,12 +14,14 @@ public abstract class Vehicle{
 
     public abstract double getHeight();
 
+    public abstract Direction getInboundDirection();
+    public abstract Direction getOutboundDirection();
+
     // let the car object know that the turn has been completed
-    public void set_made_turn() {
+    public void setMadeTurn() {
         this.made_turn = true;
         this.turning = false;
     }
-
 
     // if car is currently turning
     public boolean is_turning(){
@@ -32,11 +34,11 @@ public abstract class Vehicle{
     }
 
     // check if the turn is completed
-    public boolean has_made_turn() {
+    public boolean hasMadeTurn() {
         return made_turn;
-
     }
 
-
-
+    public boolean hasStartedTurning() {
+        return this.made_turn || this.turning;
+    }
 }

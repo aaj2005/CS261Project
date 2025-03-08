@@ -2,6 +2,7 @@ package com.example;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.BoundingBox;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -28,7 +29,8 @@ public class TrafficLights {
     private double time4; // time for left junction lights to be on in seconds
     private double s_per_request; // seconds per request for pedestrian crossings
     private double crossing_dur; // pedestrian crossing duration
-    private Road[] out_junc;
+    private Road[] in_junc;
+    private BoundingBox junction_rectangle;
 
     private static double default_time = 10; // the default time that a traffic light is on for in seconds
     private static double priority_multiplier = 2; // the amount of time longer that a traffic light is on for in seconds for each priority unit it thas
@@ -38,18 +40,20 @@ public class TrafficLights {
     // time2 = right junction
     // time3 = bottom junction
     // time4 = left junction
-    public TrafficLights(int[] priorities, double requests_ph, double crossing_dur,Road[] out_junc ) {
+    public TrafficLights(int[] priorities, double requests_ph, double crossing_dur,Road[] in_junc, BoundingBox junction_rectangle) {
         this.time1 = priorities[0]*priority_multiplier + default_time;
         this.time2 = priorities[1]*priority_multiplier + default_time;
         this.time3 = priorities[2]*priority_multiplier + default_time;
         this.time4 = priorities[3]*priority_multiplier + default_time;
 
-        this.out_junc = out_junc;
+        this.in_junc = in_junc;
         this.s_per_request = 1/(requests_ph/3600); // convert from requests per hour to seconds per request
         this.crossing_dur = crossing_dur;
         if (time1+time2+time3+time4 == 0){
             light_status[0] = false;
         }
+
+        this.junction_rectangle = junction_rectangle;
 
     }
 
@@ -320,13 +324,11 @@ public class TrafficLights {
 
 
     private void check_car_in_junction(){
-        car_in_junction = false;
-        for (Road road: out_junc){
-            for (Lane lane: road.getLanes()){
-                if (!lane.getCars().isEmpty()) {
-                    car_in_junction = true;
-                    break;
-                }
+        this.car_in_junction = false;
+        for (Road road: this.in_junc) {
+            if (road.existsCarInJunction(this.junction_rectangle)) {
+                this.car_in_junction = true;
+                return;
             }
         }
     }

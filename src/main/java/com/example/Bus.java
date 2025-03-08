@@ -32,8 +32,12 @@ public class Bus extends Vehicle {
         shape.setRotate(direction.getRotation());
     }
 
-    public Direction getDirection() {
-        return direction;
+    public Direction getInboundDirection() {
+        return this.direction;
+    }
+
+    public Direction getOutboundDirection() {
+        return Direction.getOpposite(this.direction);
     }
 
     public Rectangle getShape() {
@@ -43,7 +47,4 @@ public class Bus extends Vehicle {
     public double getHeight(){
         return BUS_HEIGHT;
     }
-
-
-
 }

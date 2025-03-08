@@ -75,7 +75,7 @@
 /* Selected ListView item */
 .list-cell:selected {
     /*-fx-background-color: #3498db;*/
-    -fx-background-color: red;
+    -fx-background-color: #D0EFFF;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
@@ -148,14 +148,14 @@
 }
 
 .button-rename {
-    -fx-background-color: #023e8a;
+    -fx-background-color: #F0AD4E;
     -fx-border-width: 0;
     -fx-padding: 5px;
     -fx-border-radius: 5px;
 }
 
 .button-rename:hover {
-    -fx-background-color: #03045e;
+    -fx-background-color: #E0963B;
 }
 
 
