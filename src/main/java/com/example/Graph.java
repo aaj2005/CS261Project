@@ -84,11 +84,11 @@ public class Graph {
             case "score":
                 return "Performance Score";
             case "maxWaitTime":
-                return "Maximum Wait Time (Mins)";
+                return "Maximum Wait Time (Seconds)";
             case "avgQueueLength":
                 return "Max Queue Length (Cars)";
             case "avgWaitTime":
-                return "Average Wait Time (Mins)";
+                return "Average Wait Time (Seconds)";
             default:
                 return "Unknown Metric";
         }
@@ -147,7 +147,7 @@ public class Graph {
             switch (metric) {
                 case "maxWaitTime":
                     values = run.getMaxWaitTime();
-                    barChart.getYAxis().setLabel("Maximum Wait Time (Mins)");
+                    barChart.getYAxis().setLabel("Maximum Wait Time (Seconds)");
                     break;
                 case "avgQueueLength":
                     values = run.getMaxQueueLength();
@@ -155,7 +155,7 @@ public class Graph {
                     break;
                 case "avgWaitTime":
                     values = run.getAvgWaitTime();
-                    barChart.getYAxis().setLabel("Average Wait Time (Mins)");
+                    barChart.getYAxis().setLabel("Average Wait Time (Seconds)");
                     break;
                 default:
                     continue;
