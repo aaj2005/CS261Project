@@ -204,7 +204,7 @@ public class PrimaryController {
             sim.getWest_num_lanes(), Cardinal.W, west_left_turn, west_right_turn),
         };
 
-        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 9.98);
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(0, 0);
 
         try {
             StatRoad[] roads = new StatRoad[4];

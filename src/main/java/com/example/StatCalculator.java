@@ -223,7 +223,9 @@ public class StatCalculator {
             // (this condition is implicit because this function only runs when
             //  road 0 is the next road to have its green light turn on)
         // 2) the pedestrian light is just turning red
-        return DoubleCompare.approximatelyEqual(this.t % getPedLightRate(), getPedLightLength())
+        
+        double mod = getPedLightRate() == 0 ? 0 : this.t % getPedLightRate();
+        return DoubleCompare.approximatelyEqual(mod, getPedLightLength())
 
             // we also check that the time isn't ped_light_length, because that is the beginning of the first cycle
             // and we are only checking for when cycles end
@@ -243,9 +245,11 @@ public class StatCalculator {
         }
 
         // keep the pedestrian light green for as many times as it should be turned green for
-        while (DoubleCompare.geq(t, this.last_ped_light + getPedLightRate())) {
-            this.t += getPedLightLength();
-            this.last_ped_light += getPedLightRate();
+        if (getPedLightRate() != 0) {
+            while (DoubleCompare.geq(t, this.last_ped_light + getPedLightRate())) {
+                this.t += getPedLightLength();
+                this.last_ped_light += getPedLightRate();
+            }
         }
     }
 
