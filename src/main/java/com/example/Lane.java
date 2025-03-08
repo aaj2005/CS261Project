@@ -20,6 +20,9 @@ public class Lane {
     private double spawn_position_y;
     private final int lane_number;
 
+    private final double center_x;
+    private final double center_y;
+
     // position where the front of the road is at (just before entering the junction)
     private double front_of_road_x=0;
     private double front_of_road_y=0;
@@ -53,9 +56,10 @@ public class Lane {
         int lanes_in_road,
         double[] corner1_dims,
         double[] corner2_dims,
-        Animations animations,
         boolean road_going_into_junction,
-        Cardinal dir
+        Cardinal dir,
+        double center_x,
+        double center_y
     ) {
         this.dir = dir;
         cars = new ArrayList<>();
@@ -64,7 +68,9 @@ public class Lane {
         this.lane_number = lane_number; // the lane number in the particular road
         this.lanes_in_road = lanes_in_road;
         this.max_lane_out = max_lane_out;
-        this.animations =animations;
+        this.center_x = center_x;
+        this.center_y = center_y;
+
         this.road_going_into_junction = road_going_into_junction;
         switch (direction){
             case TOP:
@@ -97,7 +103,7 @@ public class Lane {
         if (is_bus){
             c = (Bus) new Bus(direction,spawn_position_x, spawn_position_y);
         }else{
-            c = (Car) new Car(direction, spawn_position_x, spawn_position_y,dir);
+            c = (Car) new Car(direction, spawn_position_x, spawn_position_y,dir, center_x, center_y);
         }
 
         // first check if a car is taking up the spawn zone
@@ -195,7 +201,7 @@ public class Lane {
                         car_ready_to_turn = Math.min(corner2_dims[1],corner1_dims[1]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <=y && turning_cond && !car.has_made_turn();
                         break;
                     case RIGHT:
-                        car_ready_to_turn =( SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT >= x && turning_cond && !car.has_made_turn());
+                        car_ready_to_turn =( SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0]) >= x && turning_cond && !car.has_made_turn());
                         break;
                     case BOTTOM:
                         car_ready_to_turn = SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y && turning_cond && !car.has_made_turn();
@@ -215,9 +221,9 @@ public class Lane {
                         carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
                         carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
                     }else if (Road.isLeftOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn left
-                        animations.turn_left(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(), y+car.getDirection().getRight_turn_pos_y(), lanes_in_road, max_lane_out);
+                        ((Car) c).getAnimations().turn_left(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(), y+car.getDirection().getRight_turn_pos_y(), lanes_in_road, max_lane_out);
                     }else if ( Road.isRightOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn right
-                        animations.turn_right(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(),y+car.getDirection().getRight_turn_pos_y());
+                        ((Car) c).getAnimations().turn_right(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(),y+car.getDirection().getRight_turn_pos_y());
                     }
                 }
             }else{

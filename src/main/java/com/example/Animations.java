@@ -57,6 +57,7 @@ public class Animations {
 
     private AnimationTimer timer_right;
     private PathTransition pathTransitionRight;
+    private boolean right_paused = false;
 
     public void turn_right(Car car, Direction direction, double carX, double carY){
 
@@ -115,6 +116,7 @@ public class Animations {
 
         // create the path transition animation object
         pathTransitionRight = new PathTransition();
+        System.out.println("path transition object created");
         pathTransitionRight.setDuration(Duration.millis(totalDuration*1000));
         pathTransitionRight.setNode(car.getShape());
         pathTransitionRight.setPath(path);
@@ -123,22 +125,22 @@ public class Animations {
         // rotate the car as it moves
         timer_right = new AnimationTimer() {
             double startTime = 0;
+            double elapsedTime =0;
             @Override
             public void handle(long now) {
                 // time passed in the animation
-                double elapsedTime = (now - startTime);
-
+                if (right_paused){
+                    startTime = now - elapsedTime;
+                    return;
+                }
+                elapsedTime = (now - startTime);
                 // determine start time
                 if (startTime == 0.0){
                     startTime = elapsedTime;
                     elapsedTime = (now - startTime);
                 }
 
-                // determine if end time is reached
-                if (elapsedTime/1_000_000_000.0 >= totalDuration) {
-                    startTime = 0;
-                    elapsedTime = totalDuration* 1_000_000_000.0 ; // Clamp at total_duration
-                }
+
 
                 // percentage into the animation
                 double progress = (elapsedTime/1_000_000_000.0) / totalDuration; // Normalize [0,1]
@@ -171,6 +173,8 @@ public class Animations {
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     car.set_made_turn();
+                    System.out.println("true");
+                    pathTransitionRight = null;
                     stop();
                 }
             }
@@ -189,6 +193,7 @@ public class Animations {
 
     private AnimationTimer timer_left;
     private PathTransition pathTransitionLeft;
+    private boolean left_paused = false;
 
 
     public void turn_left(Car car, Direction direction, double carX, double carY, int lane_number, int max_lane_out){
@@ -273,10 +278,16 @@ public class Animations {
         // rotate the car as it moves
         timer_left = new AnimationTimer() {
             double startTime = 0;
+            double elapsedTime = 0;
             @Override
             public void handle(long now) {
                 // time passed in the animation
-                double elapsedTime = (now - startTime);
+                if (left_paused){
+                    startTime = now - elapsedTime;
+                    return;
+                }
+                elapsedTime = (now - startTime);
+
 
                 // determine start time
                 if (startTime == 0.0){
@@ -320,6 +331,8 @@ public class Animations {
 
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     car.set_made_turn();
+
+                    pathTransitionLeft = null;
                     stop();
                 }
             }
@@ -330,26 +343,26 @@ public class Animations {
     }
 
     public void pause_turns(){
-        if (timer_right != null){
-            timer_right.stop();
+        if (pathTransitionRight != null){
+            pathTransitionRight.pause();
         }
-        if (timer_left != null){
-            timer_left.stop();
+        if (timer_right != null){
+            right_paused = true;
         }
         if (pathTransitionLeft!= null){
             pathTransitionLeft.pause();
         }
-        if (pathTransitionRight != null){
-            pathTransitionRight.pause();
+        if (timer_left != null){
+            left_paused = true;
         }
     }
 
     public void resume_turns(){
         if (timer_right != null){
-            timer_right.start();
+            right_paused = false;
         }
         if (timer_left != null){
-            timer_left.start();
+            left_paused = false;
         }
         if (pathTransitionLeft!= null){
             pathTransitionLeft.play();

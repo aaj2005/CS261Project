@@ -47,7 +47,7 @@ public class SimulationComponents {
     private final int max_out;
 
     // animations object for turns
-    private Animations animations;
+//    private Animations animations;
     private float time = 0;
 
 
@@ -88,7 +88,6 @@ public class SimulationComponents {
 
         root = new AnchorPane();
         root.setBackground(new Background(new BackgroundFill(Color.rgb(148,148,148), CornerRadii.EMPTY, Insets.EMPTY)));
-
         // number of lanes exiting junction for each arm
         max_out = Math.max(Math.max(Math.max(lanes_arm1,lanes_arm2),lanes_arm3),lanes_arm4);
         this.has_pedestrian = crossings_enabled ? 1 : 0;
@@ -122,7 +121,7 @@ public class SimulationComponents {
         center_x = corners[0].getWidth() + Lane.lane_w *max_out;
         center_y = corners[1].getHeight() + Lane.lane_w *max_out;
 
-        animations = new Animations(center_x, center_y);
+//        animations = new Animations(center_x, center_y);
         // line dividing incoming/outgoing lanes for each junction arm
         lane_separation = new Rectangle[]{
                 new Rectangle( // top junction arm
@@ -156,9 +155,10 @@ public class SimulationComponents {
                 right_turn1, // right turn
                 is_bus_lane1,
                 max_out, // maximum number of lanes in one road
-                animations,
                 true,
-                cars_to_remove
+                cars_to_remove,
+                center_x,
+                center_y
         );
 
         // set the spawn position for the TOP junction arm
@@ -180,9 +180,10 @@ public class SimulationComponents {
                 right_turn2, // right turn
                 is_bus_lane2,
                 max_out, // maximum number of lanes in one road
-                animations,
                 true,
-                cars_to_remove
+                cars_to_remove,
+                center_x,
+                center_y
         );
 
         // set the spawn position for the RIGHT junction arm
@@ -204,9 +205,10 @@ public class SimulationComponents {
                 right_turn3, // right turn
                 is_bus_lane3,
                 max_out, // maximum number of lanes in one road
-                animations,
                 true,
-                cars_to_remove
+                cars_to_remove,
+                center_x,
+                center_y
         );
 
         // set the spawn position for the BOTTOM junction arm
@@ -228,9 +230,10 @@ public class SimulationComponents {
                 right_turn4, // right turn
                 is_bus_lane4,
                 max_out, // maximum number of lanes in one road
-                animations,
                 true,
-                cars_to_remove
+                cars_to_remove,
+                center_x,
+                center_y
         );
 
         // set the spawn position for the LEFT junction arm
@@ -240,10 +243,10 @@ public class SimulationComponents {
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
-        junction_arms_out[0] = new Road(max_out,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1, is_bus_lane1, max_out,animations,false, cars_to_remove);
-        junction_arms_out[1] = new Road(max_out,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2, is_bus_lane2, max_out,animations,false, cars_to_remove);
-        junction_arms_out[2] = new Road(max_out,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,animations,false, cars_to_remove);
-        junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
+        junction_arms_out[0] = new Road(max_out,getCornerDims("tl"),getCornerDims("tr"), false, Direction.TOP, vph_1, left_turn1, right_turn1, is_bus_lane1, max_out,false, cars_to_remove, center_x, center_y);
+        junction_arms_out[1] = new Road(max_out,getCornerDims("tr"),getCornerDims("br"), false, Direction.RIGHT, vph_2, left_turn2, right_turn2, is_bus_lane2, max_out,false, cars_to_remove, center_x, center_y);
+        junction_arms_out[2] = new Road(max_out,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,false, cars_to_remove, center_x, center_y);
+        junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,false, cars_to_remove, center_x, center_y);
 
         traffic_system = new TrafficLights(new int[] {0,0,0,0},crossing_rph,crossing_dur,junction_arms_out);
         lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters(), max_out);
@@ -287,7 +290,30 @@ public class SimulationComponents {
         if (!running) {
             timeline.play();
             traffic_system.lights_start();
-            animations.resume_turns();
+            for (int i=0; i<4;++i){
+                int lane_size = junction_arms_in[i].get_lane_size();
+                for (int j=0; j<lane_size;++j){
+                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getCars();
+                    for (int k=0;k<v.size();++k){
+
+                        if (v.get(k) instanceof Car){
+                            ((Car) v.get(k)).getAnimations().resume_turns();
+                        }
+                    }
+                }
+            }
+            for (int i=0; i<4;++i){
+                int lane_size = junction_arms_out[i].get_lane_size();
+                for (int j=0; j<lane_size;++j){
+                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getCars();
+                    for (int k=0;k<v.size();++k){
+
+                        if (v.get(k) instanceof Car){
+                            ((Car) v.get(k)).getAnimations().resume_turns();
+                        }
+                    }
+                }
+            }
         }
         running = true;
     }
@@ -295,7 +321,30 @@ public class SimulationComponents {
     public void stop_simulation(){
         if (running) {
             timeline.stop();
-            animations.pause_turns();
+            for (int i=0; i<4;++i){
+                int lane_size = junction_arms_in[i].get_lane_size();
+                for (int j=0; j<lane_size;++j){
+                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getCars();
+                    for (int k=0;k<v.size();++k){
+
+                        if (v.get(k) instanceof Car){
+                            ((Car) v.get(k)).getAnimations().pause_turns();
+                        }
+                    }
+                }
+            }
+            for (int i=0; i<4;++i){
+                int lane_size = junction_arms_out[i].get_lane_size();
+                for (int j=0; j<lane_size;++j){
+                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getCars();
+                    for (int k=0;k<v.size();++k){
+
+                        if (v.get(k) instanceof Car){
+                            ((Car) v.get(k)).getAnimations().pause_turns();
+                        }
+                    }
+                }
+            }
             traffic_system.lights_stop();
         }
         running = false;
@@ -442,6 +491,7 @@ public class SimulationComponents {
             while (outRoad != null) {
                 // spawn the car
                 Rectangle carRect = road.spawnCar(outRoad);
+
                 // the car may not be able to spawn due to traffic going offscreen. If this is the case, ignore this car :)
                 if (carRect != null) { root.getChildren().add(carRect); }
 
@@ -485,20 +535,18 @@ public class SimulationComponents {
                                 Car c = (Car) to_move;
 
                                 if (j==0 && Road.isLeftOf(lane.getDir(),c.getDir()) && lane.is_left()){
-                                    animations.turn_left(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y(), num_of_lanes, max_out);
+                                    c.getAnimations().turn_left(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y(), num_of_lanes, max_out);
                                     junction_arms_out[lane.getDirection().getRoad_after_left()].getLanes().get(j).add_car(to_move);
                                 }else if ( j== num_of_lanes-1 && Road.isRightOf(lane.getDir(),c.getDir()) && lane.is_right()){
-                                    animations.turn_right(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y());
+                                    c.getAnimations().turn_right(c, c.getDirection(), c.getShape().getX()+c.getDirection().getRight_turn_pos_x(), c.getShape().getY()+c.getDirection().getRight_turn_pos_y());
                                     junction_arms_out[lane.getDirection().getRoad_after_right()].getLanes().get(j).add_car(to_move);
                                 }else{
                                     junction_arms_out[i].getLanes().get(j).add_car(to_move);
                                 }
                             }
-
                         }
                     }
                 }
-
             }
 
             // always move cars that are in the junction
