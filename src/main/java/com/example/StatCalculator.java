@@ -89,7 +89,7 @@ public class StatCalculator {
             this.jam_lengthening_rate = this.r_prime * cs;
 
             if (DoubleCompare.geq(0, this.jam_lengthening_rate)) {
-                throw new InvalidParametersException("Cars are too close together! Either the inbound rate of vehicles is too high.");
+                throw new InvalidParametersException("Cars are too close together! The inbound rate of vehicles is too high.");
             }
         }
     }

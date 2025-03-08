@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -57,13 +59,24 @@ public class SimulationComponents {
     public static double GET_PEDESTRIAN_CROSSING_WIDTH(){
         return PEDESTRIAN_CROSSING_WIDTH;
     }
+
     // traffic light logic instance
     private TrafficLights traffic_system;
-
+    
     private int has_pedestrian;
-
+    
     private Timeline timeline;
     private Boolean running = false;
+    
+    // how many pixels off the screen cars are allowed to spawn
+    // this means that queues extend off the screen, rather than ending right at the very edge
+    public static final double spawn_offset = 300;
+    
+    // used to check if car is in junction
+    private BoundingBox junction_rectangle;
+    public BoundingBox getJunctionRectangle() {
+        return this.junction_rectangle;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -117,6 +130,18 @@ public class SimulationComponents {
                 ),
         };
 
+        double junc_left_x   = Math.min(this.corners[0].getWidth(), this.corners[2].getWidth());
+        double junc_top_y    = Math.min(this.corners[0].getHeight(), this.corners[1].getHeight());
+        double junc_right_x  = SimulationComponents.sim_w - Math.min(this.corners[1].getWidth(), this.corners[3].getWidth());
+        double junc_bottom_y = SimulationComponents.sim_h - Math.min(this.corners[2].getHeight(), this.corners[3].getHeight());
+        double ped_width     = SimulationComponents.PEDESTRIAN_CROSSING_WIDTH*this.has_pedestrian;
+        junction_rectangle = new BoundingBox(
+            junc_left_x - ped_width,
+            junc_top_y - ped_width,
+            junc_right_x - junc_left_x + ped_width*2,
+            junc_bottom_y - junc_top_y + ped_width*2
+        );
+
         // determine the center
         center_x = corners[0].getWidth() + Lane.lane_w *max_out;
         center_y = corners[1].getHeight() + Lane.lane_w *max_out;
@@ -165,7 +190,7 @@ public class SimulationComponents {
         junction_arms_in[0].set_start(
                 sim_w-getCornerDims("tr")[0]-Car.CAR_WIDTH- (Lane.lane_w-Car.CAR_WIDTH)/2,
                 // Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
-                -Car.CAR_HEIGHT -Car.CAR_HEIGHT/2
+                -Car.CAR_HEIGHT -Car.CAR_HEIGHT/2 -this.spawn_offset
         );
 
         // create a road instance for RIGHT junction arm, this road is specifically for cars entering the junction
@@ -189,7 +214,7 @@ public class SimulationComponents {
         // set the spawn position for the RIGHT junction arm
         junction_arms_in[1].set_start(
                 // sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
-                sim_w + Car.CAR_HEIGHT/2,
+                sim_w + Car.CAR_HEIGHT/2 + this.spawn_offset,
                 sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH
         );
 
@@ -215,7 +240,7 @@ public class SimulationComponents {
         junction_arms_in[2].set_start(
                 getCornerDims("bl")[0]+ (Lane.lane_w-Car.CAR_WIDTH)/2,
                 // sim_h-Math.min(getCornerDims("bl")[1],getCornerDims("br")[1])
-                sim_h+Car.CAR_HEIGHT/2
+                sim_h+Car.CAR_HEIGHT/2 +this.spawn_offset
         );
 
         // create a road instance for LEFT junction arm, this road is specifically for cars entering the junction
@@ -239,7 +264,7 @@ public class SimulationComponents {
         // set the spawn position for the LEFT junction arm
         junction_arms_in[3].set_start(
                 // getCornerDims("tl")[0]- Car.CAR_HEIGHT,
-                -Car.CAR_HEIGHT,
+                -Car.CAR_HEIGHT -this.spawn_offset,
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
@@ -248,7 +273,7 @@ public class SimulationComponents {
         junction_arms_out[2] = new Road(max_out,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,false, cars_to_remove, center_x, center_y);
         junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,false, cars_to_remove, center_x, center_y);
 
-        traffic_system = new TrafficLights(new int[] {0,0,0,0},crossing_rph,crossing_dur,junction_arms_out);
+        traffic_system = new TrafficLights(new int[] {0,0,0,0},crossing_rph,crossing_dur,junction_arms_out, this.getJunctionRectangle());
         lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters(), max_out);
 
 
@@ -354,7 +379,6 @@ public class SimulationComponents {
     private void animation(AnchorPane root){
         this.update(root);
     }
-
 
 
     public void addLaneSeparators(int lanes_arm1,int lanes_arm2,int lanes_arm3,int lanes_arm4){
@@ -502,13 +526,14 @@ public class SimulationComponents {
         }
     }
 
-
     private void moveCars() {
         for (int i=0; i< 4; i++) {
+            boolean can_enter_junction = !this.junction_arms_in[((i-1)%4+4)%4].existsCarInJunction(this.junction_rectangle);
+            this.junction_arms_in[i].moveCars(traffic_system.getLight_status()[i], can_enter_junction);
 
+            /*
             // move cars if the light is green and the junction is clear
             if (traffic_system.getLight_status()[i] && !traffic_system.isCar_in_junction()){
-                this.junction_arms_in[i].moveCars(); // move the cars
 
                 int num_of_lanes =junction_arms_in[i].getLanes().size();
                 for (int j=0; j< num_of_lanes; j++ ){
@@ -548,9 +573,7 @@ public class SimulationComponents {
                     }
                 }
             }
-
-            // always move cars that are in the junction
-            this.junction_arms_out[i].moveCars();
+            */
 
             // remove cars which are outside the simulation display area
             for (Rectangle c: cars_to_remove){

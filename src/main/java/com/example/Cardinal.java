@@ -33,4 +33,20 @@ public enum Cardinal {
         return false;
     }
 
+    public static Direction toDirection(Cardinal a) {
+        switch (a) {
+            case N: return Direction.TOP;
+            case E: return Direction.RIGHT;
+            case S: return Direction.BOTTOM;
+            case W: return Direction.LEFT;
+        }
+        return null;
+    }
+
+    public static boolean isOpposite(Cardinal a, Cardinal b) {
+        return a == N && b == S
+            || a == S && b == N
+            || a == E && b == W
+            || a == W && b == E;
+    }
 }
