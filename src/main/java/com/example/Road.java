@@ -96,7 +96,7 @@ public class Road extends JunctionElement{
         * offsetting the time by changing the initial values of lastspawn fixes this
         */
         for (int i=0; i<4; i++) {
-            this.lastSpawn[i] = this.spawnFreq[i]/(i+1);
+            this.lastSpawn[i] = -this.spawnFreq[i]/(i+1);
         }
 
 
@@ -175,9 +175,22 @@ public class Road extends JunctionElement{
 
     public Rectangle spawn_car_in_lane(int i, Cardinal dir){
         if (i < lanes.size()){
-            this.lastSpawn[dir.ordinal()] += this.spawnFreq[dir.ordinal()]; // update the last time a car spawned because a car is spawning like right now
-            this.numSpawned[i]++;                                           // increment the amount of cars that have spawned on that lane
-            return lanes.get(i).spawn_car(dir);                             // actually spawn a car and return its shape
+            /* BUGFIX
+             * the lanes for the east and west are swapped
+             * as in, left-turning cars spawn on the rightmost side
+             * this is fixed by indexing the array in reverse, so rather than spawning on
+             * lane i, it is spawned on lane len-1-i
+             */
+            if (this.direction == Direction.LEFT || this.direction == Direction.RIGHT) {
+                int actual_index = this.lanes.size()-1-i;
+                this.lastSpawn[dir.ordinal()] += this.spawnFreq[dir.ordinal()];
+                this.numSpawned[actual_index]++;
+                return lanes.get(actual_index).spawn_car(dir);
+            } else {
+                this.lastSpawn[dir.ordinal()] += this.spawnFreq[dir.ordinal()]; // update the last time a car spawned because a car is spawning like right now
+                this.numSpawned[i]++;                                           // increment the amount of cars that have spawned on that lane
+                return lanes.get(i).spawn_car(dir);                             // actually spawn a car and return its shape
+            }
         }else{
             throw new IndexOutOfBoundsException("Lane "+ i+ " does not exist!");
         }
