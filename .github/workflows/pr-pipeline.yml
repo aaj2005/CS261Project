@@ -114,7 +114,7 @@ jobs:
 
       - name: Check if JAR file exists
         run: |
-          if [ ! -f "target/trafficsim-${{ env.VERSION }}.jar" ]; then
+          if [ ! -f "target/traffic_sim_with_dep.jar" ]; then
             echo "The built .deb file does not exist"
             exit 1
           fi
