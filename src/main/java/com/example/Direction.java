@@ -65,8 +65,6 @@ public enum Direction {
     private final int road_after_left;
     private final int road_after_right;
 
-
-
     Direction(
             double rotation,
             double lane_switch_x, double lane_switch_y,
@@ -94,7 +92,6 @@ public enum Direction {
         this.road_after_left = road_after_left;
     }
 
-
     public double getRotation() {
         return rotation;
     }
@@ -104,8 +101,6 @@ public enum Direction {
     }
 
     public double getLane_switch_y() {return lane_switch_y;}
-
-
 
     public double getRight_trans_x() {
         return right_trans_x;
@@ -154,6 +149,26 @@ public enum Direction {
 
     public int getRoad_after_right() {
         return road_after_right;
+    }
+
+    public static Direction getLeft(Direction a) {
+        switch (a) {
+            case TOP: return LEFT;
+            case LEFT: return BOTTOM;
+            case BOTTOM: return RIGHT;
+            case RIGHT: return TOP;
+        }
+        return null;
+    }
+
+    public static Direction getRight(Direction a) {
+        switch (a) {
+            case TOP: return RIGHT;
+            case RIGHT: return BOTTOM;
+            case BOTTOM: return LEFT;
+            case LEFT: return TOP;
+        }
+        return null;
     }
 }
 

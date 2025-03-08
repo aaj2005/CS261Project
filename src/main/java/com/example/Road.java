@@ -412,6 +412,42 @@ public class Road extends JunctionElement{
      * @param offset the current offset (includes line markings and the pedestrian crossing). The arrows should be rendered behind these markings
      */
     public ArrayList<Rectangle> getArrows(double offset){
+        double image_width = 50, image_height = 50;
+        double image_offset = Lane.lane_w/2-image_width/2;
+
+        lane_arrows = new ArrayList<Rectangle>();
+        
+        for (int i=0; i<this.lane_count; i++){
+            Rectangle rect = new Rectangle(0, 0, image_width, image_height);
+            rect.setFill(forward_arrow);
+
+            switch (this.direction){
+                case TOP:
+                    rotateRectangle(rect, 180);
+                    rect.setX(SimulationComponents.sim_w - this.corner2[0] - Lane.lane_w*(i+1) + image_offset);
+                    rect.setY(Math.min(this.corner1[1], this.corner2[1]) - offset - image_height);
+                    break;
+                case RIGHT:
+                    rotateRectangle(rect, 270);
+                    rect.setX(SimulationComponents.sim_w - Math.min(this.corner1[0], this.corner2[0]) + offset);
+                    rect.setY(SimulationComponents.sim_h - this.corner2[1] - Lane.lane_w*(i+1) + image_offset);
+                    break;
+                case BOTTOM:
+                    rotateRectangle(rect, 0);
+                    rect.setX(this.corner2[0] + Lane.lane_w*i + image_offset);
+                    rect.setY(SimulationComponents.sim_h - Math.min(this.corner1[1], this.corner2[1]) + offset);
+                    break;
+                case LEFT:
+                    rotateRectangle(rect, 90);
+                    rect.setX(Math.min(this.corner1[0],this.corner2[0]) - offset - image_width);
+                    rect.setY(this.corner2[1] + Lane.lane_w*i + image_offset);
+                    break;
+            }
+            
+            lane_arrows.add(rect);
+        }
+
+        /*
         double image_width = 30, image_height = 50;
         lane_arrows = new ArrayList<Rectangle>();
         
@@ -430,7 +466,7 @@ public class Road extends JunctionElement{
                     rect.setX(SimulationComponents.sim_w - Math.min(this.corner1[0], this.corner2[0]) + offset);
                     rect.setY(SimulationComponents.sim_h - this.corner2[1] - Lane.lane_w*(i+1));
                     break;
-                    case BOTTOM:
+                case BOTTOM:
                     rotateRectangle(rect, 0);
                     rect.setX(this.corner2[0] + Lane.lane_w*i);
                     rect.setY(SimulationComponents.sim_h - Math.min(this.corner1[1], this.corner2[1]) + offset);
@@ -444,7 +480,9 @@ public class Road extends JunctionElement{
             
             lane_arrows.add(rect);
         }
+            */
         
+        /*
         if (this.has_left_turn){
             lane_arrows.get(0).setFill(left_arrow);
         }if (this.has_right_turn){
@@ -452,17 +490,42 @@ public class Road extends JunctionElement{
         }if (this.has_bus_lane){
             lane_arrows.get(0).setFill(bus_lane_writing);
         }
+        */
+
+        if (this.lanes.size() == 1) {
+            if (this.hasFlowLeft() && this.hasFlowRight()) {
+                lane_arrows.get(0).setFill(all_arrows);
+            } else if (this.hasFlowLeft() && this.)
+        }
         return lane_arrows;
+    }
+
+    /*
+     * returns if the amount of cars turning left is greater than 0
+     */
+    private boolean hasFlowLeft() {
+        return this.spawnFreq[Direction.getLeft(this.direction).ordinal()] > 0;
+    }
+
+    private boolean hasFlowRight() {
+        return this.spawnFreq[Direction.getRight(this.direction).ordinal()] > 0;
+    }
+
+    private boolean hasFlowAhead() {
+        return this.spawnFreq[]
     }
 
     /*
      * rotates a rectangle about its centre
      */
     private void rotateRectangle(Rectangle r, double angle) {
+        /*
         Rotate rot = new Rotate();
         rot.setAngle(angle);
         rot.setPivotX(r.getX() + r.getWidth()/2);
         rot.setPivotY(r.getY() + r.getHeight()/2);
         r.getTransforms().add(rot);
+        */
+        r.setRotate(angle);
     }
 }
