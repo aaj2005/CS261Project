@@ -30,7 +30,7 @@ public class Road extends JunctionElement{
     // when was the last time a car spawned?
     // a car will be spawned if some time variable > lastSpawn[x] + spawnRate[x]
     private float[] lastSpawn = new float[4];
-
+    
     // number of cars spawned in each lane
     // used to determine in which lane to spawn cars
     // prevents one particular lane from having too many cars on it
@@ -87,6 +87,16 @@ public class Road extends JunctionElement{
         // calculates how long it takes for a car to spawn
         for (int i=0; i<4; i++) {
             this.spawnFreq[i] = (vph[i] == 0) ? -1 : 3600/vph[i];
+        }
+
+        /*
+        * BUGFIX:
+        * if the vphs for each outbound lane are identical, they will try to spawn at the exact same time always
+        * this means that every car but one will fail to spawn every time on a one-lane road
+        * offsetting the time by changing the initial values of lastspawn fixes this
+        */
+        for (int i=0; i<4; i++) {
+            this.lastSpawn[i] = this.spawnFreq[i]/(i+1);
         }
 
 
@@ -359,12 +369,16 @@ public class Road extends JunctionElement{
 
         return lanes.toArray(new Integer[lanes.size()]);
     }
-    public void moveCars() {
+    
+    /*
+     * Move all the cars on a road
+     * @param light_is_green whether the light for that road is green or not
+     */
+    public void moveCars(boolean light_is_green) {
         for (Lane lane : this.lanes) {
-            this.cars_to_remove.addAll(lane.moveCars());
+            this.cars_to_remove.addAll(lane.moveCars(light_is_green));
         }
     }
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////

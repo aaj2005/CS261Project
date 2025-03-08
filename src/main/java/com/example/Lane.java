@@ -171,61 +171,69 @@ public class Lane {
 
     /*
      * moves all cars in the lane towards the junction
+     * @param light_is_green whether the light for the road light is green or not
+     * @return an arraylist of all the cars that should be despawned
      */
-    public ArrayList<Rectangle> moveCars() {
+    public ArrayList<Rectangle> moveCars(boolean light_is_green) {
         ArrayList<Vehicle> cars_to_remove=new ArrayList<>();
         ArrayList<Rectangle> car_shape_remove = new ArrayList<>();
+        
         for (Vehicle c : this.cars) {
             // get x and y pos of car currently
             Rectangle carRect = c.getShape();
-            double[] dirMod = this.getDirectionModifier(this.direction);
             double x = carRect.getX(), y = carRect.getY();
+            double[] dirMod = this.getDirectionModifier(this.direction);
+
             if (c instanceof Car){
-
                 Car car = (Car) c;
+                System.out.println("is a car");
+                
+                // ----- MOVE THE CAR ----- //
 
-                // move the car
+                if (this.isCarInJam(car) && this.cars.indexOf(car)==1) {
+                    System.out.println("A");
+                }
 
                 // wait till car reaches very front of lane (so it can turn)
                 // check if car is in the front of the lane (about to enter the junction)
-                boolean car_ready_to_turn = false;
-                boolean turning_cond = ((Road.isLeftOf(this.dir,car.getDir()) && is_left)  || (Road.isRightOf(this.dir,car.getDir()) && is_right));
-                switch (this.direction){
-                    case TOP:
-                        car_ready_to_turn = Math.min(corner2_dims[1],corner1_dims[1]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <=y && turning_cond && !car.has_made_turn();
-                        break;
-                    case RIGHT:
-                        car_ready_to_turn =( SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT >= x && turning_cond && !car.has_made_turn());
-                        break;
-                    case BOTTOM:
-                        car_ready_to_turn = SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y && turning_cond && !car.has_made_turn();
-                        break;
-                    case LEFT:
-                        car_ready_to_turn = Math.min(corner1_dims[0],corner2_dims[0]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <= x && turning_cond && !car.has_made_turn();
-                        break;
-                }
-                // if the car is in the junction and has turned, move straight
-
-                if (!road_going_into_junction && car.has_made_turn()){
+                
+                // if car is on an outbound lane, move straight
+                if (!road_going_into_junction && car.has_made_turn()) {
+                    System.out.println("going straight after junction exit");
                     carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
                     carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
-                }else{ // car recently spawned
-                    // if the car is not ready to turn yet, move straight
-                    if (!car_ready_to_turn && !car.is_turning()){
-                        carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
-                        carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
-                    }else if (Road.isLeftOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn left
+                }
+
+
+                // if the car hasn't yet reached the jam
+                else if (!car.is_turning() && !this.isCarInJam(car)) {
+                    System.out.println("hasn't reached jam yet, going straight");
+                    carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
+                    carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
+                }
+
+                // cars can only turn if the light is green
+                else if (light_is_green && !car.is_turning() && !car.has_made_turn() && this.hasCarReachedJunction(car)) {
+                    // make the car turn left
+                    if (Road.isLeftOf(this.dir,car.getDir())) {
+                        System.out.println("car turning left");
                         animations.turn_left(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(), y+car.getDirection().getRight_turn_pos_y(), lanes_in_road, max_lane_out);
-                    }else if ( Road.isRightOf(this.dir,car.getDir()) && !car.is_turning() && !car.has_made_turn()){ // make the car turn right
+                    }
+                    
+                    // make the car turn right
+                    else if (Road.isRightOf(this.dir,car.getDir())) {
+                        System.out.println("car turning right");
                         animations.turn_right(car, car.getDirection(), x+car.getDirection().getRight_turn_pos_x(),y+car.getDirection().getRight_turn_pos_y());
                     }
                 }
-            }else{
+            } else {
+                System.out.println("bus");
                 carRect.setX(x + dirMod[0]*Car.VEHICLE_SPEED);
                 carRect.setY(y + dirMod[1]*Car.VEHICLE_SPEED);
             }
+
             // check if cars are outside the simulation view, if so destroy them
-            switch (this.direction){
+            switch (this.direction) {
                 case TOP:
                     if (carRect.getY() >= SimulationComponents.sim_h || carRect.getX() >= SimulationComponents.sim_w || carRect.getX()+Car.CAR_HEIGHT <= 0){
                         cars_to_remove.add(c);
@@ -261,9 +269,6 @@ public class Lane {
         return car_shape_remove;
     }
 
-
-
-
     /*
      * converts a direction into a tuple like (0,1)
      * the reason for this is that then this tuple can be multiplied by the
@@ -282,6 +287,100 @@ public class Lane {
         }
     }
 
+    /*
+     * checks if the car is in the correct place to start turning into a different lane
+     */
+    private boolean hasCarReachedJunction(Car car) {
+        Rectangle carRect = car.getShape();
+        double x = carRect.getX(), y = carRect.getY();
+        boolean turning_cond = ((Road.isLeftOf(this.dir,car.getDir()) && is_left) || (Road.isRightOf(this.dir,car.getDir()) && is_right));
+
+        switch (this.direction){
+            case TOP:
+                return Math.min(corner2_dims[1],corner1_dims[1]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <=y && turning_cond && !car.has_made_turn();
+            case RIGHT:
+                return SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT >= x && turning_cond && !car.has_made_turn();
+            case BOTTOM:
+                return SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y && turning_cond && !car.has_made_turn();
+            case LEFT:
+                return Math.min(corner1_dims[0],corner2_dims[0]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <= x && turning_cond && !car.has_made_turn();
+        }
+
+        return false;
+    }
+
+    /*
+     * checks if a car is queueing
+     */
+    private boolean isCarInJam(Car car) {
+        Car prevCar = this.getCarAhead(car);
+        if (prevCar == null) { // if the car is first in the queue,
+
+            if (this.hasCarReachedJunction(car)) {
+                System.out.println("Car " + this.cars.indexOf(car) + " reached junction");
+            }
+
+            return this.hasCarReachedJunction(car); // check if it has reached the junction
+        } else { // if the car is not the first in the queue,
+
+            if (this.isSpacingTooSmall(prevCar, car)) {
+                System.out.println("Car " + this.cars.indexOf(car) + " too close to previous car");
+            }
+
+            return this.isSpacingTooSmall(prevCar, car); // check if the car is close to the one in front of it
+        }
+    }
+
+    /*
+     * given a car in a lane, this function finds the first car before it
+     * @param car a car
+     * @return {@code null} if this is the first car in the lane, or the car before it
+     */
+    private Car getCarAhead(Car car) {
+        /*
+         * this function works by getting where the car is in the array,
+         * then iterating backwards from the index of the car to the beginning of the array
+         * the first car in the same lane encountered is removed
+         */
+        int index = this.cars.indexOf(car);
+        for (int i=index-1; 0<=i; i--) {
+            Vehicle vehicle = this.cars.get(i);
+            if (vehicle instanceof Car) {
+                return (Car) vehicle;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * checks if the spacing between two cars is too small
+     * if it is, that means the cars must be queueing
+     * @param car1 some car potentiall in the jam
+     * @param car2 the car behind it
+     * @return if the cars are queueing or not
+     */
+    private boolean isSpacingTooSmall(Car car1, Car car2) {
+        // x and y of the first car
+        Rectangle car1_rect = car1.getShape();
+        double x1 = car1_rect.getX(), y1 = car1_rect.getY();
+        
+        // x and y of the second car
+        Rectangle car2_rect = car2.getShape();
+        double x2 = car2_rect.getX(), y2 = car2_rect.getY();
+
+        Direction dir = car1.getDirection();
+        double[] dir_mod = this.getDirectionModifier(dir);
+
+        switch (dir) {
+            case TOP:
+            case BOTTOM:
+                return Math.abs(y2-y1)<Car.CAR_HEIGHT+Car.VEHICLE_GAP;
+            case LEFT:
+            case RIGHT:
+                return Math.abs(x2-x1)<Car.CAR_HEIGHT+Car.VEHICLE_GAP;
+        }        
+        return false;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// GETTERS + SETTERS ////////////////////////////////////
@@ -321,8 +420,6 @@ public class Lane {
     public void setSpawn_position_y(double spawn_position_y) {
         this.spawn_position_y = spawn_position_y + direction.getLane_switch_y() * (lane_w * lane_number);
     }
-
-
 
     public Cardinal getDir() {
         return dir;

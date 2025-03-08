@@ -38,7 +38,7 @@ public class App extends Application {
         Font.loadFont(getClass().getResource("fonts/IstokWeb-Bold.ttf").toExternalForm(), 18);
 
         // Load main UI scene
-        scene = new Scene(loadFXML("proj"), 1920, 1200);
+        scene = new Scene(loadFXML("proj"), 1400, 800);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Traffic Simulation");
