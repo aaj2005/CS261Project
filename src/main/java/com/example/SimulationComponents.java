@@ -512,8 +512,13 @@ public class SimulationComponents {
      * Same as stripeMinor but used between lanes going in opposite directions
      */
     public Rectangle stripeMajor(Rectangle r, boolean vertical) {
+        /*
         if (vertical) { return this.stripeVertical(r, Color.WHITE, 40, 10); }
         else { return this.stripeHorizontal(r, Color.WHITE, 40, 10); }
+        */
+        // actually ali wants these lines unstriped
+        r.setFill(Color.WHITE);
+        return r;
     }
 
     /*

@@ -520,7 +520,9 @@ public class Road extends JunctionElement{
         */
 
         if (this.lanes.size() == 1) {
-            if (this.hasFlowLeft() && this.hasFlowRight()) {
+            if (this.has_bus_lane) {
+                lane_arrows.get(0).setFill(bus_lane_writing);
+            } else if (this.hasFlowLeft() && this.hasFlowRight()) {
                 lane_arrows.get(0).setFill(all_arrows);
             } else if (this.hasFlowLeft() && this.hasFlowAhead()) {
                 lane_arrows.get(0).setFill(left_and_forward_arrow);
@@ -534,7 +536,9 @@ public class Road extends JunctionElement{
         }
 
         else {
-            if (this.hasFlowLeft()) {
+            if (this.has_bus_lane) {
+                lane_arrows.get(0).setFill(bus_lane_writing);
+            } else if (this.hasFlowLeft()) {
                 if (this.hasFlowAhead()) {
                     lane_arrows.get(0).setFill(left_and_forward_arrow);
                 } else {
