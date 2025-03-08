@@ -345,7 +345,7 @@ public class Lane {
                 return Math.min(corner2_dims[1],corner1_dims[1]) - Car.CAR_HEIGHT- Car.VEHICLE_GAP <=y;
             case RIGHT:
                 // System.out.println("simw: " + SimulationComponents.sim_w + ", corner: "+ (SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT));
-                return SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT >= x;
+                return SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0]) >= x;
             case BOTTOM:
                 return SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y;
             case LEFT:
