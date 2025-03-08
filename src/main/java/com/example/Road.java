@@ -6,6 +6,7 @@ import java.util.Arrays;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 
 public class Road extends JunctionElement{
 
@@ -48,6 +49,13 @@ public class Road extends JunctionElement{
     new Image(TrafficLights.class.getResource("/forwardarrow.png").toExternalForm()));
     public static final ImagePattern bus_lane_writing = new ImagePattern(
     new Image(TrafficLights.class.getResource("/buslane.png").toExternalForm()));
+    public static final ImagePattern left_and_forward_arrow = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/leftandforwardarrow.png").toExternalForm()));
+    public static final ImagePattern right_and_forward_arrow = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/rightandforwardarrow.png").toExternalForm()));
+    public static final ImagePattern all_arrows = new ImagePattern(
+    new Image(TrafficLights.class.getResource("/allarrows.png").toExternalForm()));
+
     private int lane_count;
     private double[] corner1;
     private double[] corner2;
@@ -74,6 +82,8 @@ public class Road extends JunctionElement{
             double center_x,
             double center_y
     ){
+        // System.out.println("Corner1: (" + corner1[0] + ", "+ corner1[1] + "), corner2: (" + corner2[0] + ", " + corner2[1] + ")");
+
         this.center_x = center_x;
         this.center_y = center_y;
         light_status = false;
@@ -397,47 +407,44 @@ public class Road extends JunctionElement{
         return lanes.size();
     }
 
-    public ArrayList<Rectangle> getArrows(double PEDESTRIAN_CROSSING_WIDTH){
-        double pedestrian_value = 0;
-        if (this.has_pedestrian){
-            pedestrian_value = 1;
-        }
+    /*
+     * Returns a list of all arrows to be rendered
+     * @param offset the current offset (includes line markings and the pedestrian crossing). The arrows should be rendered behind these markings
+     */
+    public ArrayList<Rectangle> getArrows(double offset){
+        double image_width = 30, image_height = 50;
         lane_arrows = new ArrayList<Rectangle>();
-        double arrow_x = 0;
-        double arrow_y = 0;
-        double rotate = 0;
+        
         for (int i=0; i<this.lane_count; i++){
+            Rectangle rect = new Rectangle(0, 0, image_width, image_height);
+            rect.setFill(forward_arrow);
+
             switch (this.direction){
                 case TOP:
-                    arrow_y = Math.min(this.corner2[1],this.corner1[1])-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    //System.out.println("Position = "+arrow_y);
-                    arrow_x = SimulationComponents.sim_h-this.corner2[0]-(i*30)-Car.CAR_HEIGHT+Car.CAR_WIDTH;
-                    rotate = 180;
+                    rotateRectangle(rect, 180);
+                    rect.setX(SimulationComponents.sim_w - this.corner2[0] - Lane.lane_w*(i+1));
+                    rect.setY(Math.min(this.corner1[1], this.corner2[1]) - offset - image_height);
                     break;
                 case RIGHT:
-                    arrow_x = SimulationComponents.sim_w-Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-6+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    //System.out.println("Position = "+arrow_x);
-
-                    arrow_y = SimulationComponents.sim_w-this.corner2[1]-(i*30)+Car.CAR_WIDTH-Car.CAR_HEIGHT-10;
-                    rotate = 270;
+                    rotateRectangle(rect, 270);
+                    rect.setX(SimulationComponents.sim_w - Math.min(this.corner1[0], this.corner2[0]) + offset);
+                    rect.setY(SimulationComponents.sim_h - this.corner2[1] - Lane.lane_w*(i+1));
                     break;
-                case BOTTOM:
-                    arrow_y = SimulationComponents.sim_h-Math.min(this.corner1[1],this.corner2[1])+PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    //System.out.println("Position = "+arrow_y);
-                    arrow_x = corner2[0]+(i*30)+6;
-                    rotate = 0;
+                    case BOTTOM:
+                    rotateRectangle(rect, 0);
+                    rect.setX(this.corner2[0] + Lane.lane_w*i);
+                    rect.setY(SimulationComponents.sim_h - Math.min(this.corner1[1], this.corner2[1]) + offset);
                     break;
                 case LEFT:
-                    arrow_x = Math.min(this.corner1[0],this.corner2[0])+Car.VEHICLE_GAP-Car.CAR_HEIGHT-PEDESTRIAN_CROSSING_WIDTH*pedestrian_value;
-                    //System.out.println("Position = "+arrow_x);
-                    arrow_y = this.corner2[1]+(i*30)-6;
-                    rotate = 90;
+                    rotateRectangle(rect, 90);
+                    rect.setX(Math.min(this.corner1[0],this.corner2[0]) - offset - image_width);
+                    rect.setY(this.corner2[1] + Lane.lane_w*i);
                     break;
             }
-            lane_arrows.add(new Rectangle(arrow_x, arrow_y, 18, 43.6));
-            lane_arrows.get(i).setFill(forward_arrow);
-            lane_arrows.get(i).setRotate(rotate);
+            
+            lane_arrows.add(rect);
         }
+        
         if (this.has_left_turn){
             lane_arrows.get(0).setFill(left_arrow);
         }if (this.has_right_turn){
@@ -447,6 +454,15 @@ public class Road extends JunctionElement{
         }
         return lane_arrows;
     }
+
+    /*
+     * rotates a rectangle about its centre
+     */
+    private void rotateRectangle(Rectangle r, double angle) {
+        Rotate rot = new Rotate();
+        rot.setAngle(angle);
+        rot.setPivotX(r.getX() + r.getWidth()/2);
+        rot.setPivotY(r.getY() + r.getHeight()/2);
+        r.getTransforms().add(rot);
+    }
 }
-
-

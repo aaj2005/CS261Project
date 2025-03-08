@@ -48,6 +48,7 @@ public class SimulationComponents {
 
     private static final double MAJOR_STRIPE_WIDTH = 3;
     private static final double MINOR_STRIPE_WIDTH = 2;
+    private static final double THICK_STRIPE_THICKNESS = 4;
 
     // maximum number of lanes set
     private final int max_out;
@@ -126,6 +127,28 @@ public class SimulationComponents {
         // determine the center
         center_x = corners[0].getWidth() + Lane.lane_w *max_out;
         center_y = corners[1].getHeight() + Lane.lane_w *max_out;
+
+        double pedestrian_offset = (PEDESTRIAN_CROSSING_WIDTH+Vehicle.VEHICLE_GAP/2) * has_pedestrian;
+        
+        // line dividing incoming/outgoing lanes for each junction arm
+        this.lane_separation = new Rectangle[] {
+            this.stripeMajor(new Rectangle( // top junction arm
+                    corners[0].getWidth() + Lane.lane_w *max_out - MAJOR_STRIPE_WIDTH/2, 0, // X and Y
+                    MAJOR_STRIPE_WIDTH, Math.min(corners[0].getHeight(),corners[1].getHeight())-pedestrian_offset // Width and Height
+            ), false), // right junction arm
+            this.stripeMajor(new Rectangle(
+                    sim_w - Math.min(corners[1].getWidth(),corners[3].getWidth())+pedestrian_offset, corners[1].getHeight() + Lane.lane_w *max_out-MAJOR_STRIPE_WIDTH/2, // X and Y
+                    Math.min(corners[1].getWidth(),corners[3].getWidth())-pedestrian_offset,MAJOR_STRIPE_WIDTH  // Width and Height
+            ), true),
+            this.stripeMajor(new Rectangle( // bottom junction arm
+                    sim_w-(corners[3].getWidth() + Lane.lane_w *max_out)-MAJOR_STRIPE_WIDTH/2, sim_h-Math.min(corners[2].getHeight(),corners[3].getHeight())+pedestrian_offset, // X and Y
+                    MAJOR_STRIPE_WIDTH, Math.min(corners[2].getHeight(),corners[3].getHeight())-pedestrian_offset // Width and Height
+            ), false),
+            this.stripeMajor(new Rectangle( // left junction arm
+                    0, sim_h - (corners[2].getHeight() + Lane.lane_w *max_out)-MAJOR_STRIPE_WIDTH/2, // X and Y
+                    Math.min(corners[0].getWidth(),corners[2].getWidth())-pedestrian_offset, MAJOR_STRIPE_WIDTH // Width and Height
+            ), true)
+        };
 
         // create a road instance for TOP junction arm, this road is specifically for cars entering the junction
         junction_arms_in[0] = new Road(
@@ -248,9 +271,8 @@ public class SimulationComponents {
         addLaneSeparators(lanes_arm1,lanes_arm2,lanes_arm3,lanes_arm4);
 
         for (Rectangle rect : getCorners())         { root.getChildren().add(rect); }
-        // for (Rectangle rect : getLane_separation()) { root.getChildren().add(rect); }
-        for (Rectangle rect : createMajorStripes()) { root.getChildren().add(rect); }
         for (Rectangle rect : createStopMarkings()) { root.getChildren().add(rect); }
+        for (Rectangle rect : getLane_separation()) { root.getChildren().add(rect); }
         for (Rectangle rect : getCrossings())       { root.getChildren().add(rect); }
         for (Rectangle rect : getArrows())          { root.getChildren().add(rect); }
         for (Rectangle rect : getLights())          { root.getChildren().add(rect); }
@@ -261,9 +283,14 @@ public class SimulationComponents {
         timeline.setCycleCount(Timeline.INDEFINITE);
     }
 
+    // returns the distance between the junction and the end of the stop markers (plus a little buffer)
+    public double getStopMarkingBuffer() {
+        double pedestrian_offset = (PEDESTRIAN_CROSSING_WIDTH+Vehicle.VEHICLE_GAP/2)*has_pedestrian;
+        return pedestrian_offset + THICK_STRIPE_THICKNESS + Vehicle.VEHICLE_GAP/2;
+    }
+
     public Rectangle[] createStopMarkings() {
         double pedestrian_offset = (PEDESTRIAN_CROSSING_WIDTH + Vehicle.VEHICLE_GAP/2) * has_pedestrian;
-        double stripe_thickness = 4;
         double stripe_length = 12;
         double gap_length = 4;
 
@@ -272,9 +299,9 @@ public class SimulationComponents {
             this.stripeVertical(
                 new Rectangle(
                     /* x */ center_x,
-                    /* y */ Math.min(corners[0].getHeight(), corners[1].getHeight()) - pedestrian_offset - stripe_thickness,
+                    /* y */ Math.min(corners[0].getHeight(), corners[1].getHeight()) - pedestrian_offset - THICK_STRIPE_THICKNESS,
                     /* width */  sim_w - center_x - corners[1].getWidth(),
-                    /* height */ stripe_thickness
+                    /* height */ THICK_STRIPE_THICKNESS
                 ), Color.WHITE, stripe_length+gap_length, gap_length
             ),
 
@@ -283,7 +310,7 @@ public class SimulationComponents {
                 new Rectangle(
                     /* x */ sim_w - Math.min(corners[3].getWidth(), corners[1].getWidth()) + pedestrian_offset,
                     /* y */ center_y,
-                    /* width */  stripe_thickness,
+                    /* width */  THICK_STRIPE_THICKNESS,
                     /* height */ sim_h - center_y - corners[3].getHeight()
                 ), Color.WHITE, stripe_length+gap_length, gap_length
             ),
@@ -294,46 +321,20 @@ public class SimulationComponents {
                     /* x */ corners[2].getWidth(),
                     /* y */ sim_h - Math.min(corners[2].getHeight(), corners[3].getHeight()) + pedestrian_offset,
                     /* width */  sim_w - corners[2].getWidth() - center_x,
-                    /* height */ stripe_thickness
+                    /* height */ THICK_STRIPE_THICKNESS
                 ), Color.WHITE, stripe_length+gap_length, gap_length
             ),
 
             // left arm
             this.stripeHorizontal(
                 new Rectangle(
-                    /* x */ Math.min(corners[0].getWidth(), corners[2].getWidth()) - pedestrian_offset - stripe_thickness,
+                    /* x */ Math.min(corners[0].getWidth(), corners[2].getWidth()) - pedestrian_offset - THICK_STRIPE_THICKNESS,
                     /* y */ corners[0].getHeight(),
-                    /* width */  stripe_thickness,
+                    /* width */  THICK_STRIPE_THICKNESS,
                     /* height */ sim_h - corners[0].getHeight() - center_y
                 ), Color.WHITE, stripe_length+gap_length, gap_length
             ),
         };
-    }
-
-    public Rectangle[] createMajorStripes() {
-        double pedestrian_offset = (PEDESTRIAN_CROSSING_WIDTH+Vehicle.VEHICLE_GAP/2) * has_pedestrian;
-        
-        // line dividing incoming/outgoing lanes for each junction arm
-        this.lane_separation = new Rectangle[] {
-            this.stripeMajor(new Rectangle( // top junction arm
-                    corners[0].getWidth() + Lane.lane_w *max_out, 0, // X and Y
-                    MAJOR_STRIPE_WIDTH, Math.min(corners[0].getHeight(),corners[1].getHeight())-pedestrian_offset // Width and Height
-            ), false), // right junction arm
-            this.stripeMajor(new Rectangle(
-                    sim_w - Math.min(corners[1].getWidth(),corners[3].getWidth())+pedestrian_offset, corners[1].getHeight() + Lane.lane_w *max_out, // X and Y
-                    Math.min(corners[1].getWidth(),corners[3].getWidth())-pedestrian_offset,MAJOR_STRIPE_WIDTH  // Width and Height
-            ), true),
-            this.stripeMajor(new Rectangle( // bottom junction arm
-                    sim_w-(corners[3].getWidth() + Lane.lane_w *max_out), sim_h-Math.min(corners[2].getHeight(),corners[3].getHeight())+pedestrian_offset, // X and Y
-                    MAJOR_STRIPE_WIDTH, Math.min(corners[2].getHeight(),corners[3].getHeight())-pedestrian_offset // Width and Height
-            ), false),
-            this.stripeMajor(new Rectangle( // left junction arm
-                    0, sim_h - (corners[2].getHeight() + Lane.lane_w *max_out), // X and Y
-                    Math.min(corners[0].getWidth(),corners[2].getWidth())-pedestrian_offset, MAJOR_STRIPE_WIDTH // Width and Height
-            ), true)
-        };
-
-        return this.lane_separation;
     }
 
     public void start_simulation(){
@@ -710,7 +711,7 @@ public class SimulationComponents {
     public ArrayList<Rectangle> getArrows(){
         ArrayList<Rectangle> all_arrows = new ArrayList<Rectangle>();
         for (int i=0; i<4; i++){
-            all_arrows.addAll(junction_arms_in[i].getArrows(GET_PEDESTRIAN_CROSSING_WIDTH()));
+            all_arrows.addAll(junction_arms_in[i].getArrows(this.getStopMarkingBuffer()));
         }
         return all_arrows;
     }
