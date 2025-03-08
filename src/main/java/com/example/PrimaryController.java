@@ -654,6 +654,7 @@ public class PrimaryController {
     private void SetToPlayMode() {
         run_button.setDisable(true);
         pause_button.setDisable(false);
+        pause_button.requestFocus();
     }
 
     private void SetToPauseMode() {
