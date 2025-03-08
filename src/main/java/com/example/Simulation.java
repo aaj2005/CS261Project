@@ -266,4 +266,12 @@ public class Simulation {
     public void setWest_east_vph(Integer west_east_vph) {
         this.west_east_vph = west_east_vph;
     }
+
+    public void setDuration_of_crossings(Integer duration_of_crossings) {
+        this.duration_of_crossings = duration_of_crossings;
+    }
+
+    public void setRequests_per_hour(Integer requests_per_hour) {
+        this.requests_per_hour = requests_per_hour;
+    }
 }
