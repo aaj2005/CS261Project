@@ -165,5 +165,15 @@ public enum Direction {
         }
         return null;
     }
+
+    public static Direction getOpposite(Direction a) {
+        switch (a) {
+            case TOP: return BOTTOM;
+            case BOTTOM: return TOP;
+            case LEFT: return RIGHT;
+            case RIGHT: return LEFT;
+        }
+        return null;
+    }
 }
 

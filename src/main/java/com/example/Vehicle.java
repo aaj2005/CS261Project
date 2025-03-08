@@ -14,6 +14,9 @@ public abstract class Vehicle{
 
     public abstract double getHeight();
 
+    public abstract Direction getInboundDirection();
+    public abstract Direction getOutboundDirection();
+
     // let the car object know that the turn has been completed
     public void setMadeTurn() {
         this.made_turn = true;

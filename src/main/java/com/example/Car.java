@@ -15,16 +15,16 @@ public class Car extends Vehicle{
     public static final double CAR_HEIGHT = 43.6;
 
     // used for determining the direction the car will travel to
-    private Cardinal dir;
+    private Direction outboundDirection;
 
-    private final Direction direction; // origin direction of car
+    private final Direction inboundDirection; // origin direction of car
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
-    public Car(Direction direction, double pos_x, double pos_y, Cardinal dir){
+    public Car(Direction inboundDirection, double pos_x, double pos_y, Direction outboundDirection){
         // choose appropriate texture based on junction arm
-        if (direction == Direction.TOP || direction == Direction.BOTTOM){
+        if (inboundDirection == Direction.TOP || inboundDirection == Direction.BOTTOM){
             shape = new Rectangle(CAR_WIDTH, CAR_HEIGHT);
             shape.setFill(car_texture_ver);
         }else{
@@ -35,17 +35,21 @@ public class Car extends Vehicle{
         shape.setX(pos_x);
         shape.setY(pos_y);
         // rotate to face correct direction
-        shape.setRotate(direction.getRotation());
-        this.direction = direction;
-        this.dir = dir;
+        shape.setRotate(inboundDirection.getRotation());
+        this.inboundDirection = inboundDirection;
+        this.outboundDirection = outboundDirection;
 
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// GETTERS + SETTERS ////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
-    public Direction getDirection() {
-        return direction;
+    public Direction getInboundDirection() {
+        return this.inboundDirection;
+    }
+
+    public Direction getOutboundDirection() {
+        return this.outboundDirection;
     }
 
     public Rectangle getShape() {
@@ -55,9 +59,4 @@ public class Car extends Vehicle{
     public double getHeight(){
         return CAR_HEIGHT;
     }
-
-    public Cardinal getOutboundDirection(){
-        return this.dir;
-    }
-
 }

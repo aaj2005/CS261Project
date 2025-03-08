@@ -323,7 +323,7 @@ public class TrafficLights {
         car_in_junction = false;
         for (Road road: out_junc){
             for (Lane lane: road.getLanes()){
-                if (!lane.getCars().isEmpty()) {
+                if (!lane.getVehicles().isEmpty()) {
                     car_in_junction = true;
                     break;
                 }
