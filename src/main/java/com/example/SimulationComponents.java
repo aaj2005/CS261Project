@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -57,17 +59,24 @@ public class SimulationComponents {
     public static double GET_PEDESTRIAN_CROSSING_WIDTH(){
         return PEDESTRIAN_CROSSING_WIDTH;
     }
+
     // traffic light logic instance
     private TrafficLights traffic_system;
-
+    
     private int has_pedestrian;
-
+    
     private Timeline timeline;
     private Boolean running = false;
-
+    
     // how many pixels off the screen cars are allowed to spawn
     // this means that queues extend off the screen, rather than ending right at the very edge
     public static final double spawn_offset = 300;
+    
+    // used to check if car is in junction
+    private BoundingBox junction_rectangle;
+    public BoundingBox getJunctionRectangle() {
+        return this.junction_rectangle;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -120,6 +129,18 @@ public class SimulationComponents {
                         (sim_w/SCALE_FACTOR)-max_out * Lane.lane_w, (sim_h/SCALE_FACTOR)-lanes_arm2 * Lane.lane_w // Width and Height
                 ),
         };
+
+        double junc_left_x   = Math.min(this.corners[0].getWidth(), this.corners[2].getWidth());
+        double junc_top_y    = Math.min(this.corners[0].getHeight(), this.corners[1].getHeight());
+        double junc_right_x  = SimulationComponents.sim_w - Math.min(this.corners[1].getWidth(), this.corners[3].getWidth());
+        double junc_bottom_y = SimulationComponents.sim_h - Math.min(this.corners[2].getHeight(), this.corners[3].getHeight());
+        double ped_width     = SimulationComponents.PEDESTRIAN_CROSSING_WIDTH*this.has_pedestrian;
+        junction_rectangle = new BoundingBox(
+            junc_left_x - ped_width,
+            junc_top_y - ped_width,
+            junc_right_x - junc_left_x + ped_width*2,
+            junc_bottom_y - junc_top_y + ped_width*2
+        );
 
         // determine the center
         center_x = corners[0].getWidth() + Lane.lane_w *max_out;
@@ -310,7 +331,6 @@ public class SimulationComponents {
     }
 
 
-
     public void addLaneSeparators(int lanes_arm1,int lanes_arm2,int lanes_arm3,int lanes_arm4){
         Rectangle[] rectangles;
         for (int i=1;i<max_out;++i) {
@@ -457,7 +477,8 @@ public class SimulationComponents {
 
     private void moveCars() {
         for (int i=0; i< 4; i++) {
-            this.junction_arms_in[i].moveCars(traffic_system.getLight_status()[i]); // move cars on every road, before they've reached the junction 
+            boolean can_enter_junction = !this.junction_arms_in[((i-1)%4+4)%4].existsCarInJunction(this.junction_rectangle);
+            this.junction_arms_in[i].moveCars(traffic_system.getLight_status()[i], can_enter_junction);
 
             /*
             // move cars if the light is green and the junction is clear

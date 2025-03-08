@@ -3,6 +3,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javafx.geometry.BoundingBox;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -387,12 +388,24 @@ public class Road extends JunctionElement{
      * Move all the cars on a road
      * @param light_is_green whether the light for that road is green or not
      */
-    public void moveCars(boolean light_is_green) {
+    public void moveCars(boolean light_is_green, boolean can_enter_junction) {
         for (Lane lane : this.lanes) {
-            this.cars_to_remove.addAll(lane.moveCars(light_is_green));
+            this.cars_to_remove.addAll(lane.moveCars(light_is_green, can_enter_junction));
         }
     }
 
+    /*
+     * Check if a vehicle has moved from this road into the junction
+     * We need the junc to be clear before allowing the cars in the next road to move
+     */
+    public boolean existsCarInJunction(BoundingBox junction_rectangle) {
+        for (Lane lane: this.lanes) {
+            if (lane.existsCarInJunction(junction_rectangle)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// GETTERS + SETTERS ////////////////////////////////////

@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.geometry.BoundingBox;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
@@ -136,12 +137,13 @@ public class Lane {
         }
         return false;
     }
-    public boolean car_in_junction(Vehicle car){
+
+    public boolean existsCarInJunction(Vehicle vehicle, BoundingBox junction_rectangle){
+        /*
         Rectangle carRect = car.getShape();
         double x = carRect.getX(), y = carRect.getY();
         switch (this.direction) {
             case TOP:
-
                 if (y >= front_of_road_y - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian) {return true;}
                 break;
             case RIGHT:
@@ -155,7 +157,20 @@ public class Lane {
                 break;
         }
         return false;
+        */
+        return vehicle.getShape().intersects(junction_rectangle); 
+    }
 
+    /*
+     * Iterates through every car that has spawned in this lane and sees if any of them are currently in the junction
+     */
+    public boolean existsCarInJunction(BoundingBox junction_rectangle) {
+        for (Vehicle v : this.vehicles) {
+            if (this.existsCarInJunction(v, junction_rectangle)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void add_car(Vehicle car){
@@ -174,7 +189,7 @@ public class Lane {
      * @param light_is_green whether the light for the road light is green or not
      * @return an arraylist of all the cars that should be despawned
      */
-    public ArrayList<Rectangle> moveCars(boolean light_is_green) {
+    public ArrayList<Rectangle> moveCars(boolean light_is_green, boolean can_enter_junction) {
         ArrayList<Vehicle> vehicles_to_remove=new ArrayList<>();
         ArrayList<Rectangle> vehicle_shapes_to_remove = new ArrayList<>();
         
@@ -189,10 +204,6 @@ public class Lane {
             // ----- MOVE THE CAR ----- //
             // wait till car reaches very front of lane (so it can turn)
             // check if car is in the front of the lane (about to enter the junction)
-            
-            // if (!this.isCarInJam(car) && x < SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT) {
-            //     System.out.println(SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0])+ Car.CAR_HEIGHT);
-            // }
 
             // if car hasn't reached the jam yet, move forward
             if (!this.isVehicleInJam(vehicle) && !vehicle.hasStartedTurning()) {
@@ -204,7 +215,7 @@ public class Lane {
             else if (this.isVehicleInJam(vehicle) && !vehicle.hasStartedTurning() && !light_is_green) {}
 
             // if the car has reached the junction, and the light is green, start turning
-            else if (this.hasVehicleReachedJunction(vehicle) && !vehicle.hasStartedTurning() && light_is_green) {
+            else if (this.hasVehicleReachedJunction(vehicle) && !vehicle.hasStartedTurning() && light_is_green && can_enter_junction) {
                 if (vehicle instanceof Car) { // buses do not turn so they are handled differently
                     Car car = (Car) vehicle;
 
@@ -226,7 +237,11 @@ public class Lane {
             }
 
             // if the car has already passed the junction (equivalently, if the car has "turned"), keep the car going
-            else if (vehicle.hasMadeTurn()) {                
+            else if (vehicle.hasMadeTurn()) {   
+                if (vehicle.getInboundDirection() == Direction.LEFT && vehicle.getOutboundDirection() == Direction.TOP) {
+                    System.out.println("A");
+                }
+                
                 vehicle_rect.setX(x - car_dir_mod[0]*Car.VEHICLE_SPEED);
                 vehicle_rect.setY(y - car_dir_mod[1]*Car.VEHICLE_SPEED);
                 this.despawnVehicle(vehicles_to_remove, vehicle_shapes_to_remove, vehicle, vehicle.getOutboundDirection());
