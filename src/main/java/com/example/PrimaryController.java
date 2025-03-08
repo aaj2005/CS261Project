@@ -206,9 +206,10 @@ public class PrimaryController {
         };
 
         if (sim.getPedestrian_crossings()) {
-            DynamicComponents.pedestrian_crossing = new PedestrianCrossing(sim.getDuration_of_crossings(), sim.getRequests_per_hour());
+            DynamicComponents.pedestrian_crossing = new PedestrianCrossing(Math.max(sim.getDuration_of_crossings(), 1), Math.max(sim.getRequests_per_hour(), 2));
         } else {
-            DynamicComponents.pedestrian_crossing = new PedestrianCrossing(0, 0);
+            // Default to the lowest values that won't crash everything
+            DynamicComponents.pedestrian_crossing = new PedestrianCrossing(1, 2);
         }
 
         try {
