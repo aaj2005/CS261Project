@@ -5,16 +5,19 @@ import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class SimulationComponents {
-
 
     // center of the simulation
     private final double center_x;
@@ -42,6 +45,8 @@ public class SimulationComponents {
     private static final double PEDESTRIAN_SCALE_FACTOR = 15;
     private static final int NUMBER_OF_LINES = 33;
     private static double PEDESTRIAN_CROSSING_WIDTH;
+
+    private static final double STRIPE_WIDTH = 3;
 
     // maximum number of lanes set
     private final int max_out;
@@ -284,6 +289,10 @@ public class SimulationComponents {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
 
+        Rectangle r = new Rectangle(100, 100, 500, 10);
+        r.setFill(Color.WHITE);
+        root.getChildren().addAll(this.stripeVertical(r));
+
     }
 
     public void start_simulation(){
@@ -350,12 +359,9 @@ public class SimulationComponents {
         running = false;
     }
 
-
     private void animation(AnchorPane root){
         this.update(root);
     }
-
-
 
     public void addLaneSeparators(int lanes_arm1,int lanes_arm2,int lanes_arm3,int lanes_arm4){
         Rectangle[] rectangles;
@@ -363,41 +369,42 @@ public class SimulationComponents {
             rectangles = new Rectangle[]{
                     new Rectangle( // top junction arm
                             corners[0].getWidth() + Lane.lane_w * i, 0, // X and Y
-                            1, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                            STRIPE_WIDTH, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
                     ),
                     new Rectangle( // right junction arm
                             sim_w - Math.min(corners[1].getWidth(), corners[3].getWidth()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, corners[1].getHeight() + Lane.lane_w * i, // X and Y
-                            Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1  // Width and Height
+                            Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, STRIPE_WIDTH  // Width and Height
                     ),
                     new Rectangle( // bottom junction arm
                             sim_w - (corners[3].getWidth() + Lane.lane_w * i), sim_h - Math.min(corners[2].getHeight(), // X and Y
                             corners[3].getHeight()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian,
-                            1, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                            STRIPE_WIDTH, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
                     ),
                     new Rectangle( // left junction arm
                             0, sim_h - (corners[2].getHeight() + Lane.lane_w * i), // X and Y
-                            Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1 // Width and Height
+                            Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, STRIPE_WIDTH // Width and Height
                     ),
 
             };
             for (Rectangle r : rectangles) {
                 r.setFill(Color.WHITE);
+                // r = this.stripe(r);
             }
             root.getChildren().addAll(rectangles);
         }
         for (int i =0;i<lanes_arm1;++i) {
             Rectangle rect = new Rectangle( // top junction arm
                     sim_w - corners[1].getWidth() - Lane.lane_w * i, 0, // X and Y
-                    1, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                    STRIPE_WIDTH, Math.min(corners[0].getHeight(), corners[1].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
             );
-//            if ()
-            rect.setFill(Color.WHITE);
+            rect = this.stripeVertical(rect);
+            // rect.setFill(Color.WHITE);
             root.getChildren().addAll(rect);
         }
         for (int i =0;i<lanes_arm2;++i) {
             Rectangle rect = new Rectangle( // right junction arm
                     sim_w - Math.min(corners[1].getWidth(), corners[3].getWidth()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, sim_h - corners[2].getHeight() - Lane.lane_w * i, // X and Y
-                    Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1  // Width and Height
+                    Math.min(corners[1].getWidth(), corners[3].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, STRIPE_WIDTH  // Width and Height
             );
             rect.setFill(Color.WHITE);
             root.getChildren().addAll(rect);
@@ -406,7 +413,7 @@ public class SimulationComponents {
             Rectangle rect = new Rectangle( // bottom junction arm
                     (corners[3].getWidth() + Lane.lane_w * i), sim_h - Math.min(corners[2].getHeight(), // X and Y
                     corners[3].getHeight()) + PEDESTRIAN_CROSSING_WIDTH * has_pedestrian,
-                    1, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
+                    STRIPE_WIDTH, Math.min(corners[2].getHeight(), corners[3].getHeight()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian // Width and Height
             );
             rect.setFill(Color.WHITE);
             root.getChildren().addAll(rect);
@@ -414,13 +421,51 @@ public class SimulationComponents {
         for (int i =0;i<lanes_arm4;++i) {
             Rectangle rect = new Rectangle( // left junction arm
                     0, (corners[0].getHeight() + Lane.lane_w * i), // X and Y
-                    Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, 1 // Width and Height
+                    Math.min(corners[0].getWidth(), corners[2].getWidth()) - PEDESTRIAN_CROSSING_WIDTH * has_pedestrian, STRIPE_WIDTH // Width and Height
             );
             rect.setFill(Color.WHITE);
             root.getChildren().addAll(rect);
+
         }
     }
 
+    /*
+     * Puts grey stripes along a rectangle
+     * @param stripe_separation how far the stripes are from each other
+     * @param stripe_width how wide the stripes are
+     * @return a striped rectangle
+     */
+    public Rectangle stripeVertical(Rectangle r) {
+        int stripe_separation = 50;
+        int stripe_width = 10;
+        Canvas canvas = new Canvas(r.getWidth(), r.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setFill(Color.rgb(148,148,148));
+        for (int pos = 0; pos < r.getWidth(); pos+=stripe_separation) {
+            gc.fillRect(pos, 0, stripe_width, r.getHeight());
+        }
+
+        Rectangle stripedRectangle = new Rectangle(r.getWidth(), r.getHeight());
+        stripedRectangle.setFill(new ImagePattern(canvas.snapshot(null, null)));
+        return stripedRectangle;
+    }
+
+    public Rectangle stripeHorizontal(Rectangle r) {
+        int stripe_separation = 50;
+        int stripe_height = 10;
+        Canvas canvas = new Canvas(r.getWidth(), r.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setFill(Color.rgb(148,148,148));
+        for (int pos = 0; pos < r.getHeight(); pos+=stripe_separation) {
+            gc.fillRect(0, pos, r.getWidth(), stripe_height);
+        }
+
+        Rectangle stripedRectangle = new Rectangle(r.getWidth(), r.getHeight());
+        stripedRectangle.setFill(new ImagePattern(canvas.snapshot(null, null)));
+        return stripedRectangle;
+    }
 
     public void addCrossings(int stripecount){
         crossings = new ArrayList<>();
