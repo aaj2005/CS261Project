@@ -68,7 +68,7 @@ jobs:
 
       - name: Package application as self-contained Linux installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type deb --dest target/
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type deb --dest target/
 
       - name: Upload Linux package to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -107,7 +107,7 @@ jobs:
 
       - name: Package application as self-contained Windows installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type exe --dest target/
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type exe --dest target/
 
       - name: Upload Windows package to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -146,7 +146,7 @@ jobs:
 
       - name: Package application as self-contained macOS installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar trafficsim-${{ env.VERSION }}.jar --main-class com.example.App --type dmg --dest target/
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type dmg --dest target/
 
       - name: Upload macOS package to GitHub Release
         uses: softprops/action-gh-release@v1
