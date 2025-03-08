@@ -495,8 +495,34 @@ public class Road extends JunctionElement{
         if (this.lanes.size() == 1) {
             if (this.hasFlowLeft() && this.hasFlowRight()) {
                 lane_arrows.get(0).setFill(all_arrows);
-            } else if (this.hasFlowLeft() && this.)
+            } else if (this.hasFlowLeft() && this.hasFlowAhead()) {
+                lane_arrows.get(0).setFill(left_and_forward_arrow);
+            } else if (this.hasFlowRight() && this.hasFlowAhead()) {
+                lane_arrows.get(0).setFill(right_and_forward_arrow);
+            } else if (this.hasFlowRight()) {
+                lane_arrows.get(0).setFill(right_arrow);
+            } else if (this.hasFlowLeft()) {
+                lane_arrows.get(0).setFill(left_arrow);
+            }
         }
+
+        else {
+            if (this.hasFlowLeft()) {
+                if (this.hasFlowAhead()) {
+                    lane_arrows.get(0).setFill(left_and_forward_arrow);
+                } else {
+                    lane_arrows.get(0).setFill(left_arrow);
+                }
+            }
+            if (this.hasFlowRight()) {
+                if (this.hasFlowAhead()) {
+                    lane_arrows.get(lane_arrows.size()-1).setFill(right_and_forward_arrow);
+                } else {
+                    lane_arrows.get(lane_arrows.size()-1).setFill(right_arrow);
+                }
+            }
+        }
+
         return lane_arrows;
     }
 
@@ -512,7 +538,7 @@ public class Road extends JunctionElement{
     }
 
     private boolean hasFlowAhead() {
-        return this.spawnFreq[]
+        return this.spawnFreq[Direction.getOpposite(this.direction).ordinal()] > 0;
     }
 
     /*
