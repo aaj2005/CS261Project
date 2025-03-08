@@ -121,16 +121,16 @@ public class Lane {
             double x = carRect.getX(), y = carRect.getY();
             switch (this.direction) {
                 case TOP:
-                    if (y < -Car.CAR_HEIGHT/2 + Car.VEHICLE_GAP) { return true; }
+                    if (y < -Car.CAR_HEIGHT/2 + Car.VEHICLE_GAP - SimulationComponents.spawn_offset) { return true; }
                     break;
                 case RIGHT:
-                    if (x > SimulationComponents.sim_w - Car.CAR_HEIGHT/2 - Car.VEHICLE_GAP) { return true; }
+                    if (x > SimulationComponents.sim_w - Car.CAR_HEIGHT/2 - Car.VEHICLE_GAP + SimulationComponents.spawn_offset) { return true; }
                     break;
                 case BOTTOM:
-                    if (y > SimulationComponents.sim_h - Car.CAR_HEIGHT/2 - Car.VEHICLE_GAP) { return true; }
+                    if (y > SimulationComponents.sim_h - Car.CAR_HEIGHT/2 - Car.VEHICLE_GAP + SimulationComponents.spawn_offset) { return true; }
                     break;
                 case LEFT:
-                    if (x < Car.VEHICLE_GAP) { return true; }
+                    if (x < Car.VEHICLE_GAP - SimulationComponents.spawn_offset) { return true; }
                     break;
             }
         }
@@ -323,13 +323,13 @@ public class Lane {
 
         switch (vehicle.getInboundDirection()){
             case TOP:
-                return Math.min(corner2_dims[1],corner1_dims[1]) - vehicle.getHeight() - Vehicle.VEHICLE_GAP <=y;
+                return Math.min(corner2_dims[1],corner1_dims[1]) - vehicle.getHeight() - Vehicle.VEHICLE_GAP - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian <=y;
             case RIGHT:
-                return SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0]) >= x;
+                return SimulationComponents.sim_w-Math.min(corner1_dims[0],corner2_dims[0]) + SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian + Vehicle.VEHICLE_GAP >= x;
             case BOTTOM:
-                return SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) >= y;
+                return SimulationComponents.sim_h-Math.min(corner1_dims[1],corner2_dims[1]) + SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian + Vehicle.VEHICLE_GAP >= y;
             case LEFT:
-                return Math.min(corner1_dims[0],corner2_dims[0]) - vehicle.getHeight() - Vehicle.VEHICLE_GAP <= x;
+                return Math.min(corner1_dims[0],corner2_dims[0]) - vehicle.getHeight() - Vehicle.VEHICLE_GAP - SimulationComponents.GET_PEDESTRIAN_CROSSING_WIDTH()*this.has_pedestrian <= x;
         }
 
         return false;

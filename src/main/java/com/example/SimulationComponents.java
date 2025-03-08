@@ -67,7 +67,7 @@ public class SimulationComponents {
 
     // how many pixels off the screen cars are allowed to spawn
     // this means that queues extend off the screen, rather than ending right at the very edge
-    private double spawn_offset = 300;
+    public static final double spawn_offset = 300;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// CONSTRUCTOR //////////////////////////////////////////
@@ -168,7 +168,7 @@ public class SimulationComponents {
         junction_arms_in[0].set_start(
                 sim_w-getCornerDims("tr")[0]-Car.CAR_WIDTH- (Lane.lane_w-Car.CAR_WIDTH)/2,
                 // Math.min(getCornerDims("tl")[1],getCornerDims("tr")[1])-Car.CAR_HEIGHT-Car.CAR_GAP
-                -Car.CAR_HEIGHT -Car.CAR_HEIGHT/2
+                -Car.CAR_HEIGHT -Car.CAR_HEIGHT/2 -this.spawn_offset
         );
 
         // create a road instance for RIGHT junction arm, this road is specifically for cars entering the junction
@@ -191,7 +191,7 @@ public class SimulationComponents {
         // set the spawn position for the RIGHT junction arm
         junction_arms_in[1].set_start(
                 // sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
-                sim_w + Car.CAR_HEIGHT/2,
+                sim_w + Car.CAR_HEIGHT/2 + this.spawn_offset,
                 sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH
         );
 
@@ -216,7 +216,7 @@ public class SimulationComponents {
         junction_arms_in[2].set_start(
                 getCornerDims("bl")[0]+ (Lane.lane_w-Car.CAR_WIDTH)/2,
                 // sim_h-Math.min(getCornerDims("bl")[1],getCornerDims("br")[1])
-                sim_h+Car.CAR_HEIGHT/2
+                sim_h+Car.CAR_HEIGHT/2 +this.spawn_offset
         );
 
         // create a road instance for LEFT junction arm, this road is specifically for cars entering the junction
@@ -239,7 +239,7 @@ public class SimulationComponents {
         // set the spawn position for the LEFT junction arm
         junction_arms_in[3].set_start(
                 // getCornerDims("tl")[0]- Car.CAR_HEIGHT,
-                -Car.CAR_HEIGHT,
+                -Car.CAR_HEIGHT -this.spawn_offset,
                 getCornerDims("tl")[1] + (Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
