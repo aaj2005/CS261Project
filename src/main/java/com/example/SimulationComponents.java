@@ -220,9 +220,8 @@ public class SimulationComponents {
 
         // set the spawn position for the RIGHT junction arm
         junction_arms_in[1].set_start(
-                // sim_w-Math.min(getCornerDims("tr")[0],getCornerDims("br")[0]),
                 sim_w + Car.CAR_HEIGHT/2 + this.spawn_offset,
-                sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH
+                sim_h-getCornerDims("br")[1]- Car.CAR_WIDTH-(Lane.lane_w-Car.CAR_WIDTH)/2
         );
 
         // create a road instance for BOTTOM junction arm, this road is specifically for cars entering the junction
