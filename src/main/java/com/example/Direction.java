@@ -9,44 +9,44 @@ public enum Direction {
     // road_after_left/right: get the junction_arm index for the road that you end up in after turning left/right
 
     TOP(
-            180,
-            -1, 0,
-            1, -1,
-            -1, 1,
-            0,0,
-            0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            3,1
-    ),
-    BOTTOM(
-            0,
-            1, 0,
-            1, -1,
-            -1,1,
-            0,0,
-            0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
-            Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
-            1,3
+        180,
+        -1, 0,
+        1, -1,
+        -1, 1,
+        0,0,
+        0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
+        Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+        3,1
     ),
     RIGHT(
-            0,
-            0, -1,
-            -1, 1,
-            1,-1,
-            0,0,
-            -Car.CAR_WIDTH/2,0,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            0,2
+        0,
+        0, -1,
+        -1, 1,
+        1,-1,
+        0,0,
+        -Car.CAR_WIDTH/2,0,
+        Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+        0,2
+    ),
+    BOTTOM(
+        0,
+        1, 0,
+        1, -1,
+        -1,1,
+        0,0,
+        0,Car.CAR_HEIGHT+Car.CAR_WIDTH/2,
+        Car.CAR_WIDTH/2,Car.CAR_HEIGHT/2,
+        1,3
     ),
     LEFT(
-            180,
-            0, 1,
-            -1, 1,
-            1,-1,
-            0,0,
-            -Car.CAR_WIDTH/2,0,
-            Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
-            2,0
+        180,
+        0, 1,
+        -1, 1,
+        1,-1,
+        0,0,
+        -Car.CAR_WIDTH/2,0,
+        Car.CAR_HEIGHT/2,Car.CAR_WIDTH/2,
+        2,0
     );
 
     private final double lane_switch_x;
@@ -64,8 +64,6 @@ public enum Direction {
     private final double right_turn_pos_y;
     private final int road_after_left;
     private final int road_after_right;
-
-
 
     Direction(
             double rotation,
@@ -94,7 +92,6 @@ public enum Direction {
         this.road_after_left = road_after_left;
     }
 
-
     public double getRotation() {
         return rotation;
     }
@@ -104,8 +101,6 @@ public enum Direction {
     }
 
     public double getLane_switch_y() {return lane_switch_y;}
-
-
 
     public double getRight_trans_x() {
         return right_trans_x;
@@ -172,6 +167,26 @@ public enum Direction {
             case BOTTOM: return TOP;
             case LEFT: return RIGHT;
             case RIGHT: return LEFT;
+        }
+        return null;
+    }
+
+    public static Direction getLeft(Direction a) {
+        switch (a) {
+            case TOP: return RIGHT;
+            case RIGHT: return BOTTOM;
+            case BOTTOM: return LEFT;
+            case LEFT: return TOP;
+        }
+        return null;
+    }
+
+    public static Direction getRight(Direction a) {
+        switch (a) {
+            case TOP: return LEFT;
+            case RIGHT: return TOP;
+            case BOTTOM: return RIGHT;
+            case LEFT: return BOTTOM;
         }
         return null;
     }
