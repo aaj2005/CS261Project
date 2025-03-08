@@ -269,7 +269,7 @@ public class SimulationComponents {
         junction_arms_out[2] = new Road(max_out,getCornerDims("br"),getCornerDims("bl"), false, Direction.BOTTOM, vph_3, left_turn3, right_turn3, is_bus_lane3, max_out,animations,false, cars_to_remove);
         junction_arms_out[3] = new Road(max_out,getCornerDims("bl"),getCornerDims("tl"), false, Direction.LEFT, vph_4, left_turn4, right_turn4, is_bus_lane4, max_out,animations,false, cars_to_remove);
 
-        traffic_system = new TrafficLights(new int[] {0,0,0,0},60,4,junction_arms_out);
+        traffic_system = new TrafficLights(new int[] {0,0,0,0},60,4,junction_arms_in, this.getJunctionRectangle());
         lights = traffic_system.create_rectangles(getLane_separation(), PEDESTRIAN_SCALE_FACTOR, getCenters(), max_out);
 
 
