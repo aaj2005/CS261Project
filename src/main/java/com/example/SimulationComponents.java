@@ -318,7 +318,7 @@ public class SimulationComponents {
             for (int i=0; i<4;++i){
                 int lane_size = junction_arms_in[i].get_lane_size();
                 for (int j=0; j<lane_size;++j){
-                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getCars();
+                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getVehicles();
                     for (int k=0;k<v.size();++k){
 
                         if (v.get(k) instanceof Car){
@@ -330,7 +330,7 @@ public class SimulationComponents {
             for (int i=0; i<4;++i){
                 int lane_size = junction_arms_out[i].get_lane_size();
                 for (int j=0; j<lane_size;++j){
-                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getCars();
+                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getVehicles();
                     for (int k=0;k<v.size();++k){
 
                         if (v.get(k) instanceof Car){
@@ -349,7 +349,7 @@ public class SimulationComponents {
             for (int i=0; i<4;++i){
                 int lane_size = junction_arms_in[i].get_lane_size();
                 for (int j=0; j<lane_size;++j){
-                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getCars();
+                    ArrayList<Vehicle> v = junction_arms_in[i].getLanes().get(j).getVehicles();
                     for (int k=0;k<v.size();++k){
 
                         if (v.get(k) instanceof Car){
@@ -361,7 +361,7 @@ public class SimulationComponents {
             for (int i=0; i<4;++i){
                 int lane_size = junction_arms_out[i].get_lane_size();
                 for (int j=0; j<lane_size;++j){
-                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getCars();
+                    ArrayList<Vehicle> v = junction_arms_out[i].getLanes().get(j).getVehicles();
                     for (int k=0;k<v.size();++k){
 
                         if (v.get(k) instanceof Car){
