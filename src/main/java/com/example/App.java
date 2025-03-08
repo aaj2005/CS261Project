@@ -1,12 +1,27 @@
 package com.example;
 
+import java.io.IOException;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javafx.util.Duration;
 
 /**
  * JavaFX App
@@ -17,12 +32,23 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+
+        // Load fonts
+        Font.loadFont(getClass().getResource("fonts/IstokWeb-Regular.ttf").toExternalForm(), 18);
+        Font.loadFont(getClass().getResource("fonts/IstokWeb-Bold.ttf").toExternalForm(), 18);
+
+        // Load main UI scene
+        scene = new Scene(loadFXML("proj"), 1400, 800);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
+        stage.setTitle("Traffic Simulation");
+
         stage.show();
+//        stage.setFullScreen(true);
+
     }
 
-    static void setRoot(String fxml) throws IOException {
+    private static  void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
@@ -34,5 +60,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

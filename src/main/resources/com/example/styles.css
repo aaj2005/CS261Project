@@ -1,0 +1,161 @@
+/* Ensures padding inside the tab */
+.tab {
+    -fx-padding: 10 30 10 30; /* Top Right Bottom Left */
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {-fx-border-color: transparent}
+
+
+
+/* Controls the width of each tab */
+.tab-header-area .tab {
+    -fx-min-width: 150px;
+    -fx-pref-width: 300px;
+}
+
+.list-cell:empty {
+    -fx-background-color: white;
+}
+
+/* Typography hierarchy */
+
+.input-label {
+    -fx-font-family: "IstokWeb";
+    -fx-font-weight: normal;
+    -fx-font-size: 18px;
+}
+
+.bold-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.subtitle-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.title-label {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 32px;
+}
+
+.bold-button {
+    -fx-font-family: "IstokWeb-Bold";
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* General styling for ListView */
+.list-view {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 5px;
+}
+
+/* Style for individual ListView cells */
+.list-cell {
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #333;
+    -fx-background-color: white;
+    -fx-border-color: #d3d3d3;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Hover effect for ListView items */
+.list-cell:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Selected ListView item */
+.list-cell:selected {
+    /*-fx-background-color: #3498db;*/
+    -fx-background-color: #D0EFFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.manual-select {
+    -fx-background-color: orange;
+}
+
+/* Override selected styling for the "New Simulation" cell */
+.list-cell.new-simulation:selected {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+}
+
+
+
+/* Style for the "New Simulation" button */
+.run-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+}
+
+
+.run-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.pause-button {
+    -fx-background-color: #af4c4c;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+}
+
+.plus-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+}
+
+.plus-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.pause-button:hover {
+    -fx-background-color: #a04545;
+}
+
+/* Delete button */
+.button-delete {
+    -fx-background-color: #e74c3c;
+    /*-fx-text-fill: white;*/
+    /*-fx-font-size: 12px;*/
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+}
+
+.button-delete:hover {
+    -fx-background-color: #c0392b;
+}
+
+.button-rename {
+    -fx-background-color: #F0AD4E;
+    -fx-border-width: 0;
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+}
+
+.button-rename:hover {
+    -fx-background-color: #E0963B;
+}
+
+
