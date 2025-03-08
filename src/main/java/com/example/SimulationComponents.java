@@ -455,6 +455,7 @@ public class SimulationComponents {
         for (int i=0; i< 4; i++) {
             this.junction_arms_in[i].moveCars(traffic_system.getLight_status()[i]); // move cars on every road, before they've reached the junction 
 
+            /*
             // move cars if the light is green and the junction is clear
             if (traffic_system.getLight_status()[i] && !traffic_system.isCar_in_junction()){
 
@@ -498,6 +499,7 @@ public class SimulationComponents {
                 }
 
             }
+            */
 
             // remove cars which are outside the simulation display area
             for (Rectangle c: cars_to_remove){

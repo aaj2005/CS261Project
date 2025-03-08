@@ -56,7 +56,7 @@ public class Car extends Vehicle{
         return CAR_HEIGHT;
     }
 
-    public Cardinal getDir(){
+    public Cardinal getOutboundDirection(){
         return this.dir;
     }
 

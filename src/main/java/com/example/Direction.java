@@ -155,5 +155,15 @@ public enum Direction {
     public int getRoad_after_right() {
         return road_after_right;
     }
+
+    public static Cardinal toCardinal(Direction a) {
+        switch (a) {
+            case TOP: return Cardinal.N;
+            case RIGHT: return Cardinal.E;
+            case BOTTOM: return Cardinal.S;
+            case LEFT: return Cardinal.W;
+        }
+        return null;
+    }
 }
 

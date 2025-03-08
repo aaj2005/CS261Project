@@ -221,7 +221,7 @@ public class Road extends JunctionElement{
             int lane = 0;
             while (
                     lane+1<this.lanes.size() // check that you haven't reached the last lane
-                            && this.numSpawned[lane] > this.numSpawned[lane+1] // check that there are more cars here than in the next lane
+                 && this.numSpawned[lane] > this.numSpawned[lane+1] // check that there are more cars here than in the next lane
             ) { lane++; }
 
             return this.spawn_car_in_lane(lane, dir);
