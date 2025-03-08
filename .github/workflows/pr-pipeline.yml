@@ -76,12 +76,14 @@ jobs:
 
       - name: Check if JAR file exists
         run: |
-          if [ ! -f "target/traffic_sim_with_dep.jar" ]; then
-            echo "The built .deb file does not exist"
+          if (!(Test-Path -Path "target/traffic_sim_with_dep.jar")) {
+            Write-Host "The built .jar file does not exist"
             exit 1
-          fi
-          echo "The .deb file exists"
-  
+          }
+          Write-Host "The .jar file exists"
+        shell: pwsh
+
+
 
   build-macos:
     runs-on: macos-latest
