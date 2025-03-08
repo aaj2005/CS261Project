@@ -205,6 +205,7 @@ public class PrimaryController {
             sim.getWest_num_lanes(), Cardinal.W, west_left_turn, west_right_turn),
         };
 
+        DynamicComponents.pedestrian_crossing = new PedestrianCrossing(0, 0);
         if (sim.getPedestrian_crossings()) {
             DynamicComponents.pedestrian_crossing = new PedestrianCrossing(Math.max(sim.getDuration_of_crossings(), 1), Math.max(sim.getRequests_per_hour(), 2));
         } else {
