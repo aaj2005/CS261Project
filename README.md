@@ -21,7 +21,8 @@ Run the exe executable and follow the instructions presented.
 
 Find the application in ``C:/Program Files/TrafficSim``
 ### MacOS
-``s``
+- Run the dmg executable and drag TrafficSim to Applications
+- Navigate to the applications list in Finder to run the application 
 
 ## Usage
 

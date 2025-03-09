@@ -245,7 +245,7 @@ public class Lane {
             // if the car has already passed the junction (equivalently, if the car has "turned"), keep the car going
             else if (vehicle.hasMadeTurn()) {   
                 if (vehicle.getInboundDirection() == Direction.LEFT && vehicle.getOutboundDirection() == Direction.TOP) {
-                    System.out.println("A");
+                    // System.out.println("A");
                 }
                 
                 vehicle_rect.setX(x - car_dir_mod[0]*Car.VEHICLE_SPEED);
