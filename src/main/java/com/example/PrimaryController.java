@@ -612,8 +612,8 @@ public class PrimaryController {
         boolean east_left_turn = sim.getEast_south_vph() > 0;
         boolean east_right_turn = sim.getEast_north_vph() > 0;
 
-        boolean south_left_turn = sim.getSouth_east_vph() > 0;
-        boolean south_right_turn = sim.getSouth_west_vph() > 0;
+        boolean south_left_turn = sim.getSouth_west_vph() > 0;
+        boolean south_right_turn = sim.getSouth_east_vph() > 0;
 
         boolean west_left_turn = sim.getWest_north_vph() > 0;
         boolean west_right_turn = sim.getWest_south_vph() > 0;
