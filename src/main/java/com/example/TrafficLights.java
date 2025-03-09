@@ -173,6 +173,7 @@ public class TrafficLights {
                                 light_status[0] = false;
                                 lights[0].setFill(red_light);
                                 run_crossing = true;
+                                nextlight = 1;
                             }
                             else{
 
@@ -206,6 +207,7 @@ public class TrafficLights {
                                 light_status[1] = false;
                                 lights[1].setFill(red_light);
                                 run_crossing = true;
+                                nextlight = 2;
 
                             }
                             else{
@@ -239,6 +241,7 @@ public class TrafficLights {
                                 light_status[2] = false;
                                 lights[2].setFill(red_light);
                                 run_crossing = true;
+                                nextlight = 3;
                             }
                             else{
                                 light_status[2] = false;
@@ -271,6 +274,7 @@ public class TrafficLights {
                                 light_status[3] = false;
                                 lights[3].setFill(red_light);
                                 run_crossing = true;
+                                nextlight = 0;
                             }
                             else{
                                 light_status[3] = false;

@@ -116,7 +116,7 @@ public class Animations {
 
         // create the path transition animation object
         pathTransitionRight = new PathTransition();
-        System.out.println("path transition object created");
+        // System.out.println("path transition object created");
         pathTransitionRight.setDuration(Duration.millis(totalDuration*1000));
         pathTransitionRight.setNode(car.getShape());
         pathTransitionRight.setPath(path);
@@ -173,7 +173,7 @@ public class Animations {
                 // stop transition once animation time is reached
                 if ((elapsedTime/1_000_000_000.0) >= totalDuration) {
                     car.setMadeTurn();
-                    System.out.println("true");
+                    // System.out.println("true");
                     pathTransitionRight = null;
                     stop();
                 }

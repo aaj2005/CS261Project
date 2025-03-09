@@ -229,9 +229,7 @@ public class Road extends JunctionElement{
         if (isLeftOf(this.cardinal_pos, dir)) {
             // if there exists a left-turn lane, that's where the car will spawn
             // assumes that the left-turn lane is 0
-            if (dir == Cardinal.S){
-                System.out.println("wubba wubba");
-            }
+
             if (this.has_left_turn) {
                 return this.spawn_car_in_lane(0, dir);
             }

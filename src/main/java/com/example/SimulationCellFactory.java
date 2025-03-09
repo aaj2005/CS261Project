@@ -50,7 +50,7 @@ public class SimulationCellFactory extends ListCell<Simulation> {
         }
 
         this.setOnMouseClicked(event -> {
-            System.out.println("Clicked: " + item.getSimName() + " (Index: " + getIndex() + ")");
+//            System.out.println("Clicked: " + item.getSimName() + " (Index: " + getIndex() + ")");
             if (!item.getSimName().equals("New Simulation")) {
                 controller.setSelectedCell(this);
             }
