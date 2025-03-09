@@ -64,11 +64,13 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build, test, and package with Maven
-        run: mvn clean package --batch-mode
+        run: |
+          mvn install
+          mvn clean package --batch-mode
 
       - name: Package application as self-contained Linux installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type deb --dest target/ --vendor "SWE Group 32"
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.Main --type deb --dest target/ --vendor "SWE Group 32"
 
       - name: Upload Linux package to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -103,11 +105,13 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build, test, and package with Maven
-        run: mvn clean package --batch-mode
+        run: |
+          mvn install
+          mvn clean package --batch-mode
 
       - name: Package application as self-contained Windows installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type exe --dest target/ --vendor "SWE Group 32"
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.Main --type exe --dest target/ --vendor "SWE Group 32"
 
       - name: Upload Windows package to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -142,11 +146,13 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build, test, and package with Maven
-        run: mvn clean package --batch-mode
+        run: |
+          mvn install
+          mvn clean package --batch-mode
 
       - name: Package application as self-contained macOS installer
         run: |
-          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.App --type dmg --dest target/ --vendor "SWE Group 32"
+          jpackage --input target/ --name TrafficSim --main-jar traffic_sim_with_dep.jar --main-class com.example.Main --type dmg --dest target/ --vendor "SWE Group 32"
 
       - name: Upload macOS package to GitHub Release
         uses: softprops/action-gh-release@v1
