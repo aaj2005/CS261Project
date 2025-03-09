@@ -673,23 +673,23 @@ public class PrimaryController {
         sim_title.setWrapText(false);
 
         // Restrict all the text fields
-//        Validator.restrictToNumbers(txt_ns, 3657);
-//        Validator.restrictToNumbers(txt_ne, 3657);
-//        Validator.restrictToNumbers(txt_nw, 3657);
-//
-//        Validator.restrictToNumbers(txt_en, 3657);
-//        Validator.restrictToNumbers(txt_ew, 3657);
-//        Validator.restrictToNumbers(txt_es, 3657);
-//
-//        Validator.restrictToNumbers(txt_se, 3657);
-//        Validator.restrictToNumbers(txt_sw, 3657);
-//        Validator.restrictToNumbers(txt_sn, 3657);
-//
-//        Validator.restrictToNumbers(txt_wn, 3657);
-//        Validator.restrictToNumbers(txt_ws, 3657);
-//        Validator.restrictToNumbers(txt_we, 3657);
-//
-//        Validator.restrictToNumbers(crossing_duration, 3657);
-//        Validator.restrictToNumbers(crossing_duration, 3657);
+        Validator.restrictToNumbers(txt_ns, 3657);
+        Validator.restrictToNumbers(txt_ne, 3657);
+        Validator.restrictToNumbers(txt_nw, 3657);
+
+        Validator.restrictToNumbers(txt_en, 3657);
+        Validator.restrictToNumbers(txt_ew, 3657);
+        Validator.restrictToNumbers(txt_es, 3657);
+
+        Validator.restrictToNumbers(txt_se, 3657);
+        Validator.restrictToNumbers(txt_sw, 3657);
+        Validator.restrictToNumbers(txt_sn, 3657);
+
+        Validator.restrictToNumbers(txt_wn, 3657);
+        Validator.restrictToNumbers(txt_ws, 3657);
+        Validator.restrictToNumbers(txt_we, 3657);
+
+        Validator.restrictToNumbers(crossing_duration, 3657);
+        Validator.restrictToNumbers(crossing_duration, 3657);
     }
 }
