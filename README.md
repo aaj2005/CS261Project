@@ -5,21 +5,24 @@ This project revolves around the development of an application tht models real-l
 adjustable parameters that can simulate real life traffic.
 
 ## Installation
-### Linux
-Install JDK-21
+### Ubuntu/Debian
+Download the debian package and navigate on a terminal to the directory where it is located.
 ```bash 
-sudo apt install openjdk-21-jdk
+sudo dpkg -i trafficsim_1.0_amd64.deb
 ```
 
-Run the jar file as follows
+Run the executable
 
 ```bash 
-java -jar traffic-sim.jar
+/opt/trafficsim/bin/TrafficSim
 ```
 ### Windows
-``s``
+Run the exe executable and follow the instructions presented.
+
+Find the application in ``C:/Program Files/TrafficSim``
 ### MacOS
-``s``
+- Run the dmg executable and drag TrafficSim to Applications
+- Navigate to the applications list in Finder to run the application 
 
 ## Usage
 

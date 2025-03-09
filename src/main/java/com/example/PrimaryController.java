@@ -283,10 +283,10 @@ public class PrimaryController {
         }
 
         if (selectedCell != null) {
-            System.out.println("Deselecting: " + selectedCell.getIndex());
+            // System.out.println("Deselecting: " + selectedCell.getIndex());
         }
         if (selectedCell != null && selectedCell.getItem() != null) {
-            System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
+            // System.out.println("SAVING PARAM FOR SIM: " + cell.getItem().getSimName());
             selectedCell.setStyle("");
             Simulation selectedSim = selectedCell.getItem();
             selectedSim.setNumberParameters(
@@ -319,7 +319,7 @@ public class PrimaryController {
         SetToPauseMode();
 
         if (selectedCell != null) {
-            System.out.println("Selecting: " + ((Simulation) selectedCell.getItem()).getSimName());
+            // System.out.println("Selecting: " + ((Simulation) selectedCell.getItem()).getSimName());
 
             if (!selectedCell.getItem().getSimName().equals("New Simulation")) {
                 selectedCell.setStyle("-fx-background-color: lightblue; -fx-font-weight: bold;");
@@ -328,7 +328,7 @@ public class PrimaryController {
 
             loadParameterValues(selectedCell.getItem());
         }
-        System.out.println("Selected cell: " + (selectedCell != null ? selectedCell.getIndex() : "None"));
+        // System.out.println("Selected cell: " + (selectedCell != null ? selectedCell.getIndex() : "None"));
     }
 
     /*
@@ -600,11 +600,11 @@ public class PrimaryController {
         float[] vph_3 = new float[] {sim.getSouth_north_vph().floatValue(), sim.getSouth_east_vph().floatValue(), 0, sim.getSouth_west_vph().floatValue()};
         float[] vph_4 = new float[] {sim.getWest_north_vph().floatValue(), sim.getWest_east_vph().floatValue(), sim.getWest_south_vph().floatValue(), 0};
 
-        System.out.println(Arrays.toString(vph_1));
-        System.out.println(Arrays.toString(vph_2));
-        System.out.println(Arrays.toString(vph_3));
-        System.out.println(Arrays.toString(vph_4));
-        System.out.println();
+//        System.out.println(Arrays.toString(vph_1));
+//        System.out.println(Arrays.toString(vph_2));
+//        System.out.println(Arrays.toString(vph_3));
+//        System.out.println(Arrays.toString(vph_4));
+//        System.out.println();
         // Calculate whether left and right turn lanes are needed
         boolean north_left_turn = sim.getNorth_east_vph() > 0;
         boolean north_right_turn = sim.getNorth_west_vph() > 0;
@@ -612,8 +612,8 @@ public class PrimaryController {
         boolean east_left_turn = sim.getEast_south_vph() > 0;
         boolean east_right_turn = sim.getEast_north_vph() > 0;
 
-        boolean south_left_turn = sim.getSouth_east_vph() > 0;
-        boolean south_right_turn = sim.getSouth_west_vph() > 0;
+        boolean south_left_turn = sim.getSouth_west_vph() > 0;
+        boolean south_right_turn = sim.getSouth_east_vph() > 0;
 
         boolean west_left_turn = sim.getWest_north_vph() > 0;
         boolean west_right_turn = sim.getWest_south_vph() > 0;
