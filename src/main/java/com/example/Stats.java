@@ -9,8 +9,8 @@ public class Stats {
     public int num_cars;           // the number of cars whose wait times cumulate to total_wait_time
 
     public final double weight_max_wait_time = 1;
-    public final double weight_max_queue_length = 1;
-    public final double weight_average_wait_time = 1;
+    public final double weight_max_queue_length = 0.75;
+    public final double weight_average_wait_time = 2;
 
     public double overall_score;
 
